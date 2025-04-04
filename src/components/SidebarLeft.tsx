@@ -73,9 +73,9 @@ export const SidebarLeft: React.FC = () => {
   return (
     <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
       <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-2">
-        <Link to="/" className="tw-hidden md:tw-flex">LOGO</Link>
+        <Link to="/" className="tw-hidden lg:tw-flex">KM</Link>
       </div>
-      <div className="tw-p-4 tw-text-xl tw-font-bold">Category</div>
+      <div className="tw-p-4 tw-text-lg tw-font-bold">Category</div>
       <Menu
         style={{ width: '100%' }}
         mode="inline"

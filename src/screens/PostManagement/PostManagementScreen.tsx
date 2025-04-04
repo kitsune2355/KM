@@ -41,9 +41,9 @@ export const PostManagementScreen: React.FC = () => {
   return (
     <div className="tw-container">
       <Card>
-        <form className="tw-flex tw-flex-col tw-space-y-4">
+        <form className="tw-flex tw-flex-col tw-space-y-6">
           <div>
-            <p>Title</p>
+            <p className="tw-font-medium">Title</p>
             <Controller
               name="title"
               control={control}
@@ -54,7 +54,7 @@ export const PostManagementScreen: React.FC = () => {
             )}
           </div>
           <div>
-            <p>Category Tags</p>
+            <p className="tw-font-medium">Category Tags</p>
             <Controller
               name="category"
               control={control}
@@ -79,7 +79,7 @@ export const PostManagementScreen: React.FC = () => {
             )}
           </div>
           <div>
-            <p>Description</p>
+            <p className="tw-font-medium">Description</p>
             <Controller
               name="description"
               control={control}
@@ -94,7 +94,7 @@ export const PostManagementScreen: React.FC = () => {
             )}
           </div>
           <div>
-            <p>Content</p>
+            <p className="tw-font-medium">Content</p>
             <Controller
               name="contents"
               control={control}
@@ -105,7 +105,7 @@ export const PostManagementScreen: React.FC = () => {
             )}
           </div>
           <div>
-            <p>Files</p>
+            <p className="tw-font-medium">Files</p>
             <Controller
               name="files"
               control={control}

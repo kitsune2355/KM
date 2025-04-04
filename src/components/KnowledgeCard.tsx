@@ -1,5 +1,6 @@
 import { Button, Carousel, Tag } from "antd";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface KnowledgeCardProps {
   title: string;
@@ -14,6 +15,11 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   tags,
   image,
 }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/content");
+  };
   const contentStyle: React.CSSProperties = {
     height: "160px",
     color: "#fff",
@@ -39,7 +45,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           {description}
         </span>
         <div className="tw-flex tw-justify-end">
-          <Button type="text" color="primary">
+          <Button type="text" color="primary" onClick={handleClick}>
             Read more
           </Button>
         </div>

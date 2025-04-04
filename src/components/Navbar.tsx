@@ -63,8 +63,8 @@ export const Navbar: React.FC = () => {
             onClick={showDrawer}
             icon={<MenuOutlined />}
           />
-          <Link to="/" className="sm:tw-flex md:tw-hidden">
-            LOGO
+          <Link to="/" className="sm:tw-flex lg:tw-hidden">
+            KM
           </Link>
         </div>
 
@@ -87,7 +87,7 @@ export const Navbar: React.FC = () => {
       <Drawer
         title=""
         placement="left"
-        closable={false}
+        closable={true}
         onClose={closeDrawer}
         open={drawerVisible}
         className="tw-sidebar-drawer"
