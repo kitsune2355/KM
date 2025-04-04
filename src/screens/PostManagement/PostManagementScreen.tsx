@@ -2,12 +2,12 @@ import { Button, Card, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React from "react";
 import TextEditor from "../../components/TextEditor";
+import { Controller } from "react-hook-form";
+import FileUpload from "../../components/FileUpload";
 import {
   PostManagementFormProps,
   usePostManagementForm,
 } from "../../forms/PostManagementForm";
-import { Controller } from "react-hook-form";
-import FileUpload from "../../components/FileUpload";
 
 const selectOptions = [
   {
@@ -25,7 +25,14 @@ const selectOptions = [
 ];
 
 export const PostManagementScreen: React.FC = () => {
-  const { control, handleSubmit } = usePostManagementForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = usePostManagementForm();
+
+  console.log("errors :>> ", errors, watch("title"));
 
   const onSubmit = (data: PostManagementFormProps) => {
     console.log("Form submitted:", data);
@@ -34,10 +41,7 @@ export const PostManagementScreen: React.FC = () => {
   return (
     <div className="tw-container">
       <Card>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="tw-flex tw-flex-col tw-space-y-4"
-        >
+        <form className="tw-flex tw-flex-col tw-space-y-4">
           <div>
             <p>Title</p>
             <Controller
@@ -45,6 +49,9 @@ export const PostManagementScreen: React.FC = () => {
               control={control}
               render={({ field }) => <Input {...field} placeholder="Title" />}
             />
+            {errors.title && (
+              <div className="tw-text-red-500">{errors.title.message}</div>
+            )}
           </div>
           <div>
             <p>Category Tags</p>
@@ -67,6 +74,9 @@ export const PostManagementScreen: React.FC = () => {
                 />
               )}
             />
+            {errors.category && (
+              <div className="tw-text-red-500">{errors.category.message}</div>
+            )}
           </div>
           <div>
             <p>Description</p>
@@ -77,6 +87,11 @@ export const PostManagementScreen: React.FC = () => {
                 <TextArea {...field} rows={4} placeholder="Description" />
               )}
             />
+            {errors.description && (
+              <div className="tw-text-red-500">
+                {errors.description.message}
+              </div>
+            )}
           </div>
           <div>
             <p>Content</p>
@@ -85,6 +100,9 @@ export const PostManagementScreen: React.FC = () => {
               control={control}
               render={({ field }) => <TextEditor {...field} />}
             />
+            {errors.contents && (
+              <div className="tw-text-red-500">{errors.contents.message}</div>
+            )}
           </div>
           <div>
             <p>Files</p>
@@ -95,12 +113,15 @@ export const PostManagementScreen: React.FC = () => {
                 <FileUpload onChange={onChange} value={value} />
               )}
             />
+            {errors.files && (
+              <div className="tw-text-red-500">{errors.files.message}</div>
+            )}
           </div>
         </form>
         <div className="tw-w-full tw-flex tw-justify-end tw-mt-4">
           <Button
             type="primary"
-            htmlType="submit"
+            onClick={handleSubmit(onSubmit)}
             className="tw-w-24 tw-bg-primary"
           >
             Submit

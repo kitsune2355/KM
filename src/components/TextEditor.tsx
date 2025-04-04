@@ -3,7 +3,7 @@ import "suneditor/dist/css/suneditor.min.css";
 
 interface TextEditorProps {
   onChange: (content: string) => void;
-  value: string;
+  value?: string;
 }
 
 const TextEditor = React.forwardRef<HTMLDivElement, TextEditorProps>(({ onChange, value }, ref) => {

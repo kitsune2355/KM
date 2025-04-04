@@ -6,21 +6,27 @@ export interface PostManagementFormProps {
   title: string;
   category: string;
   description: string;
-  contents:  string;
-  files: string[];
+  contents?: string;
+  files?: string[];
 }
 
 const schema: yup.ObjectSchema<PostManagementFormProps> = yup.object().shape({
-  title: yup.string().required("Title is required").default(""),
-  category: yup.string().required("Category is required").default(""),
-  description: yup.string().required("Description is required").default(""),
-  contents: yup.string().required("Contents is required").default(""),
-  files: yup.array().of(yup.string().required()).default([]),
+  title: yup.string().required("Title is required"),
+  category: yup.string().required("Category is required"),
+  description: yup.string().required("Description is required"),
+  contents: yup.string().default(""),
+  files: yup.array().of(yup.string().required()),
 });
 
 export const usePostManagementForm = () => {
   return useForm<PostManagementFormProps>({
-    defaultValues: schema.getDefault(),
+    defaultValues: {
+      title: "",
+      category: "",
+      description: "",
+      contents: "",
+      files: [],
+    },
     resolver: yupResolver(schema),
     mode: "onSubmit",
   });
