@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .tw-container {
+    @apply tw-max-w-7xl tw-mx-auto tw-p-8;
+  }
+  .tw-sidebar-drawer .ant-drawer-body {
+    @apply !tw-p-0;
+  }
+
+  .tw-sidebar .ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    @apply tw-bg-gray-50;
+  }
+}
