@@ -13,7 +13,8 @@ export const Navbar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    console.log("User logged out");
+    localStorage.removeItem("user");
+    window.location.reload();
   };
 
   const showDrawer = () => {
@@ -36,11 +37,7 @@ export const Navbar: React.FC = () => {
     },
     {
       key: "2",
-      label: (
-        <Link to="/management">
-          Admin Management
-        </Link>
-      ),
+      label: <Link to="/management">Admin Management</Link>,
     },
     {
       key: "3",
@@ -73,10 +70,10 @@ export const Navbar: React.FC = () => {
         </div>
 
         <div className="tw-flex tw-items-center tw-gap-2">
-        <Link to="/new">
-          <Button type="primary" className="!tw-bg-primary">
-            Add new
-          </Button>
+          <Link to="/new">
+            <Button type="primary" className="!tw-bg-primary">
+              Add new
+            </Button>
           </Link>
           <Dropdown menu={{ items }}>
             <Avatar icon={<UserOutlined />} onClick={toggleDropdown} />

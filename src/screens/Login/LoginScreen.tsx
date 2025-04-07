@@ -2,8 +2,10 @@ import React from "react";
 import { Button, Input } from "antd";
 import { LoginFormProps, useLoginForm } from "../../forms/LoginForm";
 import { Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export const LoginScreen: React.FC = () => {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -20,9 +22,13 @@ export const LoginScreen: React.FC = () => {
         username: data.username,
       }),
     });
-    const dataKM = await res.json();
-    console.log("res :>> ", res);
-    console.log("dataKM :>> ", dataKM);
+    const result = await res.json();
+    if (result) {
+      localStorage.setItem("user", JSON.stringify(result));
+      navigate("/");
+    } else {
+      alert(result.message || "Login failed");
+    }
   };
 
   return (
