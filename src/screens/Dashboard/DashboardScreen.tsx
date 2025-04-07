@@ -52,22 +52,20 @@ const mockData = [
 
 export const DashboardScreen: React.FC = () => {
   return (
-    <div className="tw-container">
-      <div className="tw-grid tw-grid-cols-12 tw-gap-4">
-        {mockData.map((item, key) => (
-          <div
-            className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
-            key={key}
-          >
-            <KnowledgeCard
-              title={item.title}
-              description={item.description}
-              tags={item.tags}
-              image={item.image}
-            />
-          </div>
-        ))}
-      </div>
+    <div className="tw-grid tw-grid-cols-12 tw-gap-4">
+      {mockData.map((item, key) => (
+        <div
+          className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
+          key={key}
+        >
+          <KnowledgeCard
+            title={item.title}
+            description={item.description}
+            tags={item.tags}
+            image={item.image}
+          />
+        </div>
+      ))}
     </div>
   );
 };

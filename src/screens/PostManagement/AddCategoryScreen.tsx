@@ -1,7 +1,8 @@
-import React from 'react'
+import { Card } from "antd";
+import React from "react";
 
 export const AddCategoryScreen: React.FC = () => {
   return (
-    <div>AddCategoryScreen</div>
-  )
-}
+      <Card>AddCategoryScreen</Card>
+  );
+};
