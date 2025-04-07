@@ -1,8 +1,9 @@
-import { Card, Button, Input, Tree } from "antd";
+import { Card, Button, Input, Tree, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTreeNodeForm, TreeNodeFormProps } from "../../forms/TreeNodeForm";
 import { Controller, useForm } from "react-hook-form";
 import type { DataNode } from "antd/es/tree";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons"; // Import icons
 
 export const AddCategoryScreen: React.FC = () => {
   const {
@@ -23,7 +24,6 @@ export const AddCategoryScreen: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
   const onSubmit = (data: TreeNodeFormProps) => {
-    console.log("data :>> ", data);
     setTreeData((prev) => [
       ...prev,
       { title: data.title, key: data.title, children: [] },
@@ -83,6 +83,65 @@ export const AddCategoryScreen: React.FC = () => {
     }
   }, [treeData, reset]);
 
+  // Delete Node function
+  const deleteNode = (key: string) => {
+    const deleteNodeRecursively = (
+      nodes: TreeNodeFormProps[],
+      key: string
+    ): TreeNodeFormProps[] => {
+      return nodes.filter((node) => {
+        if (node.key === key) return false;
+        if (node.children)
+          node.children = deleteNodeRecursively(node.children, key);
+        return true;
+      });
+    };
+    setTreeData(deleteNodeRecursively(treeData, key));
+    message.success("Node deleted!");
+  };
+
+  // Edit Node function
+  const editNode = (key: string) => {
+    const newTitle = prompt("Enter new title:"); // Simple prompt for editing, you can make it more fancy
+    if (newTitle) {
+      const updateNodeTitle = (
+        nodes: TreeNodeFormProps[],
+        key: string,
+        newTitle: string
+      ): TreeNodeFormProps[] => {
+        return nodes.map((node) => {
+          if (node.key === key) {
+            node.title = newTitle;
+          } else if (node.children) {
+            node.children = updateNodeTitle(node.children, key, newTitle);
+          }
+          return node;
+        });
+      };
+      setTreeData(updateNodeTitle(treeData, key, newTitle));
+      message.success("Node updated!");
+    }
+  };
+
+  const renderTreeTitle = (node: DataNode) => (
+    <span>
+      {node.title as string}
+      <Button
+        icon={<EditOutlined />}
+        size="small"
+        onClick={() => editNode(node.key as string)}
+        style={{ marginLeft: 8 }}
+      />
+      <Button
+        icon={<DeleteOutlined />}
+        size="small"
+        onClick={() => deleteNode(node.key as string)}
+        style={{ marginLeft: 8 }}
+        className="hover:!tw-border-red-500 hover:!tw-text-red-500"
+      />
+    </span>
+  );
+
   return (
     <div className="tw-grid tw-grid-cols-12 tw-gap-4">
       <Card className="tw-col-span-12 md:tw-col-span-6">
@@ -96,6 +155,7 @@ export const AddCategoryScreen: React.FC = () => {
             treeData={treeData as DataNode[]}
             onSelect={onSelectNode}
             defaultExpandAll
+            titleRender={renderTreeTitle} // Custom render for tree node title
           />
         )}
       </Card>
@@ -105,6 +165,7 @@ export const AddCategoryScreen: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="tw-space-y-2">
             <h3 className="tw-font-bold tw-text-md">Add category name</h3>
             <div style={{ marginBottom: 10 }}>
+              <span>Root Node :</span>
               <Controller
                 name="title"
                 control={control}
@@ -118,8 +179,8 @@ export const AddCategoryScreen: React.FC = () => {
             <div className="tw-flex tw-justify-end">
               <Button
                 htmlType="submit"
-                type="default"
-                className="tw-border-primary"
+                type="primary"
+                className="tw-bg-primary"
               >
                 Add
               </Button>
@@ -135,10 +196,13 @@ export const AddCategoryScreen: React.FC = () => {
                 Add Child category to: {selectedKey}
               </h3>
               <div style={{ marginBottom: 10 }}>
+                <span>Child Node :</span>
                 <Controller
                   name="title"
                   control={childControl}
-                  render={({ field }) => <Input {...field} />}
+                  render={({ field }) => (
+                    <Input {...field} placeholder="title" />
+                  )}
                 />
                 {childErrors.title && (
                   <div style={{ color: "red" }}>
@@ -150,19 +214,19 @@ export const AddCategoryScreen: React.FC = () => {
               <div className="tw-flex tw-justify-end">
                 <Button
                   htmlType="submit"
-                  type="default"
-                  className="tw-border-primary"
+                  type="primary"
+                  className="tw-bg-primary"
                 >
-                  Add Child
+                  Add
                 </Button>
               </div>
             </form>
           )}
 
           {/* <div style={{ marginTop: 24 }}>
-          <h3>Raw Tree Data:</h3>
-          <pre>{JSON.stringify(treeData, null, 2)}</pre>
-        </div> */}
+            <h3>Raw Tree Data:</h3>
+            <pre>{JSON.stringify(treeData, null, 2)}</pre>
+          </div> */}
         </div>
       </Card>
     </div>

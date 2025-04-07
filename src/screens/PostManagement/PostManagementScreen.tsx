@@ -43,9 +43,11 @@ export const PostManagementScreen: React.FC = () => {
 
   return (
     <Card>
-      <Button type="default" className="tw-mb-6" onClick={handleAddCategory}>
-        Add Category
-      </Button>
+      <div className="tw-flex tw-justify-end tw-mb-6">
+        <Button type="default" className="tw-border-primary" onClick={handleAddCategory}>
+          Add Category
+        </Button>
+      </div>
       <form className="tw-flex tw-flex-col tw-space-y-6">
         <div>
           <p className="tw-font-medium">Title</p>
