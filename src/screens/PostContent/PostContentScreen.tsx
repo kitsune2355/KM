@@ -1,7 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Card } from "antd";
 import React from "react";
-import { CommentBox } from "../../components/CommentBox";
 
 export const PostContentScreen: React.FC = () => {
   return (
@@ -45,8 +44,6 @@ export const PostContentScreen: React.FC = () => {
           </p>
         </div>
       </Card>
-
-      <CommentBox />
     </div>
   );
 };

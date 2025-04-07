@@ -8,6 +8,7 @@ import {
   PostManagementFormProps,
   usePostManagementForm,
 } from "../../forms/PostManagementForm";
+import { useNavigate } from "react-router-dom";
 
 const selectOptions = [
   {
@@ -25,22 +26,26 @@ const selectOptions = [
 ];
 
 export const PostManagementScreen: React.FC = () => {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
     formState: { errors },
-    watch,
   } = usePostManagementForm();
-
-  console.log("errors :>> ", errors, watch("title"));
 
   const onSubmit = (data: PostManagementFormProps) => {
     console.log("Form submitted:", data);
   };
 
+  const handleAddCategory = () => {
+    navigate("/add-category");
+  };
+
   return (
-    <div className="tw-container">
+    <div className="tw-container ">
       <Card>
+
+        <Button type='default' className="tw-mb-6" onClick={handleAddCategory}>Add Category</Button>
         <form className="tw-flex tw-flex-col tw-space-y-6">
           <div>
             <p className="tw-font-medium">Title</p>
