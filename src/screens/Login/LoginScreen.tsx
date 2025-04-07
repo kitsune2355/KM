@@ -11,7 +11,7 @@ export const LoginScreen: React.FC = () => {
   } = useLoginForm();
 
   const onSubmit = async (data: LoginFormProps) => {
-    const res = await fetch("http://localhost/api_km/login.php", {
+    const res = await fetch(`/API/login.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
