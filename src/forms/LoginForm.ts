@@ -4,12 +4,10 @@ import * as yup from "yup";
 
 export interface LoginFormProps {
   username: string;
-  password: string;
 }
 
 const schema: yup.ObjectSchema<LoginFormProps> = yup.object().shape({
   username: yup.string().required("Username is required").default(""),
-  password: yup.string().required("Password is required").default(""),
 });
 
 export const useLoginForm = () => {
