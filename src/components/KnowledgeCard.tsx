@@ -36,16 +36,17 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           </div>
         ))}
       </Carousel> */}
-      <div className="tw-p-4 tw-flex tw-flex-col tw-gap-2">
-        <p className="tw-text-lg tw-font-bold">{title}</p>
+      <div className="tw-p-4 tw-flex tw-flex-col tw-space-y-4">
         <div>
+          <p className="tw-text-lg tw-font-bold">{title}</p>
+
           <Tag color="blue">{tags}</Tag>
         </div>
-        <span className="tw-text-gray-500 tw-truncate-2 tw-line-clamp-2 tw-min-h-12">
+        <span className="tw-text-gray-400 tw-truncate-2 tw-line-clamp-2 tw-min-h-10 tw-text-sm tw-font-normal">
           {description}
         </span>
         <div className="tw-flex tw-justify-end">
-          <Button type="text" color="primary" onClick={handleClick}>
+          <Button variant="outlined" onClick={handleClick}>
             Read more
           </Button>
         </div>

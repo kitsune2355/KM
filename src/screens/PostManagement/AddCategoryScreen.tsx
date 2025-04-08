@@ -187,7 +187,7 @@ export const AddCategoryScreen: React.FC = () => {
             </div>
           </form>
 
-          {selectedKey && (
+          {selectedKey && treeData.length > 0 && (
             <form
               onSubmit={handleChildSubmit(onAddChild)}
               className="tw-space-y-2"
