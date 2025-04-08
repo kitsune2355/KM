@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "sukhumvitset-webfont";
+  src: url("/src/fonts/sukhumvitset-bold-webfont.ttf") format("truetype"),
+    url("/src/fonts/sukhumvitset-medium-webfont.ttf") format("truetype"),
+    url("/src/fonts/sukhumvitset-thin-webfont.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer components {
   .tw-container {
     @apply tw-max-w-7xl tw-mx-auto tw-p-8;
