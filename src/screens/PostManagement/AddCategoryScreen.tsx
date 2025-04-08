@@ -4,6 +4,15 @@ import { useTreeNodeForm, TreeNodeFormProps } from "../../forms/TreeNodeForm";
 import { Controller, useForm } from "react-hook-form";
 import type { DataNode } from "antd/es/tree";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons"; // Import icons
+import { addCategory, fetchCategories } from "../../services/categoryService";
+import { v4 as uuidv4 } from "uuid";
+
+interface TreeNode {
+  title: string;
+  key: string;
+  children?: TreeNode[];
+  parent_id: string | null;
+}
 
 export const AddCategoryScreen: React.FC = () => {
   const {
@@ -20,14 +29,52 @@ export const AddCategoryScreen: React.FC = () => {
     reset: resetChildForm,
   } = useForm<{ title: string }>({ defaultValues: { title: "" } });
 
-  const [treeData, setTreeData] = useState<TreeNodeFormProps[]>([]);
+  const [treeData, setTreeData] = useState<TreeNode[]>([]);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
-  const onSubmit = (data: TreeNodeFormProps) => {
-    setTreeData((prev) => [
-      ...prev,
-      { title: data.title, key: data.title, children: [] },
-    ]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const data = await fetchCategories();
+      setTreeData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const addCategoryToTree = async (newCategory: TreeNode) => {
+    try {
+      const response = await addCategory(newCategory);
+
+      if (response.status === "success") {
+        return true;
+      } else {
+        message.error(response.message);
+        return false;
+      }
+    } catch (error) {
+      message.error("Failed to add category.");
+      console.error(error);
+      return false;
+    }
+  };
+
+  const onSubmit = async (data: TreeNodeFormProps) => {
+    const newCategory: TreeNode = {
+      title: data.title,
+      key: uuidv4(),
+      children: [],
+      parent_id: selectedKey ? selectedKey : null,
+    };
+
+    const isSuccess = await addCategoryToTree(newCategory);
+    if (isSuccess) {
+      setTreeData((prev) => [...prev, newCategory]);
+      message.success("Category added successfully!");
+    }
   };
 
   const onSelectNode = (selectedKeys: React.Key[]) => {
@@ -35,11 +82,12 @@ export const AddCategoryScreen: React.FC = () => {
   };
 
   const addChildToTree = (
-    data: TreeNodeFormProps[],
+    data: TreeNode[],
     parentKey: string,
-    child: TreeNodeFormProps
-  ): TreeNodeFormProps[] => {
-    return data.map((node) => {
+    child: TreeNode,
+    parentID: string | null
+  ): TreeNode[] => {
+    return data.map((node): TreeNode => {
       if (node.key === parentKey) {
         return {
           ...node,
@@ -48,25 +96,35 @@ export const AddCategoryScreen: React.FC = () => {
       } else if (node.children) {
         return {
           ...node,
-          children: addChildToTree(node.children, parentKey, child),
+          children: addChildToTree(node.children, parentKey, child, parentID),
         };
       }
       return node;
     });
   };
 
-  const onAddChild = (data: { title: string }) => {
+  const onAddChild = async (data: { title: string }) => {
     if (!selectedKey) return;
 
-    const newChild: TreeNodeFormProps = {
+    const newChild: TreeNode = {
       title: data.title,
-      key: `${selectedKey}-${data.title}`,
+      key: uuidv4(),
       children: [],
+      parent_id: selectedKey,
     };
 
-    const updatedTree = addChildToTree(treeData, selectedKey, newChild);
-    setTreeData(updatedTree);
-    resetChildForm();
+    const isSuccess = await addCategoryToTree(newChild);
+    if (isSuccess) {
+      const updatedTree = addChildToTree(
+        treeData,
+        selectedKey,
+        newChild,
+        selectedKey
+      );
+      setTreeData(updatedTree);
+      resetChildForm();
+      message.success("Child category added successfully!");
+    }
   };
 
   // Reset child form after adding child
@@ -86,9 +144,9 @@ export const AddCategoryScreen: React.FC = () => {
   // Delete Node function
   const deleteNode = (key: string) => {
     const deleteNodeRecursively = (
-      nodes: TreeNodeFormProps[],
+      nodes: TreeNode[],
       key: string
-    ): TreeNodeFormProps[] => {
+    ): TreeNode[] => {
       return nodes.filter((node) => {
         if (node.key === key) return false;
         if (node.children)
@@ -102,13 +160,13 @@ export const AddCategoryScreen: React.FC = () => {
 
   // Edit Node function
   const editNode = (key: string) => {
-    const newTitle = prompt("Enter new title:"); // Simple prompt for editing, you can make it more fancy
+    const newTitle = prompt("Enter new title:");
     if (newTitle) {
       const updateNodeTitle = (
-        nodes: TreeNodeFormProps[],
+        nodes: TreeNode[],
         key: string,
         newTitle: string
-      ): TreeNodeFormProps[] => {
+      ): TreeNode[] => {
         return nodes.map((node) => {
           if (node.key === key) {
             node.title = newTitle;
@@ -155,7 +213,7 @@ export const AddCategoryScreen: React.FC = () => {
             treeData={treeData as DataNode[]}
             onSelect={onSelectNode}
             defaultExpandAll
-            titleRender={renderTreeTitle} // Custom render for tree node title
+            titleRender={renderTreeTitle}
           />
         )}
       </Card>
@@ -169,7 +227,13 @@ export const AddCategoryScreen: React.FC = () => {
               <Controller
                 name="title"
                 control={control}
-                render={({ field }) => <Input {...field} placeholder="title" />}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="title"
+                    disabled={!!selectedKey}
+                  />
+                )}
               />
               {errors.title && (
                 <div style={{ color: "red" }}>{errors.title.message}</div>
@@ -181,6 +245,7 @@ export const AddCategoryScreen: React.FC = () => {
                 htmlType="submit"
                 type="primary"
                 className="tw-bg-primary"
+                disabled={!!selectedKey}
               >
                 Add
               </Button>
