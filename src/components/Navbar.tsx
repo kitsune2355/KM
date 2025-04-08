@@ -42,15 +42,11 @@ export const Navbar: React.FC = () => {
     loadUser();
   }, []);
 
-  console.log("user :>> ", user);
-
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: (
-        <div>
-          {isAdmin && <Link to="/management">Admin Management</Link>}
-        </div>
+        <div>{isAdmin && <Link to="/management">Admin Management</Link>}</div>
       ),
     },
     {
