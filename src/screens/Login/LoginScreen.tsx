@@ -3,31 +3,27 @@ import { Button, Input } from "antd";
 import { LoginFormProps, useLoginForm } from "../../forms/LoginForm";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../services/authService";
 
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setError,
   } = useLoginForm();
 
   const onSubmit = async (data: LoginFormProps) => {
-    const res = await fetch(`/API/login.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: data.username,
-      }),
-    });
-    const result = await res.json();
-    if (result) {
-      localStorage.setItem("user", JSON.stringify(result));
+    const res = await login(data);
+    if (res[0].status === "success") {
+      localStorage.setItem("user", JSON.stringify(res));
       navigate("/");
-    } else {
-      alert(result.message || "Login failed");
+    }else {
+      setError("username", {
+        type: "manual",
+        message: "Login failed. Please check your username.",
+      });
     }
   };
 

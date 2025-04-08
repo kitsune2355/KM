@@ -1,12 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, Drawer, Dropdown, Input, MenuProps } from "antd";
 import { UserOutlined, MenuOutlined, SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
+import useIsAdmin from "../hook/useIsAdmin";
+import { fetchUser, User } from "../services/userService";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const isAdmin = useIsAdmin();
+
+  const loadUser = async () => {
+    try {
+      const result = await fetchUser();
+      setUser(result);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -25,22 +38,23 @@ export const Navbar: React.FC = () => {
     setDrawerVisible(false);
   };
 
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  console.log("user :>> ", user);
+
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: (
         <div>
-          <p>Name Surname</p>
-          <p>Position</p>
+          {isAdmin && <Link to="/management">Admin Management</Link>}
         </div>
       ),
     },
     {
       key: "2",
-      label: <Link to="/management">Admin Management</Link>,
-    },
-    {
-      key: "3",
       label: (
         <div className="tw-text-red-500" onClick={handleLogout}>
           Log out
@@ -69,12 +83,21 @@ export const Navbar: React.FC = () => {
           <Input placeholder="search..." prefix={<SearchOutlined />} />
         </div>
 
-        <div className="tw-flex tw-items-center tw-gap-2">
-          <Link to="/new">
-            <Button type="primary" className="!tw-bg-primary">
-              Add new
-            </Button>
-          </Link>
+        <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
+          {isAdmin ? (
+            <Link to="/new">
+              <Button type="primary" className="!tw-bg-primary">
+                Add new
+              </Button>
+            </Link>
+          ) : (
+            <div className="">
+              <p className="tw-text-primary tw-font-bold">
+                {user?.username} {user?.fname}
+              </p>
+              <p className="tw-text-gray-400 tw-text-xs">{user?.position}</p>
+            </div>
+          )}
           <Dropdown menu={{ items }}>
             <Avatar icon={<UserOutlined />} onClick={toggleDropdown} />
           </Dropdown>
