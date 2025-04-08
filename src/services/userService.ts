@@ -1,5 +1,3 @@
-import { json } from "stream/consumers";
-
 export interface User {
   id: string;
   username: string;
