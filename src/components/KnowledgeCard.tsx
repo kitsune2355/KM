@@ -1,4 +1,4 @@
-import { Button, Carousel, Tag } from "antd";
+import { Button, Tag } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,13 +20,13 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   const handleClick = () => {
     navigate("/content");
   };
-  const contentStyle: React.CSSProperties = {
-    height: "160px",
-    color: "#fff",
-    lineHeight: "160px",
-    textAlign: "center",
-    background: "#364d79",
-  };
+  // const contentStyle: React.CSSProperties = {
+  //   height: "160px",
+  //   color: "#fff",
+  //   lineHeight: "160px",
+  //   textAlign: "center",
+  //   background: "#364d79",
+  // };
   return (
     <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2">
       {/* <Carousel>

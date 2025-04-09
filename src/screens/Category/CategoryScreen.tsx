@@ -1,5 +1,5 @@
 import { Card, Tree } from "antd";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "../../store";
@@ -13,13 +13,13 @@ export const CategoryScreen: React.FC = () => {
   );
   const [treeData, setTreeData] = React.useState<CategoryTreeNode[]>([]);
 
-  const onStart = () => {
+  const onStart = useCallback(() => {
     const tree = categories
       .filter((c) => c.key === params)
       .map((item) => item.children)[0];
       setTreeData(tree as CategoryTreeNode[]);
       dispatch(FETCH_CATEGORY(categories));
-  };
+  }, [categories, params, dispatch]);
 
   useEffect(() => {
     onStart();

@@ -4,11 +4,7 @@ import { useTreeNodeForm, TreeNodeFormProps } from "../../forms/TreeNodeForm";
 import { Controller, useForm } from "react-hook-form";
 import type { DataNode } from "antd/es/tree";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  addCategory,
-  deleteCategory,
-  fetchCategories,
-} from "../../services/categoryService";
+import { addCategory, deleteCategory } from "../../services/categoryService";
 import { v4 as uuidv4 } from "uuid";
 import { EditCategoryModal } from "./EditCategoryModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +13,6 @@ import {
   ADD_CATEGORY,
   CategoryTreeNode,
   DELETE_CATEGORY,
-  FETCH_CATEGORY,
   UPDATE_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
 
@@ -82,27 +77,6 @@ export const AddCategoryScreen: React.FC = () => {
     setSelectedKey(selectedKeys[0] as string);
   };
 
-  const addChildToTree = (
-    data: CategoryTreeNode[],
-    parentKey: string,
-    child: CategoryTreeNode
-  ): CategoryTreeNode[] => {
-    return data.map((node): CategoryTreeNode => {
-      if (node.key === parentKey) {
-        return {
-          ...node,
-          children: [...(node.children || []), child],
-        };
-      } else if (node.children) {
-        return {
-          ...node,
-          children: addChildToTree(node.children, parentKey, child),
-        };
-      }
-      return node;
-    });
-  };
-
   const onAddChild = async (data: { title: string }) => {
     if (!selectedKey) return;
 
@@ -153,24 +127,6 @@ export const AddCategoryScreen: React.FC = () => {
     setEditModalVisible(false);
   };
 
-  const updateTreeNodeTitle = (
-    nodes: CategoryTreeNode[],
-    key: string,
-    newTitle: string
-  ): CategoryTreeNode[] => {
-    return nodes.map((node) => {
-      if (node.key === key) {
-        return { ...node, title: newTitle };
-      } else if (node.children) {
-        return {
-          ...node,
-          children: updateTreeNodeTitle(node.children, key, newTitle),
-        };
-      }
-      return node;
-    });
-  };
-
   const deleteNode = async (key: string) => {
     confirm({
       title: "Delete Category",
@@ -206,7 +162,8 @@ export const AddCategoryScreen: React.FC = () => {
         style={{ marginLeft: 8 }}
         className="hover:!tw-border-red-500 hover:!tw-text-red-500"
       />
-      {`  `}{node.title as string}
+      {`  `}
+      {node.title as string}
     </span>
   );
 
