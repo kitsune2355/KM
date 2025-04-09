@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { PostManagementScreen } from '../screens/PostManagement/PostManagementScreen';
 import { DashboardScreen } from '../screens/Dashboard/DashboardScreen';
 import { PostContentScreen } from '../screens/PostContent/PostContentScreen';
-import { AddCategoryScreen } from '../screens/PostManagement/AddCategoryScreen';
+import { AddCategoryScreen } from '../screens/Category/AddCategoryScreen';
 
 export const MainRoutes:React.FC = () => {
   return (

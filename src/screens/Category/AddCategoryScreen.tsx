@@ -25,8 +25,10 @@ const { confirm } = Modal;
 
 export const AddCategoryScreen: React.FC = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state: RootState) => state.categories.categories);
-  
+  const categories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
+
   const {
     handleSubmit,
     control,
@@ -103,15 +105,18 @@ export const AddCategoryScreen: React.FC = () => {
 
   const onAddChild = async (data: { title: string }) => {
     if (!selectedKey) return;
-  
+
     const newChild: CategoryTreeNode = {
       title: data.title,
       key: uuidv4(),
       children: [],
       parent_id: selectedKey,
     };
-  
-    const findNodeByKey = (nodes: CategoryTreeNode[], key: string): CategoryTreeNode | undefined => {
+
+    const findNodeByKey = (
+      nodes: CategoryTreeNode[],
+      key: string
+    ): CategoryTreeNode | undefined => {
       for (const node of nodes) {
         if (node.key === key) return node;
         if (node.children?.length) {
@@ -121,24 +126,23 @@ export const AddCategoryScreen: React.FC = () => {
       }
       return undefined;
     };
-  
+
     const parentNode = findNodeByKey(categories, selectedKey);
     if (!parentNode) return;
-  
+
     const updatedCategory: CategoryTreeNode = {
       ...parentNode,
       children: [...(parentNode.children || []), newChild],
     };
-  
+
     dispatch(UPDATE_CATEGORY(updatedCategory));
-  
+
     const isSuccess = await addCategoryToTree(newChild);
     if (isSuccess) {
       dispatch(ADD_CATEGORY(newChild));
       message.success("Child category added successfully!");
     }
   };
-  
 
   const handleOpenEditModal = (key: string) => {
     setEditKey(key);
@@ -189,11 +193,10 @@ export const AddCategoryScreen: React.FC = () => {
 
   const renderTreeTitle = (node: DataNode) => (
     <span>
-      {node.title as string}
       <Button
         icon={<EditOutlined />}
         size="small"
-        onClick={()=> handleOpenEditModal(node.key as string)}
+        onClick={() => handleOpenEditModal(node.key as string)}
         style={{ marginLeft: 8 }}
       />
       <Button
@@ -203,6 +206,7 @@ export const AddCategoryScreen: React.FC = () => {
         style={{ marginLeft: 8 }}
         className="hover:!tw-border-red-500 hover:!tw-text-red-500"
       />
+      {`  `}{node.title as string}
     </span>
   );
 
