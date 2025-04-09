@@ -4,6 +4,7 @@ import { PostManagementScreen } from '../screens/PostManagement/PostManagementSc
 import { DashboardScreen } from '../screens/Dashboard/DashboardScreen';
 import { PostContentScreen } from '../screens/PostContent/PostContentScreen';
 import { AddCategoryScreen } from '../screens/Category/AddCategoryScreen';
+import { CategoryScreen } from '../screens/Category/CategoryScreen';
 
 export const MainRoutes:React.FC = () => {
   return (
@@ -12,6 +13,7 @@ export const MainRoutes:React.FC = () => {
         <Route path="/new" element={<PostManagementScreen />} />
         <Route path="/content" element={<PostContentScreen />} />
         <Route path="/add-category" element={<AddCategoryScreen />} />
+        <Route path="/categories/:id" element={<CategoryScreen />} />
       </Routes>
   )
 }

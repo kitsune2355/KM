@@ -4,20 +4,25 @@ import { Link } from "react-router-dom";
 import { fetchCategories } from "../services/categoryService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import { CategoryTreeNode, FETCH_CATEGORY } from "../redux/reducer/categoryReducer";
+import {
+  CategoryTreeNode,
+  FETCH_CATEGORY,
+} from "../redux/reducer/categoryReducer";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const transformCategoriesToMenuItems = (categories: CategoryTreeNode[]): MenuItem[] => {
-  return categories.map((cat) => ({
-    key: cat.key,
-    label: cat.title,
-    children:
-      cat.children && cat.children.length > 0
-        ? transformCategoriesToMenuItems(cat.children)
-        : undefined,
-  }));
+const transformCategoriesToMenuItems = (
+  categories: CategoryTreeNode[]
+): MenuItem[] => {
+  return categories.map((cat) => {
+    const item: MenuItem = {
+      key: String(cat.key),
+      label: <Link to={`/categories/${cat.key}`}>{cat.title}</Link>,
+    };
+    return item;
+  });
 };
+
 
 export const SidebarLeft: React.FC = () => {
   const dispatch = useDispatch();
