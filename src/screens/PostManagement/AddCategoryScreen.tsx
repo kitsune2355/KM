@@ -8,20 +8,25 @@ import {
   addCategory,
   deleteCategory,
   fetchCategories,
-} from "../../services/categoryService"; // Import updateCategory
+} from "../../services/categoryService";
 import { v4 as uuidv4 } from "uuid";
 import { EditCategoryModal } from "./EditCategoryModal";
-
-export interface TreeNode {
-  title: string;
-  key: string;
-  children?: TreeNode[];
-  parent_id: string | null;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import {
+  ADD_CATEGORY,
+  CategoryTreeNode,
+  DELETE_CATEGORY,
+  FETCH_CATEGORY,
+  UPDATE_CATEGORY,
+} from "../../redux/reducer/categoryReducer";
 
 const { confirm } = Modal;
 
 export const AddCategoryScreen: React.FC = () => {
+  const dispatch = useDispatch();
+  const categories = useSelector((state: RootState) => state.categories.categories);
+  
   const {
     handleSubmit,
     control,
@@ -36,26 +41,11 @@ export const AddCategoryScreen: React.FC = () => {
     reset: resetChildForm,
   } = useForm<{ title: string }>({ defaultValues: { title: "" } });
 
-  const [treeData, setTreeData] = useState<TreeNode[]>([]);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [editKey, setEditKey] = useState<string | null>(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  // const [editingNode, setEditingNode] = useState<TreeNode | null>(null);
-  // const [newTitle, setNewTitle] = useState("");
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const data = await fetchCategories();
-      setTreeData(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const addCategoryToTree = async (newCategory: TreeNode) => {
+  const addCategoryToTree = async (newCategory: CategoryTreeNode) => {
     try {
       const response = await addCategory(newCategory);
       if (response.status === "success") {
@@ -72,18 +62,17 @@ export const AddCategoryScreen: React.FC = () => {
   };
 
   const onSubmit = async (data: TreeNodeFormProps) => {
-    const newCategory: TreeNode = {
+    const newCategory: CategoryTreeNode = {
       title: data.title,
       key: uuidv4(),
       children: [],
       parent_id: selectedKey ? selectedKey : null,
     };
+    dispatch(ADD_CATEGORY(newCategory));
 
     const isSuccess = await addCategoryToTree(newCategory);
     if (isSuccess) {
-      setTreeData((prev) => [...prev, newCategory]);
       message.success("Category added successfully!");
-      reset(); // Reset the root form
     }
   };
 
@@ -92,12 +81,11 @@ export const AddCategoryScreen: React.FC = () => {
   };
 
   const addChildToTree = (
-    data: TreeNode[],
+    data: CategoryTreeNode[],
     parentKey: string,
-    child: TreeNode,
-    parentID: string | null
-  ): TreeNode[] => {
-    return data.map((node): TreeNode => {
+    child: CategoryTreeNode
+  ): CategoryTreeNode[] => {
+    return data.map((node): CategoryTreeNode => {
       if (node.key === parentKey) {
         return {
           ...node,
@@ -106,7 +94,7 @@ export const AddCategoryScreen: React.FC = () => {
       } else if (node.children) {
         return {
           ...node,
-          children: addChildToTree(node.children, parentKey, child, parentID),
+          children: addChildToTree(node.children, parentKey, child),
         };
       }
       return node;
@@ -115,29 +103,45 @@ export const AddCategoryScreen: React.FC = () => {
 
   const onAddChild = async (data: { title: string }) => {
     if (!selectedKey) return;
-
-    const newChild: TreeNode = {
+  
+    const newChild: CategoryTreeNode = {
       title: data.title,
       key: uuidv4(),
       children: [],
       parent_id: selectedKey,
     };
-
+  
+    const findNodeByKey = (nodes: CategoryTreeNode[], key: string): CategoryTreeNode | undefined => {
+      for (const node of nodes) {
+        if (node.key === key) return node;
+        if (node.children?.length) {
+          const found = findNodeByKey(node.children, key);
+          if (found) return found;
+        }
+      }
+      return undefined;
+    };
+  
+    const parentNode = findNodeByKey(categories, selectedKey);
+    if (!parentNode) return;
+  
+    const updatedCategory: CategoryTreeNode = {
+      ...parentNode,
+      children: [...(parentNode.children || []), newChild],
+    };
+  
+    dispatch(UPDATE_CATEGORY(updatedCategory));
+  
     const isSuccess = await addCategoryToTree(newChild);
     if (isSuccess) {
-      const updatedTree = addChildToTree(
-        treeData,
-        selectedKey,
-        newChild,
-        selectedKey
-      );
-      setTreeData(updatedTree);
-      resetChildForm();
+      dispatch(ADD_CATEGORY(newChild));
       message.success("Child category added successfully!");
     }
   };
+  
 
-  const handkeOpenEditModal = () => {
+  const handleOpenEditModal = (key: string) => {
+    setEditKey(key);
     setEditModalVisible(true);
   };
 
@@ -146,10 +150,10 @@ export const AddCategoryScreen: React.FC = () => {
   };
 
   const updateTreeNodeTitle = (
-    nodes: TreeNode[],
+    nodes: CategoryTreeNode[],
     key: string,
     newTitle: string
-  ): TreeNode[] => {
+  ): CategoryTreeNode[] => {
     return nodes.map((node) => {
       if (node.key === key) {
         return { ...node, title: newTitle };
@@ -163,36 +167,25 @@ export const AddCategoryScreen: React.FC = () => {
     });
   };
 
-  const handleUpdateCategory = (updatedKey: string, newTitle: string) => {
-    const updatedTree = updateTreeNodeTitle(treeData, updatedKey, newTitle);
-    setTreeData(updatedTree);
-  };
-
   const deleteNode = async (key: string) => {
     confirm({
       title: "Delete Category",
       content: "Are you sure you want to delete this category?",
       onOk: async () => {
         await deleteCategory(key);
-        setTreeData((prev) => prev.filter((node) => node.key !== key));
+        dispatch(DELETE_CATEGORY(key));
+        setSelectedKey(null);
       },
       onCancel() {},
     });
   };
 
-  // Reset child form after adding child
   useEffect(() => {
-    if (treeData.length > 0) {
+    if (categories.length > 0) {
       resetChildForm();
-    }
-  }, [treeData, resetChildForm]);
-
-  // Reset root form after adding root node
-  useEffect(() => {
-    if (treeData.length > 0) {
       reset();
     }
-  }, [treeData, reset]);
+  }, [categories, resetChildForm, reset]);
 
   const renderTreeTitle = (node: DataNode) => (
     <span>
@@ -200,7 +193,7 @@ export const AddCategoryScreen: React.FC = () => {
       <Button
         icon={<EditOutlined />}
         size="small"
-        onClick={handkeOpenEditModal}
+        onClick={()=> handleOpenEditModal(node.key as string)}
         style={{ marginLeft: 8 }}
       />
       <Button
@@ -216,14 +209,14 @@ export const AddCategoryScreen: React.FC = () => {
   return (
     <div className="tw-grid tw-grid-cols-12 tw-gap-4">
       <Card className="tw-col-span-12 md:tw-col-span-6">
-        {treeData.length === 0 ? (
+        {categories.length === 0 ? (
           <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[100px] tw-text-gray-300">
             No data
           </div>
         ) : (
           <Tree
             showLine
-            treeData={treeData as DataNode[]}
+            treeData={categories as DataNode[]}
             onSelect={onSelectNode}
             defaultExpandAll
             titleRender={renderTreeTitle}
@@ -265,7 +258,7 @@ export const AddCategoryScreen: React.FC = () => {
             </div>
           </form>
 
-          {selectedKey && treeData.length > 0 && (
+          {selectedKey && categories.length > 0 && (
             <form
               onSubmit={handleChildSubmit(onAddChild)}
               className="tw-space-y-2"
@@ -304,11 +297,9 @@ export const AddCategoryScreen: React.FC = () => {
       </Card>
 
       <EditCategoryModal
-        treeData={treeData}
-        selectedKey={selectedKey}
+        editKey={editKey}
         open={editModalVisible}
         onCancel={handleEditCancel}
-        onUpdateCategory={handleUpdateCategory}
       />
     </div>
   );

@@ -3,30 +3,29 @@ import TextArea from "antd/es/input/TextArea";
 import React, { useCallback, useEffect } from "react";
 import { Controller } from "react-hook-form";
 import { useEditCategoryForm } from "../../forms/EditCategoryForm";
-import { TreeNode } from "./AddCategoryScreen";
 import { updateCategory } from "../../services/categoryService";
+import { CategoryTreeNode, RootState, UPDATE_CATEGORY } from "../../redux/reducer/categoryReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 interface EditCategoryModalProps {
-  treeData: TreeNode[];
-  selectedKey: string | null;
+  editKey: string | null;
   open: boolean;
   onCancel: () => void;
-  onUpdateCategory: (updatedKey: string, newTitle: string) => void;
 }
 
 export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
-  treeData,
-  selectedKey,
+  editKey,
   open,
   onCancel,
-  onUpdateCategory,
 }) => {
+  const dispatch = useDispatch();
+  const categories = useSelector((state: RootState) => state.categories.categories);
   const { control, setValue, handleSubmit } = useEditCategoryForm();
 
   const findNodeByKey = (
-    nodes: TreeNode[],
+    nodes: CategoryTreeNode[],
     key: string | null
-  ): TreeNode | undefined => {
+  ): CategoryTreeNode | undefined => {
     for (const node of nodes) {
       if (node.key === key) return node;
       if (node.children?.length) {
@@ -38,19 +37,22 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   };
 
   const onstart = useCallback(() => {
-    if (!selectedKey) return;
-    const node = findNodeByKey(treeData, selectedKey);
+    if (!editKey) return;
+    const node = findNodeByKey(categories, editKey);
     if (node) {
       setValue("title", node.title);
     }
-  }, [selectedKey, treeData, setValue]);
+  }, [editKey, categories, setValue]);
 
-  const onSubmit = async (data: { title: string }) => {
-    if (!selectedKey) return;
-    await updateCategory(selectedKey, data.title);
-    onUpdateCategory(selectedKey, data.title);
+  const onSubmit = useCallback(async (data: { title: string }) => {
+    if (!editKey) return;
+    await updateCategory(editKey, data.title);
+    dispatch(UPDATE_CATEGORY({
+      key: editKey, title: data.title,
+      parent_id: findNodeByKey(categories, editKey)?.parent_id || null,
+    }));
     onCancel();
-  };
+  }, [editKey, dispatch, onCancel]);
 
   useEffect(() => {
     onstart();
