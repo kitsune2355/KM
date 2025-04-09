@@ -76,3 +76,30 @@ export const updateCategory = async (
     throw new Error("Error while updating category");
   }
 };
+
+export const deleteCategory = async (key: string): Promise<CategoryResponse> => {
+  try {
+    const response = await fetch("/API/delete_category.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ key }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      return result;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    throw new Error("Error while deleting category");
+  }
+};

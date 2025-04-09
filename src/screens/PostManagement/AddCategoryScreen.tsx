@@ -6,8 +6,8 @@ import type { DataNode } from "antd/es/tree";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
   addCategory,
+  deleteCategory,
   fetchCategories,
-  updateCategory,
 } from "../../services/categoryService"; // Import updateCategory
 import { v4 as uuidv4 } from "uuid";
 import { EditCategoryModal } from "./EditCategoryModal";
@@ -18,6 +18,8 @@ export interface TreeNode {
   children?: TreeNode[];
   parent_id: string | null;
 }
+
+const { confirm } = Modal;
 
 export const AddCategoryScreen: React.FC = () => {
   const {
@@ -135,22 +137,6 @@ export const AddCategoryScreen: React.FC = () => {
     }
   };
 
-  const deleteNode = (key: string) => {
-    const deleteNodeRecursively = (
-      nodes: TreeNode[],
-      key: string
-    ): TreeNode[] => {
-      return nodes.filter((node) => {
-        if (node.key === key) return false;
-        if (node.children)
-          node.children = deleteNodeRecursively(node.children, key);
-        return true;
-      });
-    };
-    setTreeData(deleteNodeRecursively(treeData, key));
-    message.success("Node deleted!");
-  };
-
   const handkeOpenEditModal = () => {
     setEditModalVisible(true);
   };
@@ -168,7 +154,10 @@ export const AddCategoryScreen: React.FC = () => {
       if (node.key === key) {
         return { ...node, title: newTitle };
       } else if (node.children) {
-        return { ...node, children: updateTreeNodeTitle(node.children, key, newTitle) };
+        return {
+          ...node,
+          children: updateTreeNodeTitle(node.children, key, newTitle),
+        };
       }
       return node;
     });
@@ -177,6 +166,18 @@ export const AddCategoryScreen: React.FC = () => {
   const handleUpdateCategory = (updatedKey: string, newTitle: string) => {
     const updatedTree = updateTreeNodeTitle(treeData, updatedKey, newTitle);
     setTreeData(updatedTree);
+  };
+
+  const deleteNode = async (key: string) => {
+    confirm({
+      title: "Delete Category",
+      content: "Are you sure you want to delete this category?",
+      onOk: async () => {
+        await deleteCategory(key);
+        setTreeData((prev) => prev.filter((node) => node.key !== key));
+      },
+      onCancel() {},
+    });
   };
 
   // Reset child form after adding child

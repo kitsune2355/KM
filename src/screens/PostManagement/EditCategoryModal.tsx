@@ -46,7 +46,6 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   }, [selectedKey, treeData, setValue]);
 
   const onSubmit = async (data: { title: string }) => {
-    console.log("data", data);
     if (!selectedKey) return;
     await updateCategory(selectedKey, data.title);
     onUpdateCategory(selectedKey, data.title);
