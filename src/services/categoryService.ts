@@ -11,7 +11,9 @@ export interface CategoryResponse {
   insert_id?: number;
 }
 
-export async function addCategory(payload: Category): Promise<CategoryResponse> {
+export async function addCategory(
+  payload: Category
+): Promise<CategoryResponse> {
   const response = await fetch("/API/add_category.php", {
     method: "POST",
     headers: {
@@ -27,7 +29,6 @@ export async function addCategory(payload: Category): Promise<CategoryResponse> 
   return await response.json();
 }
 
-
 export async function fetchCategories(): Promise<Category[]> {
   try {
     const response = await fetch("/API/show_category.php");
@@ -37,6 +38,41 @@ export async function fetchCategories(): Promise<Category[]> {
     return await response.json();
   } catch (error) {
     console.error("Error fetching categories:", error);
-    throw error; // เพื่อให้สามารถจับ error ที่เกิดขึ้นใน component ได้
+    throw error;
   }
 }
+
+export const updateCategory = async (
+  key: string,
+  title: string
+): Promise<CategoryResponse> => {
+  try {
+    const data = {
+      key: key,
+      title: title,
+    };
+
+    const response = await fetch(`/API/update_category.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      return result; // ส่งผลลัพธ์สำเร็จ
+    } else {
+      throw new Error(result.message); // ถ้ามีข้อผิดพลาดใน API
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    throw new Error("Error while updating category");
+  }
+};

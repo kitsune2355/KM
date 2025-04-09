@@ -1,13 +1,18 @@
-import { Card, Button, Input, Tree, message } from "antd";
+import { Card, Button, Input, Tree, message, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTreeNodeForm, TreeNodeFormProps } from "../../forms/TreeNodeForm";
 import { Controller, useForm } from "react-hook-form";
 import type { DataNode } from "antd/es/tree";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons"; // Import icons
-import { addCategory, fetchCategories } from "../../services/categoryService";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  addCategory,
+  fetchCategories,
+  updateCategory,
+} from "../../services/categoryService"; // Import updateCategory
 import { v4 as uuidv4 } from "uuid";
+import { EditCategoryModal } from "./EditCategoryModal";
 
-interface TreeNode {
+export interface TreeNode {
   title: string;
   key: string;
   children?: TreeNode[];
@@ -31,6 +36,9 @@ export const AddCategoryScreen: React.FC = () => {
 
   const [treeData, setTreeData] = useState<TreeNode[]>([]);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  // const [editingNode, setEditingNode] = useState<TreeNode | null>(null);
+  // const [newTitle, setNewTitle] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -48,7 +56,6 @@ export const AddCategoryScreen: React.FC = () => {
   const addCategoryToTree = async (newCategory: TreeNode) => {
     try {
       const response = await addCategory(newCategory);
-
       if (response.status === "success") {
         return true;
       } else {
@@ -74,6 +81,7 @@ export const AddCategoryScreen: React.FC = () => {
     if (isSuccess) {
       setTreeData((prev) => [...prev, newCategory]);
       message.success("Category added successfully!");
+      reset(); // Reset the root form
     }
   };
 
@@ -127,21 +135,6 @@ export const AddCategoryScreen: React.FC = () => {
     }
   };
 
-  // Reset child form after adding child
-  useEffect(() => {
-    if (treeData.length > 0) {
-      resetChildForm();
-    }
-  }, [treeData, resetChildForm]);
-
-  // Reset root form after adding root node
-  useEffect(() => {
-    if (treeData.length > 0) {
-      reset();
-    }
-  }, [treeData, reset]);
-
-  // Delete Node function
   const deleteNode = (key: string) => {
     const deleteNodeRecursively = (
       nodes: TreeNode[],
@@ -158,28 +151,47 @@ export const AddCategoryScreen: React.FC = () => {
     message.success("Node deleted!");
   };
 
-  // Edit Node function
-  const editNode = (key: string) => {
-    const newTitle = prompt("Enter new title:");
-    if (newTitle) {
-      const updateNodeTitle = (
-        nodes: TreeNode[],
-        key: string,
-        newTitle: string
-      ): TreeNode[] => {
-        return nodes.map((node) => {
-          if (node.key === key) {
-            node.title = newTitle;
-          } else if (node.children) {
-            node.children = updateNodeTitle(node.children, key, newTitle);
-          }
-          return node;
-        });
-      };
-      setTreeData(updateNodeTitle(treeData, key, newTitle));
-      message.success("Node updated!");
-    }
+  const handkeOpenEditModal = () => {
+    setEditModalVisible(true);
   };
+
+  const handleEditCancel = () => {
+    setEditModalVisible(false);
+  };
+
+  const updateTreeNodeTitle = (
+    nodes: TreeNode[],
+    key: string,
+    newTitle: string
+  ): TreeNode[] => {
+    return nodes.map((node) => {
+      if (node.key === key) {
+        return { ...node, title: newTitle };
+      } else if (node.children) {
+        return { ...node, children: updateTreeNodeTitle(node.children, key, newTitle) };
+      }
+      return node;
+    });
+  };
+
+  const handleUpdateCategory = (updatedKey: string, newTitle: string) => {
+    const updatedTree = updateTreeNodeTitle(treeData, updatedKey, newTitle);
+    setTreeData(updatedTree);
+  };
+
+  // Reset child form after adding child
+  useEffect(() => {
+    if (treeData.length > 0) {
+      resetChildForm();
+    }
+  }, [treeData, resetChildForm]);
+
+  // Reset root form after adding root node
+  useEffect(() => {
+    if (treeData.length > 0) {
+      reset();
+    }
+  }, [treeData, reset]);
 
   const renderTreeTitle = (node: DataNode) => (
     <span>
@@ -187,7 +199,7 @@ export const AddCategoryScreen: React.FC = () => {
       <Button
         icon={<EditOutlined />}
         size="small"
-        onClick={() => editNode(node.key as string)}
+        onClick={handkeOpenEditModal}
         style={{ marginLeft: 8 }}
       />
       <Button
@@ -287,13 +299,16 @@ export const AddCategoryScreen: React.FC = () => {
               </div>
             </form>
           )}
-
-          {/* <div style={{ marginTop: 24 }}>
-            <h3>Raw Tree Data:</h3>
-            <pre>{JSON.stringify(treeData, null, 2)}</pre>
-          </div> */}
         </div>
       </Card>
+
+      <EditCategoryModal
+        treeData={treeData}
+        selectedKey={selectedKey}
+        open={editModalVisible}
+        onCancel={handleEditCancel}
+        onUpdateCategory={handleUpdateCategory}
+      />
     </div>
   );
 };
