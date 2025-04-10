@@ -58,7 +58,7 @@ export const PostManagementScreen: React.FC = () => {
             <Controller
               name="title"
               control={control}
-              render={({ field }) => <Input {...field} placeholder="Title" />}
+              render={({ field }) => <Input {...field} placeholder="" />}
             />
             {errors.title && (
               <div className="tw-text-red-500">{errors.title.message}</div>
