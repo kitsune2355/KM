@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Button, Drawer, Dropdown, Input, MenuProps } from "antd";
-import { UserOutlined, MenuOutlined, SearchOutlined } from "@ant-design/icons";
+import { UserOutlined, MenuOutlined, SearchOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
 import useIsAdmin from "../hook/useIsAdmin";
@@ -56,6 +56,7 @@ export const Navbar: React.FC = () => {
           ออกจากระบบ
         </div>
       ),
+      icon: <LogoutOutlined />,
     },
   ];
 

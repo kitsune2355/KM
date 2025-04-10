@@ -22,13 +22,13 @@ export const LoginScreen: React.FC = () => {
     } else {
       setError("username", {
         type: "manual",
-        message: "การเข้าสู่ระบบล้มเหลว โปรดตรวจสอบรหัสพนักงานของคุณ",
+        message: "Login failed. Please check your username.",
       });
     }
   };
 
   return (
-    <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-background">
+    <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear">
       <div className="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
         <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">KM</h2>
         <form className="tw-space-y-4">
@@ -42,13 +42,13 @@ export const LoginScreen: React.FC = () => {
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="กรุณากรอกรหัสพนักงานของคุณ"
+                  placeholder="รหัสพนักงาน"
                   className="tw-mt-2 tw-p-2 tw-w-full tw-border tw-border-gray-300 tw-rounded-md"
                 />
               )}
             />
             {errors.username && (
-              <div className="tw-text-red-500 tw-text-xs tw-mt-1">
+              <div className="tw-text-red-500 tw-text-sm tw-mt-1">
                 {errors.username.message}
               </div>
             )}

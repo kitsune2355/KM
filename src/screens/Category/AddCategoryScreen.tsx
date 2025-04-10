@@ -182,7 +182,7 @@ export const AddCategoryScreen: React.FC = () => {
         </Divider>
       </div>
       <div className="tw-grid tw-grid-cols-12 tw-gap-4">
-        <Card className="tw-col-span-12 md:tw-col-span-6">
+        <Card className="tw-col-span-12 md:tw-col-span-6 ">
           {categories.length === 0 ? (
             <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[100px] tw-text-gray-300">
               ไม่มีหมวดหมู่ในระบบ
@@ -208,7 +208,11 @@ export const AddCategoryScreen: React.FC = () => {
                   name="title"
                   control={control}
                   render={({ field }) => (
-                    <Input {...field} disabled={!!selectedKey} />
+                    <Input
+                      {...field}
+                      disabled={!!selectedKey}
+                      placeholder="ชื่อหมวดหมู่หลัก"
+                    />
                   )}
                 />
                 {errors.title && (
@@ -242,7 +246,9 @@ export const AddCategoryScreen: React.FC = () => {
                   <Controller
                     name="title"
                     control={childControl}
-                    render={({ field }) => <Input {...field} />}
+                    render={({ field }) => (
+                      <Input {...field} placeholder="ชื่อหมวดหมู่ย่อย" />
+                    )}
                   />
                   {childErrors.title && (
                     <div style={{ color: "red" }}>

@@ -58,7 +58,7 @@ export const PostManagementScreen: React.FC = () => {
             <Controller
               name="title"
               control={control}
-              render={({ field }) => <Input {...field} placeholder="" />}
+              render={({ field }) => <Input {...field} placeholder="หัวข้อ" />}
             />
             {errors.title && (
               <div className="tw-text-red-500">{errors.title.message}</div>
@@ -79,7 +79,10 @@ export const PostManagementScreen: React.FC = () => {
                     value: "key",
                     children: "children",
                   }}
-                  placeholder=""
+                  placeholder="เลือกหมวดหมู่"
+                  allowClear
+                  treeDefaultExpandAll
+                  dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
                 />
               )}
             />
@@ -93,7 +96,7 @@ export const PostManagementScreen: React.FC = () => {
               name="description"
               control={control}
               render={({ field }) => (
-                <TextArea {...field} rows={4} placeholder="" />
+                <TextArea {...field} rows={4} placeholder="รายละเอียด" />
               )}
             />
             {errors.description && (

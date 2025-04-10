@@ -18,6 +18,10 @@ module.exports = {
         xl: "1280px", // Extra large devices (large desktops)
         "2xl": "1536px", // 2X extra large devices
       },
+      backgroundImage: {
+        'gradient-linear': 'linear-gradient(to right, #364d79, #1F2937)',
+        'gradient-radial': 'radial-gradient(circle, #364d79, #1F2937)',
+      },
     },
   },
   plugins: [],
