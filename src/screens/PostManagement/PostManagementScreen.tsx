@@ -1,4 +1,4 @@
-import { Button, Card, Input, Select } from "antd";
+import { Button, Card, Input, TreeSelect } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React from "react";
 import TextEditor from "../../components/TextEditor";
@@ -9,23 +9,13 @@ import {
   usePostManagementForm,
 } from "../../forms/PostManagementForm";
 import { useNavigate } from "react-router-dom";
-
-const selectOptions = [
-  {
-    value: "1",
-    label: "Option 1",
-  },
-  {
-    value: "2",
-    label: "Option 2",
-  },
-  {
-    value: "3",
-    label: "Option 3",
-  },
-];
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 export const PostManagementScreen: React.FC = () => {
+  const categories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
   const navigate = useNavigate();
   const {
     control,
@@ -41,10 +31,16 @@ export const PostManagementScreen: React.FC = () => {
     navigate("/add-category");
   };
 
+  console.log("categories :>> ", categories);
+
   return (
     <Card>
       <div className="tw-flex tw-justify-end tw-mb-6">
-        <Button type="default" className="tw-border-primary" onClick={handleAddCategory}>
+        <Button
+          type="default"
+          className="tw-border-primary"
+          onClick={handleAddCategory}
+        >
           Add Category
         </Button>
       </div>
@@ -66,18 +62,16 @@ export const PostManagementScreen: React.FC = () => {
             name="category"
             control={control}
             render={({ field }) => (
-              <Select
+              <TreeSelect
                 {...field}
                 className="tw-w-full"
-                showSearch
+                treeData={categories}
+                fieldNames={{
+                  label: "title",
+                  value: "key",
+                  children: "children",
+                }}
                 placeholder="Choose a category"
-                optionFilterProp="label"
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={selectOptions}
               />
             )}
           />
