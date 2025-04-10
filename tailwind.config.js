@@ -18,9 +18,6 @@ module.exports = {
         xl: "1280px", // Extra large devices (large desktops)
         "2xl": "1536px", // 2X extra large devices
       },
-      fontFamily: {
-        sans: ["sukhumvitset-webfont", "ui-sans-serif", "system-ui"],
-      },
     },
   },
   plugins: [],
