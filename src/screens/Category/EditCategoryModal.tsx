@@ -75,16 +75,18 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
 
   return (
     <Modal
-      title="Edit Category"
+      title="แก้ไขชื่อหมวดหมู่"
       open={open}
       onCancel={onCancel}
       onOk={handleSubmit(onSubmit)}
+      okText="บันทึก"
+      cancelText="ยกเลิก"
     >
       <Controller
         name="title"
         control={control}
         render={({ field: { onChange, value } }) => (
-          <TextArea value={value} onChange={onChange} placeholder="title" />
+          <TextArea value={value} onChange={onChange} placeholder="" rows={3} />
         )}
       />
     </Modal>

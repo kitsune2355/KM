@@ -46,14 +46,14 @@ export const Navbar: React.FC = () => {
     {
       key: "1",
       label: (
-        <div>{isAdmin && <Link to="/management">Admin Management</Link>}</div>
+        <div>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</div>
       ),
     },
     {
       key: "2",
       label: (
         <div className="tw-text-red-500" onClick={handleLogout}>
-          Log out
+          ออกจากระบบ
         </div>
       ),
     },
@@ -76,14 +76,14 @@ export const Navbar: React.FC = () => {
         </div>
 
         <div className="tw-w-2/5 tw-hidden md:tw-flex">
-          <Input placeholder="search..." prefix={<SearchOutlined />} />
+          <Input placeholder="ค้นหา..." prefix={<SearchOutlined />} />
         </div>
 
         <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
           {isAdmin ? (
-            <Link to="/new">
+            <Link to="/new-post">
               <Button type="primary" className="!tw-bg-primary">
-                Add new
+                เพิ่มบทความ
               </Button>
             </Link>
           ) : (
@@ -109,7 +109,7 @@ export const Navbar: React.FC = () => {
         className="tw-sidebar-drawer"
       >
         <div className="tw-pt-6 tw-px-6">
-          <Input placeholder="search..." prefix={<SearchOutlined />} />
+          <Input placeholder="ค้นหา..." prefix={<SearchOutlined />} />
         </div>
         <SidebarLeft />
       </Drawer>

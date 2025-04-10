@@ -2,14 +2,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-export interface TreeNodeFormProps {
+export interface ChildTreeNodeFormProps {
   title: string;
   key?: string;
-  children?: TreeNodeFormProps[];
+  children?: ChildTreeNodeFormProps[];
 }
 
-const schema: yup.ObjectSchema<TreeNodeFormProps> = yup.object().shape({
-  title: yup.string().required("จำเป็นต้องกรอกชื่อหมวดหมู่หลัก").default(""),
+const schema: yup.ObjectSchema<ChildTreeNodeFormProps> = yup.object().shape({
+  title: yup.string().required("จำเป็นต้องกรอกชื่อหมวดหมู่ย่อย").default(""),
   key: yup.string().default(""),
   children: yup
     .array()
@@ -17,8 +17,8 @@ const schema: yup.ObjectSchema<TreeNodeFormProps> = yup.object().shape({
     .default([]),
 });
 
-export const useTreeNodeForm = () => {
-  return useForm<TreeNodeFormProps>({
+export const useChildTreeNodeForm = () => {
+  return useForm<ChildTreeNodeFormProps>({
     defaultValues: schema.getDefault(),
     resolver: yupResolver(schema),
     mode: "onSubmit",

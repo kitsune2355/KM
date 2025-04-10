@@ -1,4 +1,4 @@
-import { Menu, MenuProps } from "antd";
+import { Divider, Menu, MenuProps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchCategories } from "../services/categoryService";
@@ -53,7 +53,7 @@ export const SidebarLeft: React.FC = () => {
           KM
         </Link>
       </div>
-      <div className="tw-p-4 tw-text-lg tw-font-bold">Category</div>
+      <Divider orientation="left" className="!tw-text-lg !tw-font-bold">คลังความรู้</Divider>
       <Menu style={{ width: "100%" }} mode="inline" items={menuItems} />
     </div>
   );

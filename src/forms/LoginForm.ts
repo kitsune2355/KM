@@ -7,7 +7,7 @@ export interface LoginFormProps {
 }
 
 const schema: yup.ObjectSchema<LoginFormProps> = yup.object().shape({
-  username: yup.string().required("Username is required").default(""),
+  username: yup.string().required("จำเป็นต้องกรอกหรัสพนักงาน").default(""),
 });
 
 export const useLoginForm = () => {

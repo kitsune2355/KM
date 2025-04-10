@@ -46,8 +46,8 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           {description}
         </span>
         <div className="tw-flex tw-justify-end">
-          <Button variant="outlined" onClick={handleClick}>
-            Read more
+          <Button color="primary" variant="filled" onClick={handleClick}>
+            อ่านเพิ่มเติม
           </Button>
         </div>
       </div>

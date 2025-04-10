@@ -19,10 +19,10 @@ export const LoginScreen: React.FC = () => {
     if (res[0].status === "success") {
       localStorage.setItem("user", JSON.stringify(res));
       navigate("/");
-    }else {
+    } else {
       setError("username", {
         type: "manual",
-        message: "Login failed. Please check your username.",
+        message: "การเข้าสู่ระบบล้มเหลว โปรดตรวจสอบรหัสพนักงานของคุณ",
       });
     }
   };
@@ -30,13 +30,11 @@ export const LoginScreen: React.FC = () => {
   return (
     <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-background">
       <div className="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
-        <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">
-          Login
-        </h2>
+        <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">KM</h2>
         <form className="tw-space-y-4">
           <div className="tw-mb-4">
             <label className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-              Username
+              รหัสพนักงาน
             </label>
             <Controller
               name="username"
@@ -44,13 +42,13 @@ export const LoginScreen: React.FC = () => {
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="Enter your username"
+                  placeholder="กรุณากรอกรหัสพนักงานของคุณ"
                   className="tw-mt-2 tw-p-2 tw-w-full tw-border tw-border-gray-300 tw-rounded-md"
                 />
               )}
             />
             {errors.username && (
-              <div className="tw-text-red-500 tw-text-sm tw-mt-1">
+              <div className="tw-text-red-500 tw-text-xs tw-mt-1">
                 {errors.username.message}
               </div>
             )}
@@ -61,7 +59,7 @@ export const LoginScreen: React.FC = () => {
             onClick={handleSubmit(onSubmit)}
             className="tw-w-full tw-py-2 !tw-bg-primary"
           >
-            Log In
+            เข้าสู่ระบบ
           </Button>
         </form>
       </div>

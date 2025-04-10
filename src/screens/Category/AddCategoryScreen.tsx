@@ -1,4 +1,4 @@
-import { Card, Button, Input, Tree, message, Modal } from "antd";
+import { Card, Button, Input, Tree, message, Modal, Divider } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTreeNodeForm, TreeNodeFormProps } from "../../forms/TreeNodeForm";
 import { Controller, useForm } from "react-hook-form";
@@ -15,6 +15,7 @@ import {
   DELETE_CATEGORY,
   UPDATE_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
+import { useChildTreeNodeForm } from "../../forms/ChildTreeNodeForm";
 
 const { confirm } = Modal;
 
@@ -36,7 +37,7 @@ export const AddCategoryScreen: React.FC = () => {
     control: childControl,
     formState: { errors: childErrors },
     reset: resetChildForm,
-  } = useForm<{ title: string }>({ defaultValues: { title: "" } });
+  } = useChildTreeNodeForm();
 
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [editKey, setEditKey] = useState<string | null>(null);
@@ -129,8 +130,10 @@ export const AddCategoryScreen: React.FC = () => {
 
   const deleteNode = async (key: string) => {
     confirm({
-      title: "Delete Category",
-      content: "Are you sure you want to delete this category?",
+      title: "ยืนยันการลบ",
+      content: "ท่านต้องการลบหมวดหมู่นี้จริงหรือไม่?",
+      okText: "ยืนยัน",
+      cancelText: "ยกเลิก",
       onOk: async () => {
         await deleteCategory(key);
         dispatch(DELETE_CATEGORY(key));
@@ -168,78 +171,48 @@ export const AddCategoryScreen: React.FC = () => {
   );
 
   return (
-    <div className="tw-grid tw-grid-cols-12 tw-gap-4">
-      <Card className="tw-col-span-12 md:tw-col-span-6">
-        {categories.length === 0 ? (
-          <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[100px] tw-text-gray-300">
-            No data
-          </div>
-        ) : (
-          <Tree
-            showLine
-            treeData={categories as DataNode[]}
-            onSelect={onSelectNode}
-            defaultExpandAll
-            titleRender={renderTreeTitle}
-          />
-        )}
-      </Card>
-
-      <Card className="tw-col-span-12 md:tw-col-span-6">
-        <div className="tw-space-y-4">
-          <form onSubmit={handleSubmit(onSubmit)} className="tw-space-y-2">
-            <h3 className="tw-font-bold tw-text-md">Add category name</h3>
-            <div style={{ marginBottom: 10 }}>
-              <span>Root Node :</span>
-              <Controller
-                name="title"
-                control={control}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    placeholder="title"
-                    disabled={!!selectedKey}
-                  />
-                )}
-              />
-              {errors.title && (
-                <div style={{ color: "red" }}>{errors.title.message}</div>
-              )}
+    <>
+      <div>
+        <Divider
+          orientation="left"
+          orientationMargin="0"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold"
+        >
+          สร้างหมวดหมู่
+        </Divider>
+      </div>
+      <div className="tw-grid tw-grid-cols-12 tw-gap-4">
+        <Card className="tw-col-span-12 md:tw-col-span-6">
+          {categories.length === 0 ? (
+            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[100px] tw-text-gray-300">
+              ไม่มีหมวดหมู่ในระบบ
             </div>
+          ) : (
+            <Tree
+              showLine
+              treeData={categories as DataNode[]}
+              onSelect={onSelectNode}
+              defaultExpandAll
+              titleRender={renderTreeTitle}
+            />
+          )}
+        </Card>
 
-            <div className="tw-flex tw-justify-end">
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="tw-bg-primary"
-                disabled={!!selectedKey}
-              >
-                Add
-              </Button>
-            </div>
-          </form>
-
-          {selectedKey && categories.length > 0 && (
-            <form
-              onSubmit={handleChildSubmit(onAddChild)}
-              className="tw-space-y-2"
-            >
-              <h3 className="tw-font-bold tw-text-md">
-                Add Child category to: {selectedKey}
-              </h3>
+        <Card className="tw-col-span-12 md:tw-col-span-6">
+          <div className="tw-space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="tw-space-y-2">
+              <h3 className="tw-font-bold tw-text-md">เพิ่มชื่อหมวดหมู่</h3>
               <div style={{ marginBottom: 10 }}>
-                <span>Child Node :</span>
+                <span>หมวดหมู่หลัก :</span>
                 <Controller
                   name="title"
-                  control={childControl}
+                  control={control}
                   render={({ field }) => (
-                    <Input {...field} placeholder="title" />
+                    <Input {...field} disabled={!!selectedKey} />
                   )}
                 />
-                {childErrors.title && (
-                  <div style={{ color: "red" }}>
-                    {childErrors.title.message}
-                  </div>
+                {errors.title && (
+                  <div style={{ color: "red" }}>{errors.title.message}</div>
                 )}
               </div>
 
@@ -248,20 +221,56 @@ export const AddCategoryScreen: React.FC = () => {
                   htmlType="submit"
                   type="primary"
                   className="tw-bg-primary"
+                  disabled={!!selectedKey}
                 >
-                  Add
+                  บันทึก
                 </Button>
               </div>
             </form>
-          )}
-        </div>
-      </Card>
 
-      <EditCategoryModal
-        editKey={editKey}
-        open={editModalVisible}
-        onCancel={handleEditCancel}
-      />
-    </div>
+            {selectedKey && categories.length > 0 && (
+              <form
+                onSubmit={handleChildSubmit(onAddChild)}
+                className="tw-space-y-2"
+              >
+                <h3 className="tw-font-bold tw-text-md">
+                  เพิ่มหมวดหมู่ย่อยไปยัง :{" "}
+                  <span className="!tw-font-normal">{selectedKey}</span>
+                </h3>
+                <div style={{ marginBottom: 10 }}>
+                  <span>หมวดหมู่ย่อย :</span>
+                  <Controller
+                    name="title"
+                    control={childControl}
+                    render={({ field }) => <Input {...field} />}
+                  />
+                  {childErrors.title && (
+                    <div style={{ color: "red" }}>
+                      {childErrors.title.message}
+                    </div>
+                  )}
+                </div>
+
+                <div className="tw-flex tw-justify-end">
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    className="tw-bg-primary"
+                  >
+                    บันทึก
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Card>
+
+        <EditCategoryModal
+          editKey={editKey}
+          open={editModalVisible}
+          onCancel={handleEditCancel}
+        />
+      </div>
+    </>
   );
 };
