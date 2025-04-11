@@ -211,7 +211,7 @@ export const AddCategoryScreen: React.FC = () => {
                     <Input
                       {...field}
                       disabled={!!selectedKey}
-                      placeholder="ชื่อหมวดหมู่หลัก"
+                      placeholder="หมวดหมู่หลัก"
                     />
                   )}
                 />
@@ -247,7 +247,7 @@ export const AddCategoryScreen: React.FC = () => {
                     name="title"
                     control={childControl}
                     render={({ field }) => (
-                      <Input {...field} placeholder="ชื่อหมวดหมู่ย่อย" />
+                      <Input {...field} placeholder="หมวดหมู่ย่อย" />
                     )}
                   />
                   {childErrors.title && (
