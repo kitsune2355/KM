@@ -1,7 +1,7 @@
 import { Card, Button, Input, Tree, message, Modal, Divider } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTreeNodeForm, TreeNodeFormProps } from "../../forms/TreeNodeForm";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import type { DataNode } from "antd/es/tree";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { addCategory, deleteCategory } from "../../services/categoryService";
