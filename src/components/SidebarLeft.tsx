@@ -23,7 +23,6 @@ const transformCategoriesToMenuItems = (
   });
 };
 
-
 export const SidebarLeft: React.FC = () => {
   const dispatch = useDispatch();
   const categories = useSelector(
@@ -37,8 +36,10 @@ export const SidebarLeft: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (!categories || categories.length === 0) {
+      fetchData();
+    }
+  }, [categories, fetchData]);
 
   useEffect(() => {
     if (categories && categories.length > 0) {
@@ -53,7 +54,9 @@ export const SidebarLeft: React.FC = () => {
           KM
         </Link>
       </div>
-      <Divider orientation="left" className="!tw-text-lg !tw-font-bold">คลังความรู้</Divider>
+      <Divider orientation="left" className="!tw-text-lg !tw-font-bold">
+        คลังความรู้
+      </Divider>
       <Menu style={{ width: "100%" }} mode="inline" items={menuItems} />
     </div>
   );

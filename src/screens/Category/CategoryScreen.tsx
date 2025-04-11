@@ -1,5 +1,5 @@
 import { Card, Divider, Tooltip, Tree } from "antd";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "../../store";
@@ -7,6 +7,7 @@ import {
   CategoryTreeNode,
   FETCH_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
+import { fetchCategories } from "../../services/categoryService";
 
 export const CategoryScreen: React.FC = () => {
   const params = useParams().id;
@@ -15,6 +16,22 @@ export const CategoryScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const [treeData, setTreeData] = React.useState<CategoryTreeNode[]>([]);
+
+  const fetchData = useCallback(async () => {
+    const res = await fetchCategories();
+    dispatch(FETCH_CATEGORY(res));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!categories || categories.length === 0) {
+      fetchData();
+    }
+  }, [categories, fetchData]);
+
+  const childTree = useMemo(() => {
+    const data = categories.find((c) => c.key === params);
+    return data ? data.title : "";
+  }, [categories, params]);
 
   const onStart = useCallback(() => {
     const tree = categories
@@ -25,8 +42,10 @@ export const CategoryScreen: React.FC = () => {
   }, [categories, params, dispatch]);
 
   useEffect(() => {
-    onStart();
-  }, [onStart]);
+    if (categories && categories.length > 0) {
+      onStart();
+    }
+  }, [categories, onStart]);
 
   return (
     <>
@@ -36,9 +55,9 @@ export const CategoryScreen: React.FC = () => {
           orientationMargin="0"
           className="!tw-text-xl !tw-text-primary !tw-font-bold"
         >
-          <Tooltip placement="leftBottom" title={categories.filter((c) => c.key === params)[0].title}>
+          <Tooltip placement="leftBottom" title={childTree}>
             <div className="tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-max-w-[500px]">
-              {categories.filter((c) => c.key === params)[0].title}
+              {childTree}
             </div>
           </Tooltip>
         </Divider>
