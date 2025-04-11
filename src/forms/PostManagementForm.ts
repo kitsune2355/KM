@@ -7,7 +7,7 @@ export interface PostManagementFormProps {
   category: string;
   description: string;
   contents?: string;
-  files?: string[];
+  files?: File[];
 }
 
 const schema: yup.ObjectSchema<PostManagementFormProps> = yup.object().shape({
@@ -15,7 +15,7 @@ const schema: yup.ObjectSchema<PostManagementFormProps> = yup.object().shape({
   category: yup.string().required("จำเป็นต้องเลือกหมวดหมู่"),
   description: yup.string().default(""),
   contents: yup.string().default(""),
-  files: yup.array().of(yup.string().required()),
+  files: yup.array().default([]),
 });
 
 export const usePostManagementForm = () => {

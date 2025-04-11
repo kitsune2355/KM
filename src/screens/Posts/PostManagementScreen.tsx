@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { addPost } from "../../services/postService";
 
 export const PostManagementScreen: React.FC = () => {
   const categories = useSelector(
@@ -23,9 +24,26 @@ export const PostManagementScreen: React.FC = () => {
     formState: { errors },
   } = usePostManagementForm();
 
-  const onSubmit = (data: PostManagementFormProps) => {
-    console.log("Form submitted:", data);
+  const onSubmit = async (data: PostManagementFormProps) => {
+    const userData = localStorage.getItem("user");
+    const user = userData ? JSON.parse(userData) : null;
+    const post = {
+      post_title: data.title,
+      post_ctg_id: data.category,
+      desc: data.description,
+      post_create_by: user[0].id,
+      files: data.files,
+    };
+    console.log("post", post);
+    try {
+      const response = await addPost(post);
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  
 
   const handleAddCategory = () => {
     navigate("/category");
@@ -105,7 +123,7 @@ export const PostManagementScreen: React.FC = () => {
               </div>
             )}
           </div>
-          <div>
+          {/* <div>
             <p className="tw-font-medium">บทความ</p>
             <Controller
               name="contents"
@@ -115,7 +133,7 @@ export const PostManagementScreen: React.FC = () => {
             {errors.contents && (
               <div className="tw-text-red-500">{errors.contents.message}</div>
             )}
-          </div>
+          </div> */}
           <div>
             <p className="tw-font-medium">อัปโหลดไฟล์</p>
             <Controller
@@ -143,3 +161,7 @@ export const PostManagementScreen: React.FC = () => {
     </>
   );
 };
+
+
+
+

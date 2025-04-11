@@ -64,7 +64,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
           ))}
         </ul>
       ) : (
-        <p className="tw-text-gray-500">
+        <p className="tw-text-gray-500 tw-text-center">
           ลากและวางไฟล์ .docx, .pdf, หรือ .xlsx ที่นี่ หรือคลิกเพื่อเลือกไฟล์
         </p>
       )}
