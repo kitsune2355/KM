@@ -1,6 +1,6 @@
 import { Button, Card, Divider, Input, message, TreeSelect } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import FileUpload from "../../components/FileUpload";
 import {
@@ -40,7 +40,7 @@ export const PostManagementScreen: React.FC = () => {
     }));
   };
 
-  const onStart = () => {
+  const onStart = useCallback(() => {
     const postById = posts.find((post: any) => post.id === postId);
     if (postById) {
       const atrFile = transformedFiles(postById.files && postById.files);
@@ -49,7 +49,7 @@ export const PostManagementScreen: React.FC = () => {
       setValue("description", postById.post_desc);
       setValue("files", atrFile);
     }
-  };
+  }, [postId, posts, setValue]);
 
   useEffect(() => {
     if (!posts || posts.length === 0) {
@@ -59,7 +59,7 @@ export const PostManagementScreen: React.FC = () => {
 
   useEffect(() => {
     onStart();
-  }, [postId, posts]);
+  }, [onStart, postId, posts]);
 
   const onSubmit = async (data: PostManagementFormProps) => {
     const userData = localStorage.getItem("user");
@@ -72,8 +72,6 @@ export const PostManagementScreen: React.FC = () => {
       post_create_by: user[0].id,
       files: data.files,
     };
-
-    console.log('post', post)
 
     try {
       const response = await addPost(post);
@@ -91,6 +89,10 @@ export const PostManagementScreen: React.FC = () => {
     navigate("/category");
   };
 
+  const handleBack = () => {
+    navigate("/management");
+  };
+
   return (
     <>
       <div className="tw-mb-4">
@@ -99,7 +101,7 @@ export const PostManagementScreen: React.FC = () => {
           orientationMargin="0"
           className="!tw-text-xl !tw-text-primary !tw-font-bold"
         >
-          เพิ่มบทความ
+          {postId ? "แก้ไขบทความ" : "เพิ่มบทความ"}
         </Divider>
       </div>
       <Card>
@@ -190,7 +192,7 @@ export const PostManagementScreen: React.FC = () => {
             )}
           </div>
         </form>
-        <div className="tw-w-full tw-flex tw-justify-end tw-mt-4">
+        <div className="tw-w-full tw-flex tw-justify-end tw-mt-4 tw-space-x-2">
           <Button
             type="primary"
             onClick={handleSubmit(onSubmit)}
@@ -198,6 +200,15 @@ export const PostManagementScreen: React.FC = () => {
           >
             บันทึก
           </Button>
+          {postId && (
+            <Button
+              variant="outlined"
+              onClick={handleBack}
+              className="tw-w-24 tw-border-primary"
+            >
+              ยกเลิก
+            </Button>
+          )}
         </div>
       </Card>
     </>

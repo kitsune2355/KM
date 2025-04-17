@@ -1,8 +1,8 @@
 import { Card, Table, Button, Space, Popconfirm, Divider, message } from "antd";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, getPosts } from "../../services/postService";
-import { DELETE_POST, FETCH_POSTS } from "../../redux/reducer/postReducer";
+import { deletePost } from "../../services/postService";
+import { DELETE_POST } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
@@ -13,17 +13,17 @@ export const TablePostManageScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       dispatch(fetchPosts());
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleEdit = (record: any) => {
     navigate(`/new-post?id=${record.id}`);

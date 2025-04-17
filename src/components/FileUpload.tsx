@@ -5,7 +5,9 @@ import {
   FileWordOutlined,
   FileExcelOutlined,
   FileTextOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
+import { Card } from "antd";
 
 interface FileUploadProps {
   onChange: (files: File[]) => void;
@@ -13,7 +15,6 @@ interface FileUploadProps {
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
-
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "application/pdf": [".pdf"],
@@ -26,8 +27,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
       ],
     },
     onDrop: (acceptedFiles) => {
-      console.log(acceptedFiles);
-      onChange(acceptedFiles);
+      const existingFiles = value || [];
+      const mergedFiles = [
+        ...existingFiles,
+        ...acceptedFiles.filter(
+          (file) =>
+            !existingFiles.some(
+              (f: File) => f.name === file.name && f.size === file.size
+            )
+        ),
+      ];
+      onChange(mergedFiles);
     },
   });
 
@@ -48,24 +58,71 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
     }
   };
 
+  const handleRemoveFile = (file: File) => {
+    const updatedFiles = value.filter((f: File) => f !== file);
+    onChange(updatedFiles);
+  };
+
+  const handlePreview = (file: any) => {
+    const hostname = window.location.hostname;
+    if (file instanceof File) {
+      const url = URL.createObjectURL(file);
+      window.open(url, "_blank");
+    } else if (file.file_name) {
+      if (hostname === "localhost") {
+        window.open(`http://km.happylandgroup.biz/${file.file_name}`, "_blank");
+      }
+      window.open(`/${file.file_name}`, "_blank");
+    }
+  };
+ 
   return (
     <div
       {...getRootProps()}
-      className="tw-border tw-border-dashed tw-border-gray-300 tw-p-4 tw-cursor-pointer"
+      className="tw-border tw-border-dashed tw-border-gray-300 tw-p-4 tw-cursor-pointer tw-min-h-[200px]"
     >
-      <input {...getInputProps()} />
       {value && value.length > 0 ? (
         <ul>
           {value.map((file: File, index: React.Key | null | undefined) => (
-            <li key={index}>
-              {renderFileIcon(file)} {file.name}
-            </li>
+            <Card
+              key={index}
+              className="tw-mb-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePreview(file);
+              }}
+            >
+              <div className="tw-flex tw-flex-row tw-items-center tw-justify-between">
+                <div className="tw-flex tw-flex-row tw-items-center tw-space-x-2">
+                  {renderFileIcon(file)}
+                  <p>{file.name}</p>
+                </div>
+                <div className="tw-space-x-2">
+                  <CloseOutlined
+                    className="hover:tw-text-red-500 tw-cursor-pointer"
+                    onClick={() => {
+                      handleRemoveFile(file);
+                    }}
+                  />
+                </div>
+              </div>
+            </Card>
           ))}
+          <Card className="hover:tw-bg-gray-100">
+            <p className="tw-text-gray-500 tw-text-center">
+              ลากและวางไฟล์ .docx, .pdf, หรือ .xlsx ที่นี่
+              หรือคลิกเพื่อเลือกไฟล์
+            </p>
+            <input {...getInputProps()} />
+          </Card>
         </ul>
       ) : (
-        <p className="tw-text-gray-500 tw-text-center">
-          ลากและวางไฟล์ .docx, .pdf, หรือ .xlsx ที่นี่ หรือคลิกเพื่อเลือกไฟล์
-        </p>
+        <>
+          <input {...getInputProps()} />
+          <p className="tw-text-gray-500 tw-flex tw-justify-center tw-items-center tw-min-h-[200px]">
+            ลากและวางไฟล์ .docx, .pdf, หรือ .xlsx ที่นี่ หรือคลิกเพื่อเลือกไฟล์
+          </p>
+        </>
       )}
     </div>
   );
