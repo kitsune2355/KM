@@ -30,8 +30,6 @@ export async function addPost(payload: Post): Promise<PostResponse> {
 
   formData.append("data", JSON.stringify(dataPayload));
 
-  console.log("formData", formData);
-
   const response = await fetch("/API/add_post.php", {
     method: "POST",
     body: formData,

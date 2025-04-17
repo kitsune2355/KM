@@ -3,43 +3,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../services/postService";
 import { FETCH_POSTS } from "../../redux/reducer/postReducer";
-import { RootState } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
-
-const mockPosts = [
-  {
-    id: 1,
-    post_title: "React Tips and Tricks",
-    post_ctg_id: "Frontend",
-    post_desc: "Useful techniques to improve your React apps.",
-    post_create_by: "Admin",
-    status: "draft",
-  },
-  {
-    id: 2,
-    post_title: "Understanding Redux Toolkit",
-    post_ctg_id: "Frontend",
-    post_desc: "A guide to managing state in React apps.",
-    post_create_by: "Editor",
-    status: "published",
-  },
-  {
-    id: 3,
-    post_title: "Node.js Performance Tuning",
-    post_ctg_id: "Backend",
-    post_desc: "Improve the performance of your Node.js server.",
-    post_create_by: "Admin",
-    status: "draft",
-  },
-  {
-    id: 4,
-    post_title: "Database Indexing 101",
-    post_ctg_id: "Database",
-    post_desc: "Learn the basics of indexing in SQL databases.",
-    post_create_by: "User123",
-    status: "published",
-  },
-];
+import { RootState } from "../../store";
 
 export const TablePostManageScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -57,8 +22,6 @@ export const TablePostManageScreen: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log("posts", posts);
 
   const handleEdit = (record: any) => {
     console.log("Edit post:", record);
@@ -80,8 +43,8 @@ export const TablePostManageScreen: React.FC = () => {
     },
     {
       title: "หมวดหมู่",
-      dataIndex: "post_ctg_id",
-      key: "post_title",
+      dataIndex: "categories_title",
+      key: "categories_title",
     },
     {
       title: "รายละเอียด",

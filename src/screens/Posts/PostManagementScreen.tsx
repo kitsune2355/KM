@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Input, TreeSelect } from "antd";
+import { Button, Card, Divider, Input, message, TreeSelect } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import React from "react";
 import TextEditor from "../../components/TextEditor";
@@ -22,6 +22,7 @@ export const PostManagementScreen: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = usePostManagementForm();
 
   const onSubmit = async (data: PostManagementFormProps) => {
@@ -34,16 +35,17 @@ export const PostManagementScreen: React.FC = () => {
       post_create_by: user[0].id,
       files: data.files,
     };
-    console.log("post", post);
+
     try {
       const response = await addPost(post);
+      message.success("บทความถูกเพิ่มเรียบร้อยแล้ว");
+      reset();
       return response;
     } catch (error) {
+      message.error("เกิดข้อผิดพลาดในการเพิ่มบทความ");
       console.error(error);
     }
   };
-
-  
 
   const handleAddCategory = () => {
     navigate("/category");
@@ -161,7 +163,3 @@ export const PostManagementScreen: React.FC = () => {
     </>
   );
 };
-
-
-
-

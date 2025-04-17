@@ -13,7 +13,6 @@ interface FileUploadProps {
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
-  console.log("file upload :>> ", value);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
