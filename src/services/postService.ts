@@ -1,7 +1,7 @@
 export interface Post {
   post_title: string;
   post_ctg_id: string;
-  desc: string;
+  post_desc: string;
   post_create_by: string;
   files?: File[];
 }
@@ -24,7 +24,7 @@ export async function addPost(payload: Post): Promise<PostResponse> {
   const dataPayload = {
     post_title: payload.post_title,
     post_ctg_id: payload.post_ctg_id,
-    desc: payload.desc,
+    desc: payload.post_desc,
     post_create_by: payload.post_create_by,
   };
 

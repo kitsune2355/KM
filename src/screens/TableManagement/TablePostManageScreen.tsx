@@ -1,12 +1,14 @@
-import { Card, Table, Button, Space, Popconfirm } from "antd";
+import { Card, Table, Button, Space, Popconfirm, Divider } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../services/postService";
 import { FETCH_POSTS } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { RootState } from "../../store";
+import { useNavigate } from "react-router-dom";
 
 export const TablePostManageScreen: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const posts = useSelector((state: RootState) => state.posts.posts);
 
@@ -25,6 +27,7 @@ export const TablePostManageScreen: React.FC = () => {
 
   const handleEdit = (record: any) => {
     console.log("Edit post:", record);
+    navigate(`/new-post?id=${record.id}`);
   };
 
   const handleDelete = (record: any) => {
@@ -102,15 +105,26 @@ export const TablePostManageScreen: React.FC = () => {
   ];
 
   return (
-    <Card title="Manage Posts">
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={posts}
-        bordered
-        scroll={{ x: "max-content" }}
-        pagination={{ pageSize: 10, position: ["bottomCenter"] }}
-      />
-    </Card>
+    <>
+      <div className="tw-mb-4">
+        <Divider
+          orientation="left"
+          orientationMargin="0"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold"
+        >
+          การจัดการบทความ
+        </Divider>
+      </div>
+      <Card>
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={posts}
+          bordered
+          scroll={{ x: "max-content" }}
+          pagination={{ pageSize: 10, position: ["bottomCenter"] }}
+        />
+      </Card>
+    </>
   );
 };

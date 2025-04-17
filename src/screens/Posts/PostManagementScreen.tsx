@@ -1,14 +1,13 @@
 import { Button, Card, Divider, Input, message, TreeSelect } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React from "react";
-import TextEditor from "../../components/TextEditor";
+import React, { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import FileUpload from "../../components/FileUpload";
 import {
   PostManagementFormProps,
   usePostManagementForm,
 } from "../../forms/PostManagementForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { addPost } from "../../services/postService";
@@ -17,13 +16,42 @@ export const PostManagementScreen: React.FC = () => {
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
+  const posts = useSelector((state: RootState) => state.posts.posts);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
     reset,
   } = usePostManagementForm();
+
+  const postId = useMemo(() => searchParams.get("id"), [searchParams]);
+
+  const transformedFiles = (files: any) => {
+    return files.map((file: any) => ({
+      ...file,
+      url: `/uploads/${file.file_name.replace(/\\/g, "/")}`,
+      name: file.file_file_name,
+    }));
+  };
+
+  const onStart = () => {
+    const postById = posts.find((post: any) => post.id === postId);
+    if (postById) {
+      const atrFile = transformedFiles(postById.files && postById.files);
+      setValue("title", postById.post_title);
+      setValue("category", postById.post_ctg_id);
+      setValue("description", postById.post_desc);
+      setValue("files", atrFile);
+    }
+  };
+
+  useEffect(() => {
+    onStart();
+  }, [postId]);
 
   const onSubmit = async (data: PostManagementFormProps) => {
     const userData = localStorage.getItem("user");
@@ -31,7 +59,7 @@ export const PostManagementScreen: React.FC = () => {
     const post = {
       post_title: data.title,
       post_ctg_id: data.category,
-      desc: data.description,
+      post_desc: data.description,
       post_create_by: user[0].id,
       files: data.files,
     };
@@ -59,7 +87,7 @@ export const PostManagementScreen: React.FC = () => {
           orientationMargin="0"
           className="!tw-text-xl !tw-text-primary !tw-font-bold"
         >
-          จัดการบทความ
+          เพิ่มบทความ
         </Divider>
       </div>
       <Card>
