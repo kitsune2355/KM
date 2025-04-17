@@ -58,12 +58,20 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
     }
   };
 
-  const handleRemoveFile = (file: File) => {
+  const handleRemoveFile = (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    file: File
+  ) => {
+    e.stopPropagation();
     const updatedFiles = value.filter((f: File) => f !== file);
     onChange(updatedFiles);
   };
 
-  const handlePreview = (file: any) => {
+  const handlePreview = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    file: any
+  ) => {
+    e.stopPropagation();
     const hostname = window.location.hostname;
     if (file instanceof File) {
       const url = URL.createObjectURL(file);
@@ -75,7 +83,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
       window.open(`/${file.file_name}`, "_blank");
     }
   };
- 
+
   return (
     <div
       {...getRootProps()}
@@ -88,8 +96,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
               key={index}
               className="tw-mb-2"
               onClick={(e) => {
-                e.stopPropagation();
-                handlePreview(file);
+                handlePreview(e, file);
               }}
             >
               <div className="tw-flex tw-flex-row tw-items-center tw-justify-between">
@@ -100,8 +107,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onChange, value }) => {
                 <div className="tw-space-x-2">
                   <CloseOutlined
                     className="hover:tw-text-red-500 tw-cursor-pointer"
-                    onClick={() => {
-                      handleRemoveFile(file);
+                    onClick={(e) => {
+                      handleRemoveFile(e, file);
                     }}
                   />
                 </div>

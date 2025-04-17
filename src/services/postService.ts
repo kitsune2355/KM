@@ -14,7 +14,6 @@ export interface PostResponse {
 }
 
 export async function addPost(payload: Post): Promise<PostResponse> {
-  console.log("payload", payload);
   const formData = new FormData();
 
   if (payload.files) {
