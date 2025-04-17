@@ -8,11 +8,13 @@ import {
   usePostManagementForm,
 } from "../../forms/PostManagementForm";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import { addPost } from "../../services/postService";
+import { fetchPosts } from "../../redux/actions/postActions";
 
 export const PostManagementScreen: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
@@ -50,8 +52,14 @@ export const PostManagementScreen: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!posts || posts.length === 0) {
+      dispatch(fetchPosts());
+    }
+  }, [dispatch, posts]);
+
+  useEffect(() => {
     onStart();
-  }, [postId]);
+  }, [postId, posts]);
 
   const onSubmit = async (data: PostManagementFormProps) => {
     const userData = localStorage.getItem("user");

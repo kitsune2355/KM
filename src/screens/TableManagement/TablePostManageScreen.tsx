@@ -4,18 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../services/postService";
 import { FETCH_POSTS } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
-import { RootState } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
+import { fetchPosts } from "../../redux/actions/postActions";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
 
   const fetchData = async () => {
     try {
-      const response = await getPosts();
-      dispatch(FETCH_POSTS(response));
+      dispatch(fetchPosts());
     } catch (error) {
       console.error(error);
     }
