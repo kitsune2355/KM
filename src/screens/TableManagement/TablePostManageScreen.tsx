@@ -1,8 +1,8 @@
-import { Card, Table, Button, Space, Popconfirm, Divider } from "antd";
+import { Card, Table, Button, Space, Popconfirm, Divider, message } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "../../services/postService";
-import { FETCH_POSTS } from "../../redux/reducer/postReducer";
+import { deletePost, getPosts } from "../../services/postService";
+import { DELETE_POST, FETCH_POSTS } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
@@ -26,12 +26,19 @@ export const TablePostManageScreen: React.FC = () => {
   }, []);
 
   const handleEdit = (record: any) => {
-    console.log("Edit post:", record);
     navigate(`/new-post?id=${record.id}`);
   };
 
-  const handleDelete = (record: any) => {
-    console.log("Deleted post:", record);
+  const handleDelete = async (record: any) => {
+    try {
+      await deletePost(record.id);
+      dispatch(DELETE_POST(record.id));
+      fetchData();
+      message.success("ลบข้อมูลสำเร็จ");
+    } catch (error) {
+      console.error(error);
+      message.error("มีข้อผิดพลาดในการลบข้อมูล");
+    }
   };
 
   const handlePublish = (record: any) => {
@@ -73,7 +80,7 @@ export const TablePostManageScreen: React.FC = () => {
             onClick={() => handleEdit(record)}
           />
           <Popconfirm
-            title="Are you sure to delete this post?"
+            title="คุณต้องการลบข้อมูลนี้ใช่หรือไม่?"
             onConfirm={() => handleDelete(record)}
             okText="Yes"
             cancelText="No"

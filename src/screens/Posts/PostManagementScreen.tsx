@@ -65,6 +65,7 @@ export const PostManagementScreen: React.FC = () => {
     const userData = localStorage.getItem("user");
     const user = userData ? JSON.parse(userData) : null;
     const post = {
+      id: postId,
       post_title: data.title,
       post_ctg_id: data.category,
       post_desc: data.description,
@@ -72,10 +73,13 @@ export const PostManagementScreen: React.FC = () => {
       files: data.files,
     };
 
+    console.log('post', post)
+
     try {
       const response = await addPost(post);
       message.success("บทความถูกเพิ่มเรียบร้อยแล้ว");
       reset();
+      navigate("/management");
       return response;
     } catch (error) {
       message.error("เกิดข้อผิดพลาดในการเพิ่มบทความ");

@@ -1,4 +1,5 @@
 export interface Post {
+  id: string | null;
   post_title: string;
   post_ctg_id: string;
   post_desc: string;
@@ -13,6 +14,7 @@ export interface PostResponse {
 }
 
 export async function addPost(payload: Post): Promise<PostResponse> {
+  console.log("payload", payload);
   const formData = new FormData();
 
   if (payload.files) {
@@ -22,6 +24,7 @@ export async function addPost(payload: Post): Promise<PostResponse> {
   }
 
   const dataPayload = {
+    id: payload.id,
     post_title: payload.post_title,
     post_ctg_id: payload.post_ctg_id,
     desc: payload.post_desc,
@@ -46,4 +49,31 @@ export async function getPosts(): Promise<Post[]> {
   const response = await fetch("/API/show_post.php");
   const res = await response.json();
   return res;
+}
+
+export async function deletePost(post_id: string): Promise<Post[]> {
+  try {
+    const response = await fetch("/API/delete_post.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ post_id }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      return result;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    throw new Error("Error while deleting post");
+  }
 }
