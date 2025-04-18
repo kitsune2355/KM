@@ -26,6 +26,16 @@ export const findCategory = (
   return result.length > 0 ? result : null;
 };
 
+export const highlightText = (text: string, query: string) => {
+  if (!query) return text;
+
+  const regex = new RegExp(`(${query})`, "gi");
+  return text.replace(
+    regex,
+    '<mark style="background-color: yellow;">$1</mark>'
+  );
+};
+
 export const DashboardScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
@@ -48,8 +58,10 @@ export const DashboardScreen: React.FC = () => {
 
   const filteredPosts = posts.filter(
     (post) =>
-      post.post_publish === "1" &&
-      post.post_title.toLowerCase().includes(query.toLowerCase())
+      (post.post_publish === "1" &&
+        post.post_title.toLowerCase().includes(query.toLowerCase())) ||
+      post.post_desc.toLowerCase().includes(query.toLowerCase()) ||
+      post.post_create_by.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
@@ -67,9 +79,10 @@ export const DashboardScreen: React.FC = () => {
                 >
                   <KnowledgeCard
                     postId={item.id}
-                    title={item.post_title}
-                    description={item.post_desc}
+                    title={highlightText(item.post_title, query)}
+                    description={highlightText(item.post_desc, query)}
                     tags={tag || ["ไม่มีหมวดหมู่"]}
+                    
                   />
                 </div>
               );

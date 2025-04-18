@@ -6,7 +6,7 @@ import {
   SearchOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
 import useIsAdmin from "../hook/useIsAdmin";
 import { fetchUser, User } from "../services/userService";
@@ -19,6 +19,7 @@ export const Navbar: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const isAdmin = useIsAdmin();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const loadUser = async () => {
     try {
@@ -49,6 +50,7 @@ export const Navbar: React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     dispatch(SET_QUERY(query));
+    navigate("/");
   };
 
   useEffect(() => {
