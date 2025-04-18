@@ -4,6 +4,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { fetchPosts } from "../../redux/actions/postActions";
 
+export const findCategory = (
+  categoryList: any[],
+  postCtgId: string
+): string[] | null => {
+  let result: string[] = [];
+
+  for (const category of categoryList) {
+    if (category.key === postCtgId) {
+      result.push(category.title);
+    }
+
+    if (category.children && category.children.length > 0) {
+      const foundChild = findCategory(category.children, postCtgId);
+      if (foundChild) {
+        result = [category.title, ...foundChild];
+      }
+    }
+  }
+
+  return result.length > 0 ? result : null;
+};
+
 export const DashboardScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
@@ -22,28 +44,6 @@ export const DashboardScreen: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  const findCategory = (
-    categoryList: any[],
-    postCtgId: string
-  ): string[] | null => {
-    let result: string[] = [];
-
-    for (const category of categoryList) {
-      if (category.key === postCtgId) {
-        result.push(category.title);
-      }
-
-      if (category.children && category.children.length > 0) {
-        const foundChild = findCategory(category.children, postCtgId);
-        if (foundChild) {
-          result = [category.title, ...foundChild];
-        }
-      }
-    }
-
-    return result.length > 0 ? result : null;
-  };
 
   return (
     <>

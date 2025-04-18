@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Drawer, Dropdown, Input, MenuProps } from "antd";
+import { Avatar, Button, Drawer, Dropdown, Input } from "antd";
 import {
   UserOutlined,
   MenuOutlined,
