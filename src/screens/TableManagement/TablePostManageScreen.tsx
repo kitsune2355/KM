@@ -60,6 +60,7 @@ export const TablePostManageScreen: React.FC = () => {
       title: "รายละเอียด",
       dataIndex: "post_desc",
       key: "post_desc",
+      width: 350,
     },
     {
       title: "ผู้สร้าง",
@@ -129,7 +130,7 @@ export const TablePostManageScreen: React.FC = () => {
           dataSource={posts}
           bordered
           scroll={{ x: "max-content" }}
-          pagination={{ pageSize: 10, position: ["bottomCenter"] }}
+          pagination={{ pageSize: 10, position: ["bottomRight"] }}
         />
       </Card>
     </>

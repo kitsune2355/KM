@@ -44,13 +44,19 @@ export const Navbar: React.FC = () => {
 
   const items: MenuProps["items"] = [
     {
-      key: "1",
+      key: "management",
       label: (
         <div>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</div>
       ),
     },
     {
-      key: "2",
+      key: "category",
+      label: (
+        <div>{isAdmin && <Link to="/category">สร้างหมวดหมู่</Link>}</div>
+      ),
+    },
+    {
+      key: "logout",
       label: (
         <div className="tw-text-red-500" onClick={handleLogout}>
           ออกจากระบบ

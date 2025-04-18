@@ -12,7 +12,7 @@ export const MainRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<DashboardScreen />} />
       <Route path="/new-post" element={<PostManagementScreen />} />
-      <Route path="/content" element={<PostContentScreen />} />
+      <Route path="/content/:id" element={<PostContentScreen />} />
       <Route path="/category" element={<AddCategoryScreen />} />
       <Route path="/categories/:id" element={<CategoryScreen />} />
       <Route path="/management" element={<TablePostManageScreen />} />

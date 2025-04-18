@@ -1,71 +1,76 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { KnowledgeCard } from "../../components/KnowledgeCard";
-
-const mockData = [
-  {
-    title: "Title 1",
-    description:
-      "Description 1 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita, eum voluptatum sapiente architecto officiis est quis laudantium similique impedit ratione magni, perspiciatis minima sunt commodi quisquam, voluptates id aliquam unde?",
-    tags: "Tag 1",
-    image: [
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    ],
-  },
-  {
-    title: "Title 2",
-    description: "Description 2",
-    tags: "Tag 2",
-    image: [
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    ],
-  },
-  {
-    title: "Title 3",
-    description: "Description 3",
-    tags: "Tag 3",
-    image: [
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    ],
-  },
-  {
-    title: "Title 4",
-    description: "Description 4",
-    tags: "Tag 4",
-    image: [
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    ],
-  },
-  {
-    title: "Title 5",
-    description: "Description 5",
-    tags: "Tag 5",
-    image: [
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-      "https://images.unsplash.com/photo-1682685796565-37a626b9399f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
-    ],
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
+import { fetchPosts } from "../../redux/actions/postActions";
 
 export const DashboardScreen: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const posts = useSelector((state: RootState) => state.posts.posts);
+  const categories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
+
+  const fetchData = useCallback(async () => {
+    try {
+      dispatch(fetchPosts());
+    } catch (error) {
+      console.error(error);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const findCategory = (
+    categoryList: any[],
+    postCtgId: string
+  ): string[] | null => {
+    let result: string[] = [];
+
+    for (const category of categoryList) {
+      if (category.key === postCtgId) {
+        result.push(category.title);
+      }
+
+      if (category.children && category.children.length > 0) {
+        const foundChild = findCategory(category.children, postCtgId);
+        if (foundChild) {
+          result = [category.title, ...foundChild];
+        }
+      }
+    }
+
+    return result.length > 0 ? result : null;
+  };
+
   return (
-    <div className="tw-grid tw-grid-cols-12 tw-gap-4">
-      {mockData.map((item, key) => (
-        <div
-          className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
-          key={key}
-        >
-          <KnowledgeCard
-            title={item.title}
-            description={item.description}
-            tags={item.tags}
-            image={item.image}
-          />
+    <>
+      {posts.length > 0 ? (
+        <div className="tw-grid tw-grid-cols-12 tw-gap-4">
+          {posts.map((item, key) => {
+            const tag = findCategory(categories, item.post_ctg_id);
+            return (
+              <div
+                className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
+                key={key}
+              >
+                <KnowledgeCard
+                postId={item.id}
+                  title={item.post_title}
+                  description={item.post_desc}
+                  tags={tag || ["ไม่มีหมวดหมู่"]}
+                />
+              </div>
+            );
+          })}
         </div>
-      ))}
-    </div>
+      ) : (
+        <div className="tw-w-full tw-h-[90vh] tw-flex tw-justify-center tw-items-center tw-text-gray-500">
+          ยังไม่มีบทความ
+        </div>
+      )}
+    </>
   );
 };

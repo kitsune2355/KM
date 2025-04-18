@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { addPost } from "../../services/postService";
 import { fetchPosts } from "../../redux/actions/postActions";
+import useIsAdmin from "../../hook/useIsAdmin";
 
 export const PostManagementScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,6 +21,7 @@ export const PostManagementScreen: React.FC = () => {
   );
   const posts = useSelector((state: RootState) => state.posts.posts);
   const navigate = useNavigate();
+  const isAdmin = useIsAdmin();
   const [searchParams] = useSearchParams();
 
   const {
@@ -90,7 +92,10 @@ export const PostManagementScreen: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigate("/management");
+    if (isAdmin) {
+      navigate("/management");
+    }
+    navigate("/");
   };
 
   return (

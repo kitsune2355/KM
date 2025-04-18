@@ -5,6 +5,7 @@ export interface Post {
   post_desc: string;
   post_create_by: string;
   files?: File[];
+  categories_title?: string | null;
 }
 
 export interface PostResponse {
