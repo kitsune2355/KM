@@ -1,25 +1,29 @@
 import { Card, Divider, Tooltip, Tree } from "antd";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { RootState } from "../../store";
+import { useNavigate, useParams } from "react-router-dom";
+import { AppDispatch, RootState } from "../../store";
 import {
   CategoryTreeNode,
   FETCH_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
 import { fetchCategories } from "../../services/categoryService";
+import { fetchPosts } from "../../redux/actions/postActions";
 
 export const CategoryScreen: React.FC = () => {
+  const navigation = useNavigate();
   const params = useParams().id;
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
+  const posts = useSelector((state: RootState) => state.posts.posts);
   const [treeData, setTreeData] = React.useState<CategoryTreeNode[]>([]);
 
   const fetchData = useCallback(async () => {
     const res = await fetchCategories();
     dispatch(FETCH_CATEGORY(res));
+    dispatch(fetchPosts());
   }, [dispatch]);
 
   useEffect(() => {
@@ -47,6 +51,11 @@ export const CategoryScreen: React.FC = () => {
     }
   }, [categories, onStart]);
 
+  const onOpenContent = (key: string) => {
+    const postId = posts.find((c) => c.post_ctg_id === key)?.id;
+    navigation(`/content/${postId}`);
+  };
+
   return (
     <>
       <div className="tw-mb-4">
@@ -67,7 +76,7 @@ export const CategoryScreen: React.FC = () => {
           showLine
           treeData={treeData as CategoryTreeNode[]}
           defaultExpandAll
-          // titleRender={renderTreeTitle}
+          onSelect={(key) => onOpenContent(key[0] as string)}
         />
       </Card>
     </>

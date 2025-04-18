@@ -30,25 +30,33 @@ export const PostContentScreen: React.FC = () => {
 
   return (
     <div className="tw-flex tw-flex-col tw-space-y-4">
-      <Card>
-        <div className="tw-flex tw-flex-row tw-items-center">
-          <Avatar size={48} icon={<UserOutlined />} />
-          <div className="tw-flex tw-flex-col tw-ml-4">
-            <p>{postData?.post_create_by}</p>
-            <p>
-              position <span>{postData?.post_create_at}</span>
-            </p>
-          </div>
-        </div>
-        <div className="tw-mt-4 tw-flex tw-flex-col tw-space-y-4">
-          <h1 className="tw-text-xl tw-text-black tw-font-bold">
-            {postData?.post_title}
-          </h1>
-          <p>{postData?.post_desc}</p>
-        </div>
-      </Card>
+      {postData ? (
+        <>
+          <Card>
+            <div className="tw-flex tw-flex-row tw-items-center">
+              <Avatar size={48} icon={<UserOutlined />} />
+              <div className="tw-flex tw-flex-col tw-ml-4">
+                <p>{postData?.post_create_by}</p>
+                <p>
+                  {postData?.post_position} <span className="tw-text-gray-500">{postData?.post_create_at}</span>
+                </p>
+              </div>
+            </div>
+            <div className="tw-mt-4 tw-flex tw-flex-col tw-space-y-4">
+              <h1 className="tw-text-xl tw-text-black tw-font-bold">
+                {postData?.post_title}
+              </h1>
+              <p>{postData?.post_desc}</p>
+            </div>
+          </Card>
 
-      <FilePreviewScreen />
+          <FilePreviewScreen />
+        </>
+      ) : (
+        <Card className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen">
+          <p className="tw-text-gray-500">No post found</p>
+        </Card>
+      )}
     </div>
   );
 };

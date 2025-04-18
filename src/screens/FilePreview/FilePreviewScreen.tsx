@@ -24,7 +24,6 @@ export const FilePreviewScreen: React.FC = () => {
     link.click();
     document.body.removeChild(link);
   };
-  
 
   const fetchData = useCallback(async () => {
     try {
@@ -39,26 +38,30 @@ export const FilePreviewScreen: React.FC = () => {
   }, [fetchData]);
 
   return (
-    <>
-      <div className="tw-mb-4">
-        <Divider
-          orientation="left"
-          orientationMargin="0"
-          className="!tw-text-xl !tw-text-primary !tw-font-bold"
-        >
-          ไฟล์ที่อัปโหลด
-        </Divider>
-      </div>
-      <div className="tw-space-y-2">
-        {files?.map((file: any, key) => (
-          <Card key={key}>
-            <div className="tw-flex tw-flex-row tw-justify-between tw-items-center tw-space-x-2">
-              <p className="tw-text-gray-500">{file.file_file_name}</p>
-              <CloudDownloadOutlined onClick={() => handleDownload(file)} />
-            </div>
-          </Card>
-        ))}
-      </div>
-    </>
+    <React.Fragment>
+      {postId && files && files.length > 0 && (
+        <>
+          <div className="tw-mb-4">
+            <Divider
+              orientation="left"
+              orientationMargin="0"
+              className="!tw-text-xl !tw-text-primary !tw-font-bold"
+            >
+              ไฟล์ที่อัปโหลด
+            </Divider>
+          </div>
+          <div className="tw-space-y-2">
+            {files?.map((file: any, key) => (
+              <Card key={key}>
+                <div className="tw-flex tw-flex-row tw-justify-between tw-items-center tw-space-x-2">
+                  <p className="tw-text-gray-500">{file.file_file_name}</p>
+                  <CloudDownloadOutlined onClick={() => handleDownload(file)} />
+                </div>
+              </Card>
+            ))}
+          </div>
+        </>
+      )}
+    </React.Fragment>
   );
 };

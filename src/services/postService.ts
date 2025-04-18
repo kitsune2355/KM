@@ -8,6 +8,7 @@ export interface Post {
   post_create_by: string;
   files?: File[];
   categories_title?: string | null;
+  post_position?: string;
 }
 
 export interface PostResponse {

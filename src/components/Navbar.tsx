@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Button, Drawer, Dropdown, Input, MenuProps } from "antd";
-import { UserOutlined, MenuOutlined, SearchOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  MenuOutlined,
+  SearchOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
 import useIsAdmin from "../hook/useIsAdmin";
@@ -42,29 +47,41 @@ export const Navbar: React.FC = () => {
     loadUser();
   }, []);
 
-  const items: MenuProps["items"] = [
-    {
-      key: "management",
-      label: (
-        <div>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</div>
-      ),
-    },
-    {
-      key: "category",
-      label: (
-        <div>{isAdmin && <Link to="/category">สร้างหมวดหมู่</Link>}</div>
-      ),
-    },
-    {
-      key: "logout",
-      label: (
-        <div className="tw-text-red-500" onClick={handleLogout}>
-          ออกจากระบบ
-        </div>
-      ),
-      icon: <LogoutOutlined />,
-    },
-  ];
+  const AdminMenu = {
+    items: [
+      {
+        key: "management",
+        label: <>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</>,
+      },
+      {
+        key: "category",
+        label: <>{isAdmin && <Link to="/category">สร้างหมวดหมู่</Link>}</>,
+      },
+      {
+        key: "logout",
+        label: (
+          <div className="tw-text-red-500" onClick={handleLogout}>
+            ออกจากระบบ
+          </div>
+        ),
+        icon: <LogoutOutlined />,
+      },
+    ],
+  };
+
+  const items = {
+    items: [
+      {
+        key: "logout",
+        label: (
+          <div className="tw-text-red-500" onClick={handleLogout}>
+            ออกจากระบบ
+          </div>
+        ),
+        icon: <LogoutOutlined />,
+      },
+    ],
+  };
 
   return (
     <>
@@ -101,7 +118,7 @@ export const Navbar: React.FC = () => {
               <p className="tw-text-gray-400 tw-text-xs">{user?.position}</p>
             </div>
           )}
-          <Dropdown menu={{ items }}>
+          <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
             <Avatar icon={<UserOutlined />} onClick={toggleDropdown} />
           </Dropdown>
         </div>
