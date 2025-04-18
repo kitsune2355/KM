@@ -4,6 +4,7 @@ export interface Post {
   post_ctg_id: string;
   post_desc: string;
   post_publish: string;
+  post_create_at?: string;
   post_create_by: string;
   files?: File[];
   categories_title?: string | null;
