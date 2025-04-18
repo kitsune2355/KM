@@ -1,13 +1,12 @@
 import { Card, Table, Button, Space, Popconfirm, Divider, message } from "antd";
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost } from "../../services/postService";
+import { addPost, deletePost } from "../../services/postService";
 import { DELETE_POST } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled, FileOutlined } from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
-import { render } from "@testing-library/react";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -46,8 +45,25 @@ export const TablePostManageScreen: React.FC = () => {
     navigate(`/file-preview/${record.id}`);
   };
 
-  const handlePublish = (record: any) => {
-    console.log("Published post:", record);
+  const handlePublish = async (record: any) => {
+    const updatedPost = {
+      ...record,
+      post_publish: record.post_publish === "0" ? "1" : "0",
+    };
+    try {
+      await addPost(updatedPost);
+      dispatch({
+        type: "UPDATE_POST",
+        payload: updatedPost,
+      });
+      fetchData();
+      message.success(
+        updatedPost.post_publish === "1" ? "เผยแพร่แล้ว" : "ยกเลิกการเผยแพร่"
+      );
+    } catch (error) {
+      console.error(error);
+      message.error("ไม่สามารถอัปเดตสถานะการเผยแพร่ได้");
+    }
   };
 
   const columns = [
@@ -122,15 +138,15 @@ export const TablePostManageScreen: React.FC = () => {
     },
     {
       title: "สถานะ",
-      key: "status",
+      key: "post_publish",
       render: (_: any, record: any) => (
         <Button
           size="small"
           variant="filled"
-          color={record.status === "published" ? "default" : "cyan"}
+          color={record.post_publish === "0" ? "default" : "cyan"}
           onClick={() => handlePublish(record)}
         >
-          {record.status === "published" ? "ยกเลิก" : "เผยแพร่"}
+          {record.post_publish === "0" ? "ไม่เผยแพร่" : "เผยแพร่"}
         </Button>
       ),
     },

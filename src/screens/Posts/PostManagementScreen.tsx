@@ -71,6 +71,7 @@ export const PostManagementScreen: React.FC = () => {
       post_title: data.title,
       post_ctg_id: data.category,
       post_desc: data.description,
+      post_publish: "0",
       post_create_by: user[0].id,
       files: data.files,
     };

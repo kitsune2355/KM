@@ -47,24 +47,26 @@ export const DashboardScreen: React.FC = () => {
 
   return (
     <>
-      {posts.length > 0 ? (
+      {posts.filter((post) => post.post_publish === "1").length > 0 ? (
         <div className="tw-grid tw-grid-cols-12 tw-gap-4">
-          {posts.map((item, key) => {
-            const tag = findCategory(categories, item.post_ctg_id);
-            return (
-              <div
-                className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
-                key={key}
-              >
-                <KnowledgeCard
-                postId={item.id}
-                  title={item.post_title}
-                  description={item.post_desc}
-                  tags={tag || ["ไม่มีหมวดหมู่"]}
-                />
-              </div>
-            );
-          })}
+          {posts
+            .filter((post) => post.post_publish === "1")
+            .map((item, key) => {
+              const tag = findCategory(categories, item.post_ctg_id);
+              return (
+                <div
+                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
+                  key={key}
+                >
+                  <KnowledgeCard
+                    postId={item.id}
+                    title={item.post_title}
+                    description={item.post_desc}
+                    tags={tag || ["ไม่มีหมวดหมู่"]}
+                  />
+                </div>
+              );
+            })}
         </div>
       ) : (
         <div className="tw-w-full tw-h-[90vh] tw-flex tw-justify-center tw-items-center tw-text-gray-500">

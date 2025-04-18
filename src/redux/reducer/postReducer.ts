@@ -20,13 +20,11 @@ const postSlice = createSlice({
       state.posts.push(action.payload);
     },
     DELETE_POST: (state, action: PayloadAction<string>) => {
-      state.posts = state.posts.filter(
-        (post) => post.post_title !== action.payload
-      );
+      state.posts = state.posts.filter((post) => post.id !== action.payload);
     },
     UPDATE_POST: (state, action: PayloadAction<Post>) => {
       const index = state.posts.findIndex(
-        (post) => post.post_title === action.payload.post_title
+        (post) => post.id === action.payload.id
       );
       if (index !== -1) {
         state.posts[index] = action.payload;

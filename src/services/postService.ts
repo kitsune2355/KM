@@ -3,6 +3,7 @@ export interface Post {
   post_title: string;
   post_ctg_id: string;
   post_desc: string;
+  post_publish: string;
   post_create_by: string;
   files?: File[];
   categories_title?: string | null;
@@ -28,6 +29,7 @@ export async function addPost(payload: Post): Promise<PostResponse> {
     post_title: payload.post_title,
     post_ctg_id: payload.post_ctg_id,
     desc: payload.post_desc,
+    post_publish: payload.post_publish,
     post_create_by: payload.post_create_by,
   };
 
