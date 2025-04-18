@@ -28,7 +28,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           <p
             className="tw-text-lg tw-font-bold"
             dangerouslySetInnerHTML={{ __html: title }}
-          ></p>
+          />
           {tags &&
             tags.map((tag, index) => (
               <Tag color="blue" key={index} className="tw-truncate">
@@ -39,7 +39,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
         <span
           className="tw-text-gray-400 tw-truncate-2 tw-line-clamp-2 tw-min-h-10 tw-text-sm tw-font-normal"
           dangerouslySetInnerHTML={{ __html: description }}
-        ></span>
+        />
         <div className="tw-flex tw-justify-end tw-items-end tw-flex-1">
           <Button onClick={handleClick}>อ่านเพิ่มเติม</Button>
         </div>
