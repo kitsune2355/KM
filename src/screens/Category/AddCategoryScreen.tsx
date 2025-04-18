@@ -78,6 +78,20 @@ export const AddCategoryScreen: React.FC = () => {
     setSelectedKey(selectedKeys[0] as string);
   };
 
+  const findNodeByKey = (
+    nodes: CategoryTreeNode[],
+    key: string
+  ): CategoryTreeNode | undefined => {
+    for (const node of nodes) {
+      if (node.key === key) return node;
+      if (node.children?.length) {
+        const found = findNodeByKey(node.children, key);
+        if (found) return found;
+      }
+    }
+    return undefined;
+  };
+
   const onAddChild = async (data: { title: string }) => {
     if (!selectedKey) return;
 
@@ -86,20 +100,6 @@ export const AddCategoryScreen: React.FC = () => {
       key: uuidv4(),
       children: [],
       parent_id: selectedKey,
-    };
-
-    const findNodeByKey = (
-      nodes: CategoryTreeNode[],
-      key: string
-    ): CategoryTreeNode | undefined => {
-      for (const node of nodes) {
-        if (node.key === key) return node;
-        if (node.children?.length) {
-          const found = findNodeByKey(node.children, key);
-          if (found) return found;
-        }
-      }
-      return undefined;
     };
 
     const parentNode = findNodeByKey(categories, selectedKey);
@@ -239,7 +239,9 @@ export const AddCategoryScreen: React.FC = () => {
               >
                 <h3 className="tw-font-bold tw-text-md">
                   เพิ่มหมวดหมู่ย่อยไปยัง :{" "}
-                  <span className="!tw-font-normal">{selectedKey}</span>
+                  <span className="!tw-font-normal">
+                    {findNodeByKey(categories, selectedKey)?.title}
+                  </span>
                 </h3>
                 <div style={{ marginBottom: 10 }}>
                   <span>หมวดหมู่ย่อย :</span>
