@@ -1,6 +1,6 @@
 import { Divider, Menu, MenuProps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, matchPath } from "react-router-dom";
 import { fetchCategories } from "../services/categoryService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -14,17 +14,15 @@ type MenuItem = Required<MenuProps>["items"][number];
 const transformCategoriesToMenuItems = (
   categories: CategoryTreeNode[]
 ): MenuItem[] => {
-  return categories.map((cat) => {
-    const item: MenuItem = {
-      key: String(cat.key),
-      label: <Link to={`/categories/${cat.key}`}>{cat.title}</Link>,
-    };
-    return item;
-  });
+  return categories.map((cat) => ({
+    key: String(cat.key),
+    label: <Link to={`/categories/${cat.key}`}>{cat.title}</Link>,
+  }));
 };
 
 export const SidebarLeft: React.FC = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
@@ -47,6 +45,10 @@ export const SidebarLeft: React.FC = () => {
     }
   }, [categories]);
 
+  // ตรวจสอบ path ว่าตรงกับ /categories/:id หรือไม่
+  const match = matchPath("/categories/:id", location.pathname);
+  const selectedKey = match ? match.params?.id : undefined;
+
   return (
     <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
       <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-2">
@@ -57,7 +59,12 @@ export const SidebarLeft: React.FC = () => {
       <Divider orientation="left" className="!tw-text-lg !tw-font-bold">
         คลังความรู้
       </Divider>
-      <Menu style={{ width: "100%" }} mode="inline" items={menuItems} />
+      <Menu
+        style={{ width: "100%" }}
+        mode="inline"
+        items={menuItems}
+        selectedKeys={selectedKey ? [selectedKey] : []}
+      />
     </div>
   );
 };
