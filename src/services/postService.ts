@@ -81,3 +81,30 @@ export async function deletePost(post_id: string): Promise<Post[]> {
     throw new Error("Error while deleting post");
   }
 }
+
+export async function searchPost(query: string) {
+  try {
+    const response = await fetch("/API/search_post.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: query }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.status === "success") {
+      return result;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (error) {
+    console.error("API Error:", error);
+    throw new Error("Error while deleting post");
+  }
+}

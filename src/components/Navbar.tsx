@@ -10,12 +10,15 @@ import { Link } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
 import useIsAdmin from "../hook/useIsAdmin";
 import { fetchUser, User } from "../services/userService";
+import { useDispatch } from "react-redux";
+import { SET_QUERY } from "../redux/reducer/searchReducer";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const isAdmin = useIsAdmin();
+  const dispatch = useDispatch();
 
   const loadUser = async () => {
     try {
@@ -41,6 +44,11 @@ export const Navbar: React.FC = () => {
 
   const closeDrawer = () => {
     setDrawerVisible(false);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    dispatch(SET_QUERY(query));
   };
 
   useEffect(() => {
@@ -100,7 +108,11 @@ export const Navbar: React.FC = () => {
         </div>
 
         <div className="tw-w-2/5 tw-hidden md:tw-flex">
-          <Input placeholder="ค้นหา..." prefix={<SearchOutlined />} />
+          <Input
+            placeholder="ค้นหา..."
+            prefix={<SearchOutlined />}
+            onChange={handleSearchChange}
+          />
         </div>
 
         <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
@@ -133,7 +145,11 @@ export const Navbar: React.FC = () => {
         className="tw-sidebar-drawer"
       >
         <div className="tw-pt-6 tw-px-6">
-          <Input placeholder="ค้นหา..." prefix={<SearchOutlined />} />
+          <Input
+            placeholder="ค้นหา..."
+            prefix={<SearchOutlined />}
+            onChange={handleSearchChange}
+          />
         </div>
         <SidebarLeft />
       </Drawer>

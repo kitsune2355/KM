@@ -32,6 +32,7 @@ export const DashboardScreen: React.FC = () => {
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
+  const query = useSelector((state: RootState) => state.search.query);
 
   const fetchData = useCallback(async () => {
     try {
@@ -45,11 +46,17 @@ export const DashboardScreen: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.post_publish === "1" &&
+      post.post_title.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <>
-      {posts.filter((post) => post.post_publish === "1").length > 0 ? (
+      {filteredPosts.filter((post) => post.post_publish === "1").length > 0 ? (
         <div className="tw-grid tw-grid-cols-12 tw-gap-4">
-          {posts
+          {filteredPosts
             .filter((post) => post.post_publish === "1")
             .map((item, key) => {
               const tag = findCategory(categories, item.post_ctg_id);
