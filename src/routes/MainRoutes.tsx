@@ -6,6 +6,7 @@ import { PostContentScreen } from "../screens/Posts/PostContentScreen";
 import { AddCategoryScreen } from "../screens/Category/AddCategoryScreen";
 import { CategoryScreen } from "../screens/Category/CategoryScreen";
 import { TablePostManageScreen } from "../screens/TableManagement/TablePostManageScreen";
+import { FilePreviewScreen } from "../screens/FilePreview/FilePreviewScreen";
 
 export const MainRoutes: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ export const MainRoutes: React.FC = () => {
       <Route path="/category" element={<AddCategoryScreen />} />
       <Route path="/categories/:id" element={<CategoryScreen />} />
       <Route path="/management" element={<TablePostManageScreen />} />
+      <Route path="/file-preview/:id" element={<FilePreviewScreen />} />
     </Routes>
   );
 };

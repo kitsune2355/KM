@@ -3,10 +3,11 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost } from "../../services/postService";
 import { DELETE_POST } from "../../redux/reducer/postReducer";
-import { DeleteFilled, EditFilled } from "@ant-design/icons";
+import { DeleteFilled, EditFilled, FileOutlined } from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
+import { render } from "@testing-library/react";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -39,6 +40,10 @@ export const TablePostManageScreen: React.FC = () => {
       console.error(error);
       message.error("มีข้อผิดพลาดในการลบข้อมูล");
     }
+  };
+
+  const handlePreview = (record: any) => {
+    navigate(`/file-preview/${record.id}`);
   };
 
   const handlePublish = (record: any) => {
@@ -95,6 +100,25 @@ export const TablePostManageScreen: React.FC = () => {
           </Popconfirm>
         </Space>
       ),
+    },
+    {
+      title: "ไฟล์ทั้งหมด",
+      key: "files",
+      render: (_: any, record: any) => {
+        return (
+          <>
+            {record.files.length > 0 && (
+              <div
+                className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-space-y-2 tw-cursor-pointer"
+                onClick={() => handlePreview(record)}
+              >
+                <FileOutlined />
+                <p className="tw-text-gray-500">{record.files.length} ไฟล์</p>
+              </div>
+            )}
+          </>
+        );
+      },
     },
     {
       title: "สถานะ",
