@@ -170,7 +170,7 @@ export const TablePostManageScreen: React.FC = () => {
           dataSource={posts}
           bordered
           scroll={{ x: "max-content" }}
-          pagination={{ pageSize: 10, position: ["bottomRight"] }}
+          pagination={{ current: 1, pageSize: 10, position: ["bottomRight"] }}
         />
       </Card>
     </>

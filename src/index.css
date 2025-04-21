@@ -13,7 +13,7 @@
 
 @layer components {
   .tw-container {
-    @apply tw-max-w-7xl tw-mx-auto tw-p-8;
+    @apply tw-max-w-7xl tw-mx-auto tw-p-4;
   }
   .tw-sidebar-drawer .ant-drawer-body {
     @apply !tw-p-0;

@@ -28,8 +28,8 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear">
-      <div className="tw-bg-white tw-p-8 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
+    <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear tw-p-8">
+      <div className="tw-bg-white tw-p-4 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
         <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">KM</h2>
         <form className="tw-space-y-4">
           <div className="tw-mb-4">

@@ -2,13 +2,24 @@ export interface Post {
   id: string | null;
   post_title: string;
   post_ctg_id: string;
+  post_date: string;
+  post_type: string;
+  post_prefix_name: string;
+  post_fname: string;
+  post_lname: string;
+  post_position: string;
+  post_depm: string;
+  post_sub_depm?: string;
+  post_contents: string[];
   post_desc: string;
+  post_benefit: string;
+  post_att_file: string;
   post_publish: string;
+  post_comment?: string;
   post_create_at?: string;
   post_create_by: string;
   files?: File[];
   categories_title?: string | null;
-  post_position?: string;
 }
 
 export interface PostResponse {
@@ -30,8 +41,20 @@ export async function addPost(payload: Post): Promise<PostResponse> {
     id: payload.id,
     post_title: payload.post_title,
     post_ctg_id: payload.post_ctg_id,
+    post_date: payload.post_date,
+    post_type: payload.post_type,
+    post_prefix_name: payload.post_prefix_name,
+    post_fname: payload.post_fname,
+    post_lname: payload.post_lname,
+    post_position: payload.post_position,
+    post_depm: payload.post_depm,
+    post_sub_depm: payload.post_sub_depm,
+    post_contents: payload.post_contents,
     desc: payload.post_desc,
+    post_benefit: payload.post_benefit,
+    post_att_file: payload.post_att_file,
     post_publish: payload.post_publish,
+    post_comment: payload.post_comment,
     post_create_by: payload.post_create_by,
   };
 

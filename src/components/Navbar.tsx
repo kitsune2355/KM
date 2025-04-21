@@ -53,6 +53,10 @@ export const Navbar: React.FC = () => {
     navigate("/");
   };
 
+  const handleUserManagement = () => {
+    navigate("/user-management");
+  };
+
   useEffect(() => {
     loadUser();
   }, []);
@@ -60,12 +64,30 @@ export const Navbar: React.FC = () => {
   const AdminMenu = {
     items: [
       {
-        key: "management",
-        label: <>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</>,
+        key: "formKM",
+        label: (
+          <>
+            {isAdmin && (
+              <Link to="/new-post">ยื่นแบบฟอร์มบันทึกองค์ความรู้</Link>
+            )}
+          </>
+        ),
       },
       {
         key: "category",
         label: <>{isAdmin && <Link to="/category">สร้างหมวดหมู่</Link>}</>,
+      },
+      {
+        key: "management",
+        label: <>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</>,
+      },
+      {
+        key: "user",
+        label: (
+          <div className="tw-text-primary" onClick={handleUserManagement}>
+            ระบบจัดการผู้ใช้
+          </div>
+        ),
       },
       {
         key: "logout",
@@ -95,7 +117,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <div className="tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-2 tw-bg-foreground tw-border-spacing-1 tw-border-b-2 tw-border-background">
+      <div className="tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-3 tw-bg-foreground tw-border-spacing-1 tw-border-b-2 tw-border-background">
         <div className="tw-flex tw-items-center tw-gap-2 tw-text-black tw-font-bold tw-text-xl">
           <Button
             size="large"
@@ -118,14 +140,8 @@ export const Navbar: React.FC = () => {
         </div>
 
         <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
-          {isAdmin ? (
-            <Link to="/new-post">
-              <Button type="primary" className="!tw-bg-primary">
-                เพิ่มบทความ
-              </Button>
-            </Link>
-          ) : (
-            <div className="">
+          {!isAdmin && (
+            <div className="tw-flex tw-flex-col tw-justify-center tw-items-end">
               <p className="tw-text-primary tw-font-bold">
                 {user?.username} {user?.fname}
               </p>
