@@ -6,10 +6,11 @@ module.exports = {
     extend: {
       colors: {
         foreground: "#FFFFFF",
-        background: "#e5e7eb",
-        primary: "#364d79",
-        secondary: "#1F2937",
-        accent: "#4B5563",
+        background: "#eff1f6",
+        primary: "#0E7490",
+        secondary: "#134E4A",
+        accent: "#22D3EE",
+        
       },
       screens: {
         sm: "640px", // Small devices (phones)
@@ -19,8 +20,9 @@ module.exports = {
         "2xl": "1536px", // 2X extra large devices
       },
       backgroundImage: {
-        'gradient-linear': 'linear-gradient(to right, #364d79, #1F2937)',
+        'gradient-linear': 'linear-gradient(to right, #0E7490, #22D3EE)',
         'gradient-radial': 'radial-gradient(circle, #364d79, #1F2937)',
+        
       },
     },
   },

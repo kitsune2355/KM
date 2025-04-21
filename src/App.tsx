@@ -26,7 +26,7 @@ const App: React.FC = () => {
                     <div className="tw-sticky tw-top-0 tw-z-10">
                       <Navbar />
                     </div>
-                    <div className="tw-container ">
+                    <div className="tw-container">
                       <MainRoutes />
                     </div>
                   </div>

@@ -83,11 +83,7 @@ export const Navbar: React.FC = () => {
       },
       {
         key: "user",
-        label: (
-          <div className="tw-text-primary" onClick={handleUserManagement}>
-            ระบบจัดการผู้ใช้
-          </div>
-        ),
+        label: <div onClick={handleUserManagement}>ระบบจัดการผู้ใช้</div>,
       },
       {
         key: "logout",
@@ -117,16 +113,16 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <div className="tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-3 tw-bg-foreground tw-border-spacing-1 tw-border-b-2 tw-border-background">
+      <div className="tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-3 tw-bg-gradient-linear tw-border-spacing-1 tw-border-b-2 tw-border-background">
         <div className="tw-flex tw-items-center tw-gap-2 tw-text-black tw-font-bold tw-text-xl">
           <Button
             size="large"
             shape="circle"
-            className="sm:tw-flex lg:tw-hidden !tw-bg-transparent !tw-border-none "
+            className="sm:tw-flex lg:tw-hidden !tw-bg-transparent !tw-border-none tw-text-white"
             onClick={showDrawer}
             icon={<MenuOutlined />}
           />
-          <Link to="/" className="sm:tw-flex lg:tw-hidden">
+          <Link to="/" className="sm:tw-flex lg:tw-hidden tw-text-white">
             KM
           </Link>
         </div>
