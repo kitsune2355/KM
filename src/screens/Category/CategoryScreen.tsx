@@ -9,6 +9,7 @@ import {
 } from "../../redux/reducer/categoryReducer";
 import { fetchCategories } from "../../services/categoryService";
 import { fetchPosts } from "../../redux/actions/postActions";
+import { Post } from "../../services/postService";
 
 export const CategoryScreen: React.FC = () => {
   const navigation = useNavigate();
@@ -19,6 +20,17 @@ export const CategoryScreen: React.FC = () => {
   );
   const posts = useSelector((state: RootState) => state.posts.posts);
   const [treeData, setTreeData] = React.useState<CategoryTreeNode[]>([]);
+  const [expandedKeys, setExpandedKeys] = React.useState<string[]>([]);
+
+  const getAllKeys = (nodes: CategoryTreeNode[]): string[] => {
+    return nodes.reduce<string[]>((keys, node) => {
+      keys.push(node.key);
+      if (node.children) {
+        keys.push(...getAllKeys(node.children));
+      }
+      return keys;
+    }, []);
+  };
 
   const fetchData = useCallback(async () => {
     const res = await fetchCategories();
@@ -37,13 +49,52 @@ export const CategoryScreen: React.FC = () => {
     return data ? data.title : "";
   }, [categories, params]);
 
+  const mergePostsIntoTreeData = (
+    tree: CategoryTreeNode[],
+    posts: Post[]
+  ): CategoryTreeNode[] => {
+    return tree.map((node) => {
+      const matchedPosts = posts
+        .filter((post) => post.post_ctg_id === node.key)
+        .map((post) => ({
+          title: <span className="tw-text-primary">{post.post_title}</span>,  // เพิ่ม className ที่นี่
+          key: post.id,
+          isLeaf: true,
+          parent_id: node.key,
+        })) as any[];
+  
+      const mergedChildren =
+        node.children && node.children.length > 0
+          ? mergePostsIntoTreeData(node.children, posts)
+          : [];
+  
+      return {
+        ...node,
+        children: [...mergedChildren, ...matchedPosts],
+      };
+    });
+  };
+  
+
   const onStart = useCallback(() => {
     const tree = categories
       .filter((c) => c.key === params)
       .map((item) => item.children)[0];
-    setTreeData(tree as CategoryTreeNode[]);
+
+    const treeWithPosts = mergePostsIntoTreeData(
+      tree as CategoryTreeNode[],
+      posts
+    );
+    setTreeData(treeWithPosts);
     dispatch(FETCH_CATEGORY(categories));
-  }, [categories, params, dispatch]);
+
+    if (treeData.length > 0) {
+      const keys = getAllKeys(treeData);
+      setExpandedKeys(keys);
+    }
+    dispatch(fetchPosts());
+
+  }, [categories, params, posts, dispatch]);
 
   useEffect(() => {
     if (categories && categories.length > 0) {
@@ -52,8 +103,10 @@ export const CategoryScreen: React.FC = () => {
   }, [categories, onStart]);
 
   const onOpenContent = (key: string) => {
-    const postId = posts.find((c) => c.post_ctg_id === key)?.id;
-    navigation(`/content/${postId}`);
+    const post = posts.find((c) => c.id === key);
+    if (post) {
+      navigation(`/content/${post.id}`);
+    }
   };
 
   return (
@@ -75,7 +128,8 @@ export const CategoryScreen: React.FC = () => {
         <Tree
           showLine
           treeData={treeData as CategoryTreeNode[]}
-          defaultExpandAll
+          expandedKeys={expandedKeys}
+          onExpand={(keys) => setExpandedKeys(keys as string[])}
           onSelect={(key) => onOpenContent(key[0] as string)}
         />
       </Card>
