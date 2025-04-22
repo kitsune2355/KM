@@ -17,7 +17,7 @@ export const UserManagementScreen: React.FC = () => {
     {
       key: "2",
       label: "กำหนดสิทธิ์การใช้งาน",
-      children: <TableControlUser/>,
+      children: <TableControlUser />,
     },
   ];
 
@@ -33,7 +33,12 @@ export const UserManagementScreen: React.FC = () => {
         </Divider>
       </div>
       <Card>
-        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        <Tabs
+          className="tw-tabs"
+          defaultActiveKey="1"
+          items={items}
+          onChange={onChange}
+        />
       </Card>
     </>
   );

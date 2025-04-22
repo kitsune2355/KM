@@ -141,7 +141,7 @@ export const Navbar: React.FC = () => {
               <p className="tw-text-primary tw-font-bold">
                 {user?.username} {user?.fname}
               </p>
-              <p className="tw-text-gray-400 tw-text-xs">{user?.position}</p>
+              <p className="tw-text-white tw-text-xs">{user?.position}</p>
             </div>
           )}
           <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>

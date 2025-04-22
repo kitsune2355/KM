@@ -15,11 +15,26 @@
   .tw-container {
     @apply tw-max-w-7xl tw-mx-auto tw-p-4;
   }
+
+  /* Drawer */
   .tw-sidebar-drawer .ant-drawer-body {
     @apply !tw-p-0;
   }
 
   .tw-sidebar .ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline {
     @apply tw-bg-gray-50;
+  }
+
+  /* Tabs */
+  .tw-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    @apply !tw-text-primary;
+  }
+
+  .tw-tabs .ant-tabs-tab.ant-tabs-tab:hover .ant-tabs-tab-btn {
+    @apply !tw-text-secondary;
+  }
+
+  .tw-tabs .ant-tabs-ink-bar {
+    @apply !tw-bg-primary;
   }
 }

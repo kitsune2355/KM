@@ -47,7 +47,7 @@ export const FilePreviewScreen: React.FC = () => {
               orientationMargin="0"
               className="!tw-text-xl !tw-text-primary !tw-font-bold"
             >
-              ไฟล์ที่อัปโหลด
+              เอกสาร / ไฟล์แนบ
             </Divider>
           </div>
           <div className="tw-space-y-2">
