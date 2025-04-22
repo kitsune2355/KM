@@ -27,7 +27,7 @@ export const UserManagementScreen: React.FC = () => {
         <Divider
           orientation="left"
           orientationMargin="0"
-          className="!tw-text-xl !tw-text-primary !tw-font-bold"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
         >
           ระบบจัดการผู้ใช้
         </Divider>

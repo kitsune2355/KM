@@ -56,7 +56,7 @@ export const SidebarLeft: React.FC = () => {
           KM
         </Link>
       </div>
-      <Divider orientation="left" className="!tw-text-lg !tw-font-bold">
+      <Divider orientation="left" className="!tw-text-lg !tw-font-bold ">
         คลังความรู้
       </Divider>
       <Menu

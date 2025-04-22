@@ -176,7 +176,7 @@ export const AddCategoryScreen: React.FC = () => {
         <Divider
           orientation="left"
           orientationMargin="0"
-          className="!tw-text-xl !tw-text-primary !tw-font-bold"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
         >
           สร้างหมวดหมู่
         </Divider>

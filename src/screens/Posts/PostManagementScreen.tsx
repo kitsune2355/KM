@@ -35,7 +35,7 @@ const typeKnowledge = [
   },
 ];
 
-const typeKM = [
+export const typeKM = [
   {
     label: "แนวทาง/กระบวนการในการปฏิบัติงาน",
     value: "1",
@@ -97,6 +97,10 @@ export const PostManagementScreen: React.FC = () => {
       const atrFile = Array.isArray(postById.files)
         ? transformedFiles(postById.files)
         : [];
+      const contents =
+        typeof postById.post_contents === "string"
+          ? JSON.parse(postById.post_contents)
+          : postById.post_contents;
 
       setValue("title", postById.post_title);
       setValue("category", postById.post_ctg_id);
@@ -108,7 +112,7 @@ export const PostManagementScreen: React.FC = () => {
       setValue("position", postById.post_position);
       setValue("department", postById.post_depm);
       setValue("sub_department", postById.post_sub_depm);
-      setValue("contents", postById.post_contents);
+      setValue("contents", contents);
       setValue("description", postById.post_desc);
       setValue("benefit", postById.post_benefit);
       setValue("attachments", postById.post_att_file);
@@ -144,7 +148,7 @@ export const PostManagementScreen: React.FC = () => {
       post_position: data.position,
       post_depm: data.department,
       post_sub_depm: data.sub_department,
-      post_contents: data.contents,
+      post_contents: JSON.stringify(data.contents),
       post_desc: data.description,
       post_benefit: data.benefit,
       post_att_file: data.attachments,
@@ -188,7 +192,7 @@ export const PostManagementScreen: React.FC = () => {
         <Divider
           orientation="left"
           orientationMargin="0"
-          className="!tw-text-xl !tw-text-primary !tw-font-bold"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
         >
           แบบฟอร์มบันทึกองค์ความรู้องค์กร
         </Divider>

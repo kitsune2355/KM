@@ -62,7 +62,7 @@ export const CategoryScreen: React.FC = () => {
         <Divider
           orientation="left"
           orientationMargin="0"
-          className="!tw-text-xl !tw-text-primary !tw-font-bold"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
         >
           <Tooltip placement="leftBottom" title={childTree}>
             <div className="tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-max-w-[500px]">

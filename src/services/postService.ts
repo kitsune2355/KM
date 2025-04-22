@@ -10,7 +10,7 @@ export interface Post {
   post_position: string;
   post_depm: string;
   post_sub_depm?: string;
-  post_contents: string[];
+  post_contents: string;
   post_desc: string;
   post_benefit: string;
   post_att_file: string;
@@ -56,6 +56,7 @@ export async function addPost(payload: Post): Promise<PostResponse> {
     post_publish: payload.post_publish,
     post_comment: payload.post_comment,
     post_create_by: payload.post_create_by,
+    file: payload.files,
   };
 
   formData.append("data", JSON.stringify(dataPayload));

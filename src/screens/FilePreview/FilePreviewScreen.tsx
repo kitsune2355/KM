@@ -41,11 +41,11 @@ export const FilePreviewScreen: React.FC = () => {
     <React.Fragment>
       {postId && files && files.length > 0 && (
         <>
-          <div className="tw-mb-4">
+          <div className="">
             <Divider
-              orientation="left"
-              orientationMargin="0"
-              className="!tw-text-xl !tw-text-primary !tw-font-bold"
+              orientation="right"
+              orientationMargin="10"
+              className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
             >
               เอกสาร / ไฟล์แนบ
             </Divider>
