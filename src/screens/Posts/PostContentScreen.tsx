@@ -1,6 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Card } from "antd";
-import React, { useCallback, useEffect, useMemo } from "react";
+import { Avatar, Card, Tag } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store";
@@ -10,6 +10,7 @@ import { typeKM } from "./PostManagementScreen";
 import dayjs from "dayjs";
 import buddhistEra from "dayjs/plugin/buddhistEra";
 import "dayjs/locale/th";
+import { findCategory } from "../Dashboard/DashboardScreen";
 
 dayjs.extend(buddhistEra);
 dayjs.locale("th");
@@ -23,12 +24,15 @@ export const PostContentScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const postId = useParams().id;
   const posts = useSelector((state: RootState) => state.posts.posts);
+  const categories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
+
+  const [tags, setTags] = useState<string[] | null>([]);
 
   const postData = useMemo(() => {
     return posts.find((post: any) => post.id === postId);
   }, [postId, posts]);
-
-  console.log("postData", postData);
 
   const fetchData = useCallback(async () => {
     try {
@@ -40,6 +44,10 @@ export const PostContentScreen: React.FC = () => {
 
   useEffect(() => {
     fetchData();
+    if (postData) {
+      const tag = findCategory(categories, postData.post_ctg_id);
+      setTags(tag);
+    }
   }, [fetchData]);
 
   return (
@@ -47,35 +55,48 @@ export const PostContentScreen: React.FC = () => {
       {postData ? (
         <>
           <Card>
-            <div className="tw-flex tw-flex-row tw-items-center">
-              <Avatar size={48} icon={<UserOutlined />} />
-              <div className="tw-flex tw-flex-col tw-ml-4">
-                <p className="tw-text-primary tw-font-bold">
-                  {postData?.post_fname} {postData.post_lname}
-                </p>
-                <p className="tw-text-xs">
-                  ตำแหน่ง{" "}
-                  <span className="tw-text-gray-500">
-                    {postData?.post_position}
-                  </span>{" "}
-                  แผนก{" "}
-                  <span className="tw-text-gray-500">
-                    {postData?.post_depm}
-                  </span>{" "}
-                  ฝ่าย{" "}
-                  <span className="tw-text-gray-500">
-                    {postData?.post_sub_depm}
-                  </span>
-                </p>
-                <p className="tw-text-gray-500 tw-text-xs">
-                  บันทึกวันที่ {postData?.post_create_at}
-                </p>
+            <div className="tw-flex tw-flex-row tw-justify-between">
+              <div className="tw-flex tw-flex-row tw-items-center">
+                <Avatar size={48} icon={<UserOutlined />} />
+                <div className="tw-flex tw-flex-col tw-ml-4">
+                  <p className="tw-text-primary tw-font-bold">
+                    {postData?.post_fname} {postData.post_lname}
+                  </p>
+                  <p className="tw-text-xs">
+                    ตำแหน่ง{" "}
+                    <span className="tw-text-gray-500">
+                      {postData?.post_position}
+                    </span>{" "}
+                    แผนก{" "}
+                    <span className="tw-text-gray-500">
+                      {postData?.post_depm}
+                    </span>{" "}
+                    ฝ่าย{" "}
+                    <span className="tw-text-gray-500">
+                      {postData?.post_sub_depm}
+                    </span>
+                  </p>
+                  <p className="tw-text-gray-500 tw-text-xs">
+                    บันทึกวันที่ {postData?.post_create_at}
+                  </p>
+                </div>
+              </div>
+
+              <div className="tw-text-gray-500 tw-text-xs">
+                วันที่ทำเอกสาร {formatThaiDate(postData.post_date)}
               </div>
             </div>
-            <div className="tw-flex tw-justify-end tw-text-gray-500 tw-text-xs">
-              วันที่ทำเอกสาร {formatThaiDate(postData.post_date)}
-            </div>
+
             <div className="tw-mt-4 tw-flex tw-flex-col tw-space-y-4">
+              <div>
+                {tags &&
+                  tags.map((tag, index) => (
+                    <Tag color="blue" key={index} className="tw-truncate">
+                      {tag}
+                    </Tag>
+                  ))}
+              </div>
+
               <h1 className="tw-text-xl tw-text-black tw-font-bold">
                 {postData?.post_title}
               </h1>

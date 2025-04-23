@@ -61,7 +61,9 @@ export const DashboardScreen: React.FC = () => {
       (post.post_publish === "1" &&
         post.post_title.toLowerCase().includes(query.toLowerCase())) ||
       post.post_desc.toLowerCase().includes(query.toLowerCase()) ||
-      post.post_create_by.toLowerCase().includes(query.toLowerCase())
+      post.post_create_by.toLowerCase().includes(query.toLowerCase()) ||
+      post.post_fname.toLowerCase().includes(query.toLowerCase()) ||
+      post.post_lname.toLowerCase().includes(query.toLowerCase())
   );
 
   return (
@@ -82,7 +84,8 @@ export const DashboardScreen: React.FC = () => {
                     title={highlightText(item.post_title, query)}
                     description={highlightText(item.post_desc, query)}
                     tags={tag || ["ไม่มีหมวดหมู่"]}
-                    
+                    firstName={highlightText(item.post_fname, query)}
+                    lastName={highlightText(item.post_lname, query)}
                   />
                 </div>
               );

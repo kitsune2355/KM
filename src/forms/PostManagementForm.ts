@@ -12,7 +12,7 @@ export interface PostManagementFormProps {
   lname: string;
   position: string;
   department: string;
-  sub_department?: string;
+  sub_department: string;
   contents: string[];
   description: string;
   benefit: string;
@@ -34,7 +34,7 @@ const schema: yup.ObjectSchema<PostManagementFormProps> = yup.object().shape({
   lname: yup.string().required("จำเป็นต้องกรอกนามสกุล").default(""),
   position: yup.string().required("จำเป็นต้องกรอกตำแหน่ง").default(""),
   department: yup.string().required("จำเป็นต้องกรอกแผนก").default(""),
-  sub_department: yup.string().default(""),
+  sub_department: yup.string().required("จำเป็นต้องกรอกฝ่าย").default(""),
   contents: yup.array().default([]),
   description: yup.string().default(""),
   benefit: yup.string().default(""),

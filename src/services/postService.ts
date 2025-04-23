@@ -9,7 +9,7 @@ export interface Post {
   post_lname: string;
   post_position: string;
   post_depm: string;
-  post_sub_depm?: string;
+  post_sub_depm: string;
   post_contents: string;
   post_desc: string;
   post_benefit: string;

@@ -8,6 +8,7 @@ import {
   CategoryTreeNode,
   FETCH_CATEGORY,
 } from "../redux/reducer/categoryReducer";
+import { FolderOpenOutlined } from "@ant-design/icons";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -17,6 +18,7 @@ const transformCategoriesToMenuItems = (
   return categories.map((cat) => ({
     key: String(cat.key),
     label: <Link to={`/categories/${cat.key}`}>{cat.title}</Link>,
+    icon: <FolderOpenOutlined />,
   }));
 };
 

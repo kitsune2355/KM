@@ -10,6 +10,7 @@ import {
 import { fetchCategories } from "../../services/categoryService";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { Post } from "../../services/postService";
+import { RightCircleOutlined } from "@ant-design/icons";
 
 export const CategoryScreen: React.FC = () => {
   const navigation = useNavigate();
@@ -42,7 +43,11 @@ export const CategoryScreen: React.FC = () => {
     if (!categories || categories.length === 0) {
       fetchData();
     }
-  }, [categories, fetchData]);
+    if (treeData.length > 0) {
+      const keys = getAllKeys(treeData);
+      setExpandedKeys(keys);
+    }
+  }, [categories, treeData, fetchData]);
 
   const childTree = useMemo(() => {
     const data = categories.find((c) => c.key === params);
@@ -55,26 +60,30 @@ export const CategoryScreen: React.FC = () => {
   ): CategoryTreeNode[] => {
     return tree.map((node) => {
       const matchedPosts = posts
-        .filter((post) => post.post_ctg_id === node.key)
-        .map((post) => ({
-          title: <span className="tw-text-primary">{post.post_title}</span>,  // เพิ่ม className ที่นี่
-          key: post.id,
-          isLeaf: true,
-          parent_id: node.key,
-        })) as any[];
-  
+        .filter(
+          (post) => post.post_ctg_id === node.key && post.post_publish === "1"
+        )
+        .map(
+          (post) =>
+            ({
+              title: post.post_title,
+              key: post.id,
+              isLeaf: true,
+              parent_id: node.key,
+            } as CategoryTreeNode)
+        );
+
       const mergedChildren =
         node.children && node.children.length > 0
           ? mergePostsIntoTreeData(node.children, posts)
           : [];
-  
+
       return {
         ...node,
         children: [...mergedChildren, ...matchedPosts],
       };
     });
   };
-  
 
   const onStart = useCallback(() => {
     const tree = categories
@@ -87,20 +96,7 @@ export const CategoryScreen: React.FC = () => {
     );
     setTreeData(treeWithPosts);
     dispatch(FETCH_CATEGORY(categories));
-
-    if (treeData.length > 0) {
-      const keys = getAllKeys(treeData);
-      setExpandedKeys(keys);
-    }
-    dispatch(fetchPosts());
-
   }, [categories, params, posts, dispatch]);
-
-  useEffect(() => {
-    if (categories && categories.length > 0) {
-      onStart();
-    }
-  }, [categories, onStart]);
 
   const onOpenContent = (key: string) => {
     const post = posts.find((c) => c.id === key);
@@ -108,6 +104,12 @@ export const CategoryScreen: React.FC = () => {
       navigation(`/content/${post.id}`);
     }
   };
+
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      onStart();
+    }
+  }, [categories, onStart]);
 
   return (
     <>
@@ -131,6 +133,27 @@ export const CategoryScreen: React.FC = () => {
           expandedKeys={expandedKeys}
           onExpand={(keys) => setExpandedKeys(keys as string[])}
           onSelect={(key) => onOpenContent(key[0] as string)}
+          titleRender={(nodeData: any) => {
+            if (nodeData.isLeaf) {
+              return (
+                <Card
+                  hoverable
+                  className="tw-w-full tw-rounded-md tw-shadow-sm tw-border-l-4 tw-border-l-primary tw-transition-all hover:tw-shadow-md hover:tw-text-primary"
+                  bodyStyle={{ padding: "6px 16px" }}
+                >
+                  <div className="tw-flex tw-items-center tw-space-x-2">
+                    <span className="tw-text-primary tw-font-medium">
+                      {nodeData.title}
+                    </span>
+                    <span className="tw-ml-auto tw-text-gray-400">
+                      <RightCircleOutlined />
+                    </span>
+                  </div>
+                </Card>
+              );
+            }
+            return <div className="tw-cursor-none">{nodeData.title}</div>;
+          }}
         />
       </Card>
     </>

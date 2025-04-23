@@ -1,12 +1,14 @@
 import { Card, Table, Button, Space, Popconfirm, Divider, message } from "antd";
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost, deletePost } from "../../services/postService";
+import { addPost, deletePost, Post } from "../../services/postService";
 import { DELETE_POST } from "../../redux/reducer/postReducer";
 import { DeleteFilled, EditFilled, FileOutlined } from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
+import { ColumnsType } from "antd/es/table";
+import { typeKM } from "../Posts/PostManagementScreen";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -66,31 +68,124 @@ export const TablePostManageScreen: React.FC = () => {
     }
   };
 
-  const columns = [
+  const columns: ColumnsType<Post> = [
     {
-      title: "หัวข้อ",
-      dataIndex: "post_title",
-      key: "post_title",
+      title: "ข้อมูลทั่วไป",
+      children: [
+        {
+          title: "ชื่อเรื่ององค์ความรู้",
+          dataIndex: "post_title",
+          key: "post_title",
+        },
+        {
+          title: "หมวดหมู่",
+          dataIndex: "categories_title",
+          key: "categories_title",
+        },
+        {
+          title: "ประเภทขององค์ความรู้",
+          dataIndex: "post_type",
+          key: "post_type",
+        },
+        {
+          title: "ผู้สร้าง",
+          children: [
+            {
+              title: "ชื่อ",
+              dataIndex: "post_fname",
+              key: "post_fname",
+            },
+            {
+              title: "นามสกุล",
+              dataIndex: "post_lname",
+              key: "post_lname",
+            },
+            {
+              title: "ตำแหน่ง",
+              dataIndex: "post_position",
+              key: "post_position",
+            },
+            {
+              title: "แผนก",
+              dataIndex: "post_depm",
+              key: "post_depm",
+            },
+            {
+              title: "ฝ่าย",
+              dataIndex: "post_sub_depm",
+              key: "post_sub_depm",
+            },
+          ],
+        },
+      ],
     },
     {
-      title: "หมวดหมู่",
-      dataIndex: "categories_title",
-      key: "categories_title",
-    },
-    {
-      title: "รายละเอียด",
-      dataIndex: "post_desc",
-      key: "post_desc",
-      width: 350,
-    },
-    {
-      title: "ผู้สร้าง",
-      dataIndex: "post_create_by",
-      key: "post_create_by",
+      title: "เนื้อหาขององค์ความรู้",
+      children: [
+        {
+          title: "ประเภทขององค์ความรู้",
+          key: "post_contents",
+          render: (_: any, record: any) => (
+            <p className="">
+              {typeKM
+                .filter((item) =>
+                  JSON.parse(record.post_contents).includes(item.value)
+                )
+                .map((item, key) => (
+                  <div key={key}>
+                    <span>- {item.label}</span>
+                  </div>
+                ))}
+            </p>
+          ),
+        },
+        {
+          title: "รายละเอียดขององค์ความรู้",
+          key: "post_desc",
+          width: 350,
+          render: (_: any, record: any) => (
+            <p className="tw-text-ellipsis tw-line-clamp-2">
+              {record.post_desc}
+            </p>
+          ),
+        },
+        {
+          title: "ประโยชน์ขององค์ความรู้",
+          key: "post_benefit",
+          width: 350,
+          render: (_: any, record: any) => (
+            <p className="tw-text-ellipsis tw-line-clamp-2">
+              {record.post_benefit}
+            </p>
+          ),
+        },
+        {
+          title: "เอกสาร/ไฟล์แนบ",
+          key: "files",
+          render: (_: any, record: any) => {
+            return (
+              <>
+                {record.files.length > 0 && (
+                  <div
+                    className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-space-y-2 tw-cursor-pointer"
+                    onClick={() => handlePreview(record)}
+                  >
+                    <FileOutlined />
+                    <p className="tw-text-gray-500">
+                      {record.files.length} ไฟล์
+                    </p>
+                  </div>
+                )}
+              </>
+            );
+          },
+        },
+      ],
     },
     {
       title: "Actions",
       key: "actions",
+      fixed: "right",
       render: (_: any, record: any) => (
         <Space>
           <Button
@@ -118,27 +213,9 @@ export const TablePostManageScreen: React.FC = () => {
       ),
     },
     {
-      title: "ไฟล์ทั้งหมด",
-      key: "files",
-      render: (_: any, record: any) => {
-        return (
-          <>
-            {record.files.length > 0 && (
-              <div
-                className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-space-y-2 tw-cursor-pointer"
-                onClick={() => handlePreview(record)}
-              >
-                <FileOutlined />
-                <p className="tw-text-gray-500">{record.files.length} ไฟล์</p>
-              </div>
-            )}
-          </>
-        );
-      },
-    },
-    {
       title: "สถานะ",
       key: "post_publish",
+      fixed: "right",
       render: (_: any, record: any) => (
         <Button
           size="small"

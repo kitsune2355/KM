@@ -13,7 +13,7 @@
 
 @layer components {
   .tw-container {
-    @apply tw-max-w-7xl tw-mx-auto tw-p-4;
+    @apply tw-max-w-[75vw] tw-mx-auto tw-p-4;
   }
 
   /* Drawer */
