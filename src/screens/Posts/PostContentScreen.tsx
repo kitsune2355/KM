@@ -48,7 +48,7 @@ export const PostContentScreen: React.FC = () => {
       const tag = findCategory(categories, postData.post_ctg_id);
       setTags(tag);
     }
-  }, [categories, postData, fetchData]);
+  }, [fetchData]);
 
   return (
     <div className="tw-flex tw-flex-col tw-space-y-4">
@@ -89,6 +89,17 @@ export const PostContentScreen: React.FC = () => {
 
             <div className="tw-mt-4 tw-flex tw-flex-col tw-space-y-4">
               <div>
+                {typeKnowledge
+                  .filter((type) => type.value === postData.post_type)
+                  .map((item, key) => (
+                    <Tag
+                      color={item.value === "1" ? "pink" : "purple"}
+                      key={key}
+                      className="tw-truncate"
+                    >
+                      {item.label}
+                    </Tag>
+                  ))}
                 {tags &&
                   tags.map((tag, index) => (
                     <Tag color="blue" key={index} className="tw-truncate">
@@ -101,19 +112,9 @@ export const PostContentScreen: React.FC = () => {
                 {postData?.post_title}
               </h1>
               <div>
-                <div className="tw-flex tw-flex-row tw-items-center tw-space-x-1">
-                  {typeKnowledge
-                    .filter((type) => type.value === postData.post_type)
-                    .map((item, key) => (
-                      <Tag
-                        color={item.value === "1" ? "pink" : "purple"}
-                        key={key}
-                        className="tw-truncate"
-                      >
-                        {item.label}
-                      </Tag>
-                    ))}
-                </div>
+                <p className="tw-text-primary tw-font-bold">
+                  ประเภทขององค์ความรู้ :
+                </p>
                 {typeKM
                   .filter((item) =>
                     JSON.parse(postData!.post_contents).includes(item.value)

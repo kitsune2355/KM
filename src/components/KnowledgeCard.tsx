@@ -8,8 +8,7 @@ interface KnowledgeCardProps {
   description: string;
   tags: string[];
   postId: string | null;
-  firstName: string;
-  lastName: string;
+  createdAt: string;
   postType: string;
 }
 
@@ -18,8 +17,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   description,
   tags,
   postId,
-  firstName,
-  lastName,
+  createdAt,
   postType,
 }) => {
   const navigate = useNavigate();
@@ -47,8 +45,6 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
                 {item.label}
               </Tag>
             ))}
-        </div>
-        <div>
           {tags &&
             tags.map((tag, index) => (
               <Tag color="blue" key={index} className="tw-truncate">
@@ -60,15 +56,17 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           className="tw-text-gray-400 tw-truncate-2 tw-line-clamp-2 tw-min-h-10 tw-text-sm tw-font-normal"
           dangerouslySetInnerHTML={{ __html: description }}
         />
-        <Divider
-          orientation="left"
-          orientationMargin="0"
-          className="!tw-text-xs !tw-text-primary"
-        >
-          <p dangerouslySetInnerHTML={{ __html: `${firstName} ${lastName}` }} />
-        </Divider>
-        <div className="tw-flex tw-justify-end tw-items-end tw-flex-1">
-          <Button onClick={handleClick}>อ่านเพิ่มเติม</Button>
+        <div className="tw-flex tw-flex-col tw-justify-end tw-flex-1">
+          <Divider
+            orientation="left"
+            orientationMargin="0"
+            className="!tw-text-xs !tw-text-primary"
+          >
+            <p dangerouslySetInnerHTML={{ __html: createdAt }} />
+          </Divider>
+          <Button className="tw-w-full " onClick={handleClick}>
+            อ่านเพิ่มเติม
+          </Button>
         </div>
       </div>
     </div>
