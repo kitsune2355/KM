@@ -23,44 +23,7 @@ import { AppDispatch, RootState } from "../../store";
 import { addPost } from "../../services/postService";
 import { fetchPosts } from "../../redux/actions/postActions";
 import useIsAdmin from "../../hook/useIsAdmin";
-
-const typeKnowledge = [
-  {
-    label: "ความรู้จากการปฏิบัติงาน",
-    value: "ความรู้จากการปฏิบัติงาน",
-  },
-  {
-    label: "ความรู้จากการเข้าอบรม",
-    value: "ความรู้จากการเข้าอบรม",
-  },
-];
-
-export const typeKM = [
-  {
-    label: "แนวทาง/กระบวนการในการปฏิบัติงาน",
-    value: "1",
-  },
-  {
-    label: "วิธีการแก้ไขปัญหา",
-    value: "2",
-  },
-  {
-    label: "ข้อเสนอแนะเพื่อการพัฒนา/ประยุกต์ใช้",
-    value: "3",
-  },
-  {
-    label: "บทเรียนที่ได้รับจากความสำเร็จ",
-    value: "4",
-  },
-  {
-    label: "บทเรียนที่ได้รับจากความล้มเหลว",
-    value: "5",
-  },
-  {
-    label: "ความรู้เชิงเทคนิคหรือความเชี่ยวชาญเฉพาะด้าน",
-    value: "6",
-  },
-];
+import { typeKM, typeKnowledge } from "../../config/constant";
 
 export const PostManagementScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -82,6 +45,7 @@ export const PostManagementScreen: React.FC = () => {
   } = usePostManagementForm();
 
   const postId = useMemo(() => searchParams.get("id"), [searchParams]);
+  const nowType = watch("type");
 
   const transformedFiles = (files: any) => {
     return files.map((file: any) => ({
@@ -125,7 +89,7 @@ export const PostManagementScreen: React.FC = () => {
     if (!posts || posts.length === 0) {
       dispatch(fetchPosts());
     }
-  }, [posts]);
+  }, [posts, dispatch]);
 
   useEffect(() => {
     onStart();
@@ -142,12 +106,12 @@ export const PostManagementScreen: React.FC = () => {
       post_ctg_id: data.category,
       post_date: data.date,
       post_type: data.type,
-      post_prefix_name: data.prefixName,
-      post_fname: data.fname,
-      post_lname: data.lname,
-      post_position: data.position,
-      post_depm: data.department,
-      post_sub_depm: data.sub_department,
+      post_prefix_name: nowType === "2" ? "" : data.prefixName,
+      post_fname: nowType === "2" ? "" : data.fname,
+      post_lname: nowType === "2" ? "" : data.lname,
+      post_position: nowType === "2" ? "" : data.position,
+      post_depm: nowType === "2" ? "" : data.department,
+      post_sub_depm: nowType === "2" ? "" : data.sub_department,
       post_contents: JSON.stringify(data.contents),
       post_desc: data.description,
       post_benefit: data.benefit,
@@ -306,6 +270,7 @@ export const PostManagementScreen: React.FC = () => {
                         { value: "นาง", label: "นาง" },
                         { value: "นางสาว", label: "นางสาว" },
                       ]}
+                      disabled={nowType === "2" ? true : false}
                     />
                   )}
                 />
@@ -320,7 +285,11 @@ export const PostManagementScreen: React.FC = () => {
                   name="fname"
                   control={control}
                   render={({ field }) => (
-                    <Input {...field} placeholder="ชื่อ" />
+                    <Input
+                      {...field}
+                      placeholder="ชื่อ"
+                      disabled={nowType === "2" ? true : false}
+                    />
                   )}
                 />
                 {errors.fname && (
@@ -332,7 +301,11 @@ export const PostManagementScreen: React.FC = () => {
                   name="lname"
                   control={control}
                   render={({ field }) => (
-                    <Input {...field} placeholder="นามสกุล" />
+                    <Input
+                      {...field}
+                      placeholder="นามสกุล"
+                      disabled={nowType === "2" ? true : false}
+                    />
                   )}
                 />
                 {errors.lname && (
@@ -344,7 +317,11 @@ export const PostManagementScreen: React.FC = () => {
                   name="position"
                   control={control}
                   render={({ field }) => (
-                    <Input {...field} placeholder="ตำแหน่ง" />
+                    <Input
+                      {...field}
+                      placeholder="ตำแหน่ง"
+                      disabled={nowType === "2" ? true : false}
+                    />
                   )}
                 />
                 {errors.position && (
@@ -358,7 +335,11 @@ export const PostManagementScreen: React.FC = () => {
                   name="department"
                   control={control}
                   render={({ field }) => (
-                    <Input {...field} placeholder="แผนก" />
+                    <Input
+                      {...field}
+                      placeholder="แผนก"
+                      disabled={nowType === "2" ? true : false}
+                    />
                   )}
                 />
                 {errors.department && (
@@ -372,9 +353,18 @@ export const PostManagementScreen: React.FC = () => {
                   name="sub_department"
                   control={control}
                   render={({ field }) => (
-                    <Input {...field} placeholder="ฝ่าย" />
+                    <Input
+                      {...field}
+                      placeholder="ฝ่าย"
+                      disabled={nowType === "2" ? true : false}
+                    />
                   )}
                 />
+                {errors.sub_department && (
+                  <div className="tw-text-red-500">
+                    {errors.sub_department.message}
+                  </div>
+                )}
               </div>
             </div>
           </div>

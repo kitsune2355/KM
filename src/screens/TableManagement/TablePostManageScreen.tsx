@@ -1,4 +1,13 @@
-import { Card, Table, Button, Space, Popconfirm, Divider, message } from "antd";
+import {
+  Card,
+  Table,
+  Button,
+  Space,
+  Popconfirm,
+  Divider,
+  message,
+  Tag,
+} from "antd";
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, deletePost, Post } from "../../services/postService";
@@ -8,7 +17,7 @@ import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { ColumnsType } from "antd/es/table";
-import { typeKM } from "../Posts/PostManagementScreen";
+import { typeKM, typeKnowledge } from "../../config/constant";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -84,8 +93,22 @@ export const TablePostManageScreen: React.FC = () => {
         },
         {
           title: "ประเภทขององค์ความรู้",
-          dataIndex: "post_type",
           key: "post_type",
+          render: (_, record) => (
+            <div>
+              {typeKnowledge
+                .filter((type) => type.value === record.post_type)
+                .map((item, key) => (
+                  <Tag
+                    color={item.value === "1" ? "pink" : "purple"}
+                    key={key}
+                    className="tw-truncate"
+                  >
+                    {item.label}
+                  </Tag>
+                ))}
+            </div>
+          ),
         },
         {
           title: "ผู้สร้าง",
@@ -126,7 +149,7 @@ export const TablePostManageScreen: React.FC = () => {
           title: "ประเภทขององค์ความรู้",
           key: "post_contents",
           render: (_: any, record: any) => (
-            <p className="">
+            <div className="">
               {typeKM
                 .filter((item) =>
                   JSON.parse(record.post_contents).includes(item.value)
@@ -136,7 +159,7 @@ export const TablePostManageScreen: React.FC = () => {
                     <span>- {item.label}</span>
                   </div>
                 ))}
-            </p>
+            </div>
           ),
         },
         {

@@ -6,11 +6,11 @@ import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { FilePreviewScreen } from "../FilePreview/FilePreviewScreen";
-import { typeKM } from "./PostManagementScreen";
 import dayjs from "dayjs";
 import buddhistEra from "dayjs/plugin/buddhistEra";
 import "dayjs/locale/th";
 import { findCategory } from "../Dashboard/DashboardScreen";
+import { typeKM, typeKnowledge } from "../../config/constant";
 
 dayjs.extend(buddhistEra);
 dayjs.locale("th");
@@ -48,7 +48,7 @@ export const PostContentScreen: React.FC = () => {
       const tag = findCategory(categories, postData.post_ctg_id);
       setTags(tag);
     }
-  }, [fetchData]);
+  }, [categories, postData, fetchData]);
 
   return (
     <div className="tw-flex tw-flex-col tw-space-y-4">
@@ -102,10 +102,17 @@ export const PostContentScreen: React.FC = () => {
               </h1>
               <div>
                 <div className="tw-flex tw-flex-row tw-items-center tw-space-x-1">
-                  <p className="tw-text-primary tw-font-bold">
-                    ประเภทขององค์ความรู้ :
-                  </p>
-                  <span>{postData.post_type}</span>
+                  {typeKnowledge
+                    .filter((type) => type.value === postData.post_type)
+                    .map((item, key) => (
+                      <Tag
+                        color={item.value === "1" ? "pink" : "purple"}
+                        key={key}
+                        className="tw-truncate"
+                      >
+                        {item.label}
+                      </Tag>
+                    ))}
                 </div>
                 {typeKM
                   .filter((item) =>

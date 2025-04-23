@@ -1,6 +1,7 @@
 import { Button, Divider, Tag } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { typeKnowledge } from "../config/constant";
 
 interface KnowledgeCardProps {
   title: string;
@@ -9,6 +10,7 @@ interface KnowledgeCardProps {
   postId: string | null;
   firstName: string;
   lastName: string;
+  postType: string;
 }
 
 export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
@@ -18,6 +20,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   postId,
   firstName,
   lastName,
+  postType,
 }) => {
   const navigate = useNavigate();
 
@@ -28,11 +31,24 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   return (
     <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full">
       <div className="tw-p-4 tw-flex tw-flex-col tw-space-y-4 tw-w-full tw-h-full">
+        <p
+          className="tw-text-lg tw-font-bold"
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
         <div>
-          <p
-            className="tw-text-lg tw-font-bold"
-            dangerouslySetInnerHTML={{ __html: title }}
-          />
+          {typeKnowledge
+            .filter((type) => type.value === postType)
+            .map((item, key) => (
+              <Tag
+                color={item.value === "1" ? "pink" : "purple"}
+                key={key}
+                className="tw-truncate"
+              >
+                {item.label}
+              </Tag>
+            ))}
+        </div>
+        <div>
           {tags &&
             tags.map((tag, index) => (
               <Tag color="blue" key={index} className="tw-truncate">

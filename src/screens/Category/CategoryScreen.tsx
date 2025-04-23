@@ -137,9 +137,9 @@ export const CategoryScreen: React.FC = () => {
             if (nodeData.isLeaf) {
               return (
                 <Card
+                  size="small"
                   hoverable
                   className="tw-w-full tw-rounded-md tw-shadow-sm tw-border-l-4 tw-border-l-primary tw-transition-all hover:tw-shadow-md hover:tw-text-primary"
-                  bodyStyle={{ padding: "6px 16px" }}
                 >
                   <div className="tw-flex tw-items-center tw-space-x-2">
                     <span className="tw-text-primary tw-font-medium">

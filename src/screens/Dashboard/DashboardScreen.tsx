@@ -86,6 +86,7 @@ export const DashboardScreen: React.FC = () => {
                     tags={tag || ["ไม่มีหมวดหมู่"]}
                     firstName={highlightText(item.post_fname, query)}
                     lastName={highlightText(item.post_lname, query)}
+                    postType={item.post_type}
                   />
                 </div>
               );

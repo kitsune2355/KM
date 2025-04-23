@@ -29,12 +29,54 @@ const schema: yup.ObjectSchema<PostManagementFormProps> = yup.object().shape({
     .string()
     .required("จำเป็นต้องเลือกประเภทขององค์ความรู้")
     .default(""),
-  prefixName: yup.string().required("จำเป็นต้องกรอกคำนำหน้า").default(""),
-  fname: yup.string().required("จำเป็นต้องกรอกชื่อ").default(""),
-  lname: yup.string().required("จำเป็นต้องกรอกนามสกุล").default(""),
-  position: yup.string().required("จำเป็นต้องกรอกตำแหน่ง").default(""),
-  department: yup.string().required("จำเป็นต้องกรอกแผนก").default(""),
-  sub_department: yup.string().required("จำเป็นต้องกรอกฝ่าย").default(""),
+  prefixName: yup
+    .string()
+    .when("type", {
+      is: (val: string) => val !== "2",
+      then: (schema) => schema.required("จำเป็นต้องกรอกคำนำหน้า"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .default(""),
+  fname: yup
+    .string()
+    .when("type", {
+      is: (val: string) => val !== "2",
+      then: (schema) => schema.required("จำเป็นต้องกรอกชื่อ"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .default(""),
+  lname: yup
+    .string()
+    .when("type", {
+      is: (val: string) => val !== "2",
+      then: (schema) => schema.required("จำเป็นต้องกรอกนามสกุล"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .default(""),
+  position: yup
+    .string()
+    .when("type", {
+      is: (val: string) => val !== "2",
+      then: (schema) => schema.required("จำเป็นต้องกรอกตำแหน่ง"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .default(""),
+  department: yup
+    .string()
+    .when("type", {
+      is: (val: string) => val !== "2",
+      then: (schema) => schema.required("จำเป็นต้องกรอกแผนก"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .default(""),
+  sub_department: yup
+    .string()
+    .when("type", {
+      is: (val: string) => val !== "2",
+      then: (schema) => schema.required("จำเป็นต้องกรอกฝ่าย"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    .default(""),
   contents: yup.array().default([]),
   description: yup.string().default(""),
   benefit: yup.string().default(""),
