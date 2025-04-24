@@ -64,7 +64,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           >
             <p dangerouslySetInnerHTML={{ __html: createdAt }} />
           </Divider>
-          <Button className="tw-w-full " onClick={handleClick}>
+          <Button className="tw-w-full !tw-text-primary hover:!tw-text-accent hover:!tw-border-accent" onClick={handleClick}>
             อ่านเพิ่มเติม
           </Button>
         </div>

@@ -7,22 +7,34 @@ import {
   Divider,
   message,
   Tag,
+  InputRef,
+  Input,
 } from "antd";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, deletePost, Post } from "../../services/postService";
 import { DELETE_POST } from "../../redux/reducer/postReducer";
-import { DeleteFilled, EditFilled, FileOutlined } from "@ant-design/icons";
+import {
+  DeleteFilled,
+  EditFilled,
+  FileOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { ColumnsType } from "antd/es/table";
 import { typeKM, typeKnowledge } from "../../config/constant";
+import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
+import Highlighter from "react-highlight-words";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
+  const searchInput = useRef<InputRef>(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
 
   const fetchData = useCallback(async () => {
     try {
@@ -77,6 +89,83 @@ export const TablePostManageScreen: React.FC = () => {
     }
   };
 
+  const getSorter = (
+    field: string,
+    type: "string" | "number" | "date" = "string"
+  ) => {
+    return (a: any, b: any) => {
+      const valA = a[field];
+      const valB = b[field];
+
+      if (type === "number") {
+        return (valA || 0) - (valB || 0);
+      }
+
+      if (type === "date") {
+        return new Date(valA).getTime() - new Date(valB).getTime();
+      }
+
+      return (valA || "").toString().localeCompare((valB || "").toString());
+    };
+  };
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: (param?: FilterConfirmProps) => void,
+    dataIndex: any
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const getColumnSearchProps = (dataIndex: keyof Post): ColumnType<Post> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+        />
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "cyan" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ?.toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()) ?? false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
   const columns: ColumnsType<Post> = [
     {
       title: "ข้อมูลทั่วไป",
@@ -85,15 +174,25 @@ export const TablePostManageScreen: React.FC = () => {
           title: "ชื่อเรื่ององค์ความรู้",
           dataIndex: "post_title",
           key: "post_title",
+          sorter: getSorter("post_title"),
+          ...getColumnSearchProps("post_title"),
         },
         {
           title: "หมวดหมู่",
           dataIndex: "categories_title",
           key: "categories_title",
+          sorter: getSorter("categories_title"),
         },
         {
           title: "ประเภทขององค์ความรู้",
           key: "post_type",
+          sorter: (a, b) => {
+            const labelA =
+              typeKnowledge.find((t) => t.value === a.post_type)?.label || "";
+            const labelB =
+              typeKnowledge.find((t) => t.value === b.post_type)?.label || "";
+            return labelA.localeCompare(labelB);
+          },
           render: (_, record) => (
             <div>
               {typeKnowledge
@@ -117,26 +216,31 @@ export const TablePostManageScreen: React.FC = () => {
               title: "ชื่อ",
               dataIndex: "post_fname",
               key: "post_fname",
+              sorter: getSorter("post_fname"),
             },
             {
               title: "นามสกุล",
               dataIndex: "post_lname",
               key: "post_lname",
+              sorter: getSorter("post_lname"),
             },
             {
               title: "ตำแหน่ง",
               dataIndex: "post_position",
               key: "post_position",
+              sorter: getSorter("post_position"),
             },
             {
               title: "แผนก",
               dataIndex: "post_depm",
               key: "post_depm",
+              sorter: getSorter("post_depm"),
             },
             {
               title: "ฝ่าย",
               dataIndex: "post_sub_depm",
               key: "post_sub_depm",
+              sorter: getSorter("post_sub_depm"),
             },
           ],
         },
