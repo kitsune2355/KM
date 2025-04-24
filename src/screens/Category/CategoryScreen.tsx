@@ -139,12 +139,10 @@ export const CategoryScreen: React.FC = () => {
                 <Card
                   size="small"
                   hoverable
-                  className="tw-w-full tw-rounded-md tw-shadow-sm tw-border-l-4 tw-border-l-primary tw-transition-all hover:tw-shadow-md hover:tw-text-primary"
+                  className="tw-w-full tw-rounded-md tw-border-l-4 tw-border-l-primary hover:tw-border-l-white tw-transition-all hover:tw-bg-primary tw-text-primary hover:tw-text-white"
                 >
                   <div className="tw-flex tw-items-center tw-space-x-2">
-                    <span className="tw-text-primary tw-font-medium">
-                      {nodeData.title}
-                    </span>
+                    <span className="tw-font-medium">{nodeData.title}</span>
                     <span className="tw-ml-auto tw-text-gray-400">
                       <RightCircleOutlined />
                     </span>

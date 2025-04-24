@@ -229,21 +229,27 @@ export const Navbar: React.FC = () => {
             </div>
           )}
           <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
-            <Avatar icon={<UserOutlined />} onClick={toggleDropdown} />
+            <Avatar
+              className="tw-cursor-pointer"
+              icon={<UserOutlined />}
+              onClick={toggleDropdown}
+            />
           </Dropdown>
         </div>
       </div>
 
       <Drawer
-        title=""
+        title="คลังความรู้"
         placement="left"
         closable={true}
         onClose={closeDrawer}
         open={drawerVisible}
         className="tw-sidebar-drawer"
       >
-        <div className="tw-pt-6 tw-px-6">{renderSearch()}</div>
-        <SidebarLeft />
+        <div className="tw-pt-6 tw-px-6 tw-flex md:tw-hidden">
+          {renderSearch()}
+        </div>
+        <SidebarLeft onClose={closeDrawer} />
       </Drawer>
     </>
   );

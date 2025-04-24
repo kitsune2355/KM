@@ -81,6 +81,9 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
       onOk={handleSubmit(onSubmit)}
       okText="บันทึก"
       cancelText="ยกเลิก"
+      okButtonProps={{
+        style: { backgroundColor: "#0E7490", color: "#ffffff" },
+      }}
     >
       <Controller
         name="title"

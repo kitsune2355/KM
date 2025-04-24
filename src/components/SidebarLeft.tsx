@@ -12,17 +12,26 @@ import { FolderOpenOutlined } from "@ant-design/icons";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
+interface SidebarLeftProps {
+  onClose?: () => void;
+}
+
 const transformCategoriesToMenuItems = (
-  categories: CategoryTreeNode[]
+  categories: CategoryTreeNode[],
+  onClose?: () => void
 ): MenuItem[] => {
   return categories.map((cat) => ({
     key: String(cat.key),
-    label: <Link to={`/categories/${cat.key}`}>{cat.title}</Link>,
+    label: (
+      <Link to={`/categories/${cat.key}`} onClick={onClose}>
+        {cat.title}
+      </Link>
+    ),
     icon: <FolderOpenOutlined />,
   }));
 };
 
-export const SidebarLeft: React.FC = () => {
+export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const categories = useSelector(
@@ -43,9 +52,9 @@ export const SidebarLeft: React.FC = () => {
 
   useEffect(() => {
     if (categories && categories.length > 0) {
-      setMenuItems(transformCategoriesToMenuItems(categories));
+      setMenuItems(transformCategoriesToMenuItems(categories, onClose));
     }
-  }, [categories]);
+  }, [categories, onClose]);
 
   // ตรวจสอบ path ว่าตรงกับ /categories/:id หรือไม่
   const match = matchPath("/categories/:id", location.pathname);
@@ -54,11 +63,11 @@ export const SidebarLeft: React.FC = () => {
   return (
     <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
       <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-2">
-        <Link to="/" className="tw-hidden lg:tw-flex">
+        <Link to="/" className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl">
           KM
         </Link>
       </div>
-      <Divider orientation="left" className="!tw-text-lg !tw-font-bold ">
+      <Divider orientation="left" className="!tw-text-lg !tw-font-bold !tw-hidden md:!tw-flex">
         คลังความรู้
       </Divider>
       <Menu
@@ -66,6 +75,7 @@ export const SidebarLeft: React.FC = () => {
         mode="inline"
         items={menuItems}
         selectedKeys={selectedKey ? [selectedKey] : []}
+        onClick={onClose}
       />
     </div>
   );

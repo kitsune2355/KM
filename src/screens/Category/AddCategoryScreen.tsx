@@ -151,23 +151,21 @@ export const AddCategoryScreen: React.FC = () => {
   }, [categories, resetChildForm, reset]);
 
   const renderTreeTitle = (node: DataNode) => (
-    <span>
-      <Button
-        icon={<EditOutlined />}
-        size="small"
-        onClick={() => handleOpenEditModal(node.key as string)}
-        style={{ marginLeft: 8 }}
-      />
-      <Button
-        icon={<DeleteOutlined />}
-        size="small"
-        onClick={() => deleteNode(node.key as string)}
-        style={{ marginLeft: 8 }}
-        className="hover:!tw-border-red-500 hover:!tw-text-red-500"
-      />
-      {`  `}
-      {node.title as string}
-    </span>
+    <div className="tw-flex tw-items-center tw-space-x-4">
+      <div className="tw-flex tw-items-center tw-space-x-2">
+        <EditOutlined
+          className="hover:tw-text-blue-500"
+          onClick={() => handleOpenEditModal(node.key as string)}
+        />
+        <DeleteOutlined
+          onClick={() => deleteNode(node.key as string)}
+          className="hover:!tw-border-red-500 hover:!tw-text-red-500"
+        />
+      </div>
+      <span className="tw-text-primary tw-font-semibold">
+        {node.title as string}
+      </span>
+    </div>
   );
 
   return (
