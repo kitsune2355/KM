@@ -43,6 +43,9 @@ export const DashboardScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const query = useSelector((state: RootState) => state.search.query);
+  const postTypeFilter = useSelector(
+    (state: RootState) => state.search.postTypeFilter
+  );
 
   const fetchData = useCallback(async () => {
     try {
@@ -56,15 +59,20 @@ export const DashboardScreen: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  const filteredPosts = posts.filter(
-    (post) =>
-      (post.post_publish === "1" &&
-        post.post_title.toLowerCase().includes(query.toLowerCase())) ||
+  const filteredPosts = posts.filter((post) => {
+    const matchesQuery =
+      post.post_title.toLowerCase().includes(query.toLowerCase()) ||
       post.post_desc.toLowerCase().includes(query.toLowerCase()) ||
       post.post_create_by.toLowerCase().includes(query.toLowerCase()) ||
       post.post_fname.toLowerCase().includes(query.toLowerCase()) ||
-      post.post_lname.toLowerCase().includes(query.toLowerCase())
-  );
+      post.post_lname.toLowerCase().includes(query.toLowerCase());
+
+    const matchesPostType = postTypeFilter
+      ? post.post_type === postTypeFilter
+      : true;
+
+    return post.post_publish === "1" && matchesQuery && matchesPostType;
+  });
 
   return (
     <>
@@ -84,7 +92,10 @@ export const DashboardScreen: React.FC = () => {
                     title={highlightText(item.post_title, query)}
                     description={highlightText(item.post_desc, query)}
                     tags={tag || ["ไม่มีหมวดหมู่"]}
-                    createdAt={highlightText(item.post_create_at as string, query)}
+                    createdAt={highlightText(
+                      item.post_create_at as string,
+                      query
+                    )}
                     postType={item.post_type}
                   />
                 </div>
