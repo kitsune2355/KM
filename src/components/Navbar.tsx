@@ -239,7 +239,7 @@ export const Navbar: React.FC = () => {
       </div>
 
       <Drawer
-        title="คลังความรู้"
+        title="KM"
         placement="left"
         closable={true}
         onClose={closeDrawer}

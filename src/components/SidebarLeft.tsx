@@ -1,4 +1,4 @@
-import { Divider, Menu, MenuProps } from "antd";
+import { Menu, MenuProps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, matchPath } from "react-router-dom";
 import { fetchCategories } from "../services/categoryService";
@@ -67,9 +67,6 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
           KM
         </Link>
       </div>
-      <Divider orientation="left" className="!tw-text-lg !tw-font-bold !tw-hidden md:!tw-flex">
-        คลังความรู้
-      </Divider>
       <Menu
         style={{ width: "100%" }}
         mode="inline"

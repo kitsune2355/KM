@@ -3,6 +3,7 @@ import { KnowledgeCard } from "../../components/KnowledgeCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { fetchPosts } from "../../redux/actions/postActions";
+import { Divider } from "antd";
 
 export const findCategory = (
   categoryList: any[],
@@ -76,6 +77,16 @@ export const DashboardScreen: React.FC = () => {
 
   return (
     <>
+    <div className="tw-mb-4">
+        <Divider
+          orientation="left"
+          orientationMargin="0"
+          className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
+        >
+          องค์ความรู้องค์กร
+        </Divider>
+      </div>
+      
       {filteredPosts.filter((post) => post.post_publish === "1").length > 0 ? (
         <div className="tw-grid tw-grid-cols-12 tw-gap-4">
           {filteredPosts
