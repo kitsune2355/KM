@@ -16,10 +16,17 @@ export const CategoryScreen: React.FC = () => {
   const navigation = useNavigate();
   const params = useParams().id;
   const dispatch = useDispatch<AppDispatch>();
-  const categories = useSelector(
-    (state: RootState) => state.categories.categories
+  const { categories, isFetchingCategory } = useSelector(
+    (state: RootState) => ({
+      categories: state.categories.categories,
+      isFetchingCategory: state.categories.isFetching,
+    })
   );
-  const posts = useSelector((state: RootState) => state.posts.posts);
+  const { posts, isFetchingPosts } = useSelector((state: RootState) => ({
+    posts: state.posts.posts,
+    isFetchingPosts: state.posts.isFetching,
+  }));
+
   const [treeData, setTreeData] = React.useState<CategoryTreeNode[]>([]);
   const [expandedKeys, setExpandedKeys] = React.useState<string[]>([]);
 
@@ -40,14 +47,14 @@ export const CategoryScreen: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!isFetchingCategory && !isFetchingPosts) {
       fetchData();
     }
     if (treeData.length > 0) {
       const keys = getAllKeys(treeData);
       setExpandedKeys(keys);
     }
-  }, [categories, treeData, fetchData]);
+  }, [treeData, fetchData]);
 
   const childTree = useMemo(() => {
     const data = categories.find((c) => c.key === params);

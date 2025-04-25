@@ -34,8 +34,11 @@ const transformCategoriesToMenuItems = (
 export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const categories = useSelector(
-    (state: RootState) => state.categories.categories
+  const { categories, isFetchingCategory } = useSelector(
+    (state: RootState) => ({
+      categories: state.categories.categories,
+      isFetchingCategory: state.categories.isFetching,
+    })
   );
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
@@ -45,7 +48,7 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!isFetchingCategory) {
       fetchData();
     }
   }, [categories, fetchData]);
@@ -63,7 +66,10 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   return (
     <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
       <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-2">
-        <Link to="/" className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl">
+        <Link
+          to="/"
+          className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl"
+        >
           KM
         </Link>
       </div>

@@ -32,8 +32,8 @@ export const Navbar: React.FC = () => {
   const isAdmin = useIsAdmin();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const categories = useSelector(
-    (state: RootState) => state.categories.categories
+  const isFetchingCategory = useSelector(
+    (state: RootState) => state.categories.isFetching
   );
 
   const fetchData = useCallback(async () => {
@@ -43,10 +43,10 @@ export const Navbar: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!isFetchingCategory) {
       fetchData();
     }
-  }, [categories, fetchData]);
+  }, [fetchData]);
 
   const loadUser = async () => {
     try {
@@ -112,7 +112,7 @@ export const Navbar: React.FC = () => {
       },
       {
         key: "management",
-        label: <>{isAdmin && <Link to="/management">ระบบจัดการ Admin</Link>}</>,
+        label: <>{isAdmin && <Link to="/management">ระบบจัดการองค์ความรู้</Link>}</>,
       },
       {
         key: "user",

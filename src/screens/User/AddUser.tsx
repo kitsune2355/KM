@@ -9,10 +9,18 @@ const AddUser: React.FC = () => {
           <p>รหัสพนักงาน</p>
           <Input placeholder="รหัสพนักงาน" />
         </div>
-        <div className="tw-col-span-12">
-          <p>ชื่อ-นามสกุล</p>
-          <Input placeholder="ชื่อ-นามสกุล" />
+
+        <div className="tw-col-span-12 tw-grid tw-grid-cols-12 tw-gap-4">
+          <div className="tw-col-span-6">
+            <p>ชื่อ</p>
+            <Input placeholder="ชื่อ" />
+          </div>
+          <div className="tw-col-span-6">
+            <p>นามสกุล</p>
+            <Input placeholder="นามสกุล" />
+          </div>
         </div>
+
         <div className="tw-col-span-12 md:tw-col-span-4">
           <p>ตำแหน่ง </p>
           <Input placeholder="ตำแหน่ง " />
@@ -28,6 +36,17 @@ const AddUser: React.FC = () => {
         <div className="tw-col-span-12">
           <p>บริษัท</p>
           <Input placeholder="บริษัท" />
+        </div>
+        <div className="tw-col-span-12 md:tw-col-span-4">
+          <p>สถานะ</p>
+          <Select
+            className="tw-w-full"
+            placeholder="สถานะ"
+            options={[
+              { value: "admin", label: "Admin" },
+              { value: "user", label: "User" },
+            ]}
+          />
         </div>
         <div className="tw-col-span-12 md:tw-col-span-4 ">
           <p>สถานะการใช้งาน</p>

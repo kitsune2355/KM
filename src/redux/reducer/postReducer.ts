@@ -3,10 +3,12 @@ import { Post } from "../../services/postService";
 
 interface PostState {
   posts: Post[];
+  isFetching: boolean;
 }
 
 const initialState: PostState = {
   posts: [],
+  isFetching: false,
 };
 
 const postSlice = createSlice({
@@ -14,6 +16,7 @@ const postSlice = createSlice({
   initialState,
   reducers: {
     FETCH_POSTS: (state, action: PayloadAction<Post[]>) => {
+      state.isFetching = true;
       state.posts = action.payload;
     },
     ADD_POST: (state, action: PayloadAction<Post>) => {

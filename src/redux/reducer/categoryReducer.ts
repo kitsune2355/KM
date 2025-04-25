@@ -10,10 +10,12 @@ export interface CategoryTreeNode {
 
 interface CategoryState {
   categories: CategoryTreeNode[];
+  isFetching: boolean;
 }
 
 const initialState: CategoryState = {
   categories: [],
+  isFetching: false,
 };
 
 const addChildToTreeRecursive = (
@@ -104,6 +106,7 @@ const categorySlice = createSlice({
       );
     },
     FETCH_CATEGORY: (state, action: PayloadAction<CategoryTreeNode[]>) => {
+      state.isFetching = true;
       state.categories = action.payload;
     },
   },

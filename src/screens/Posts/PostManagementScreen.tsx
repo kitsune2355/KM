@@ -31,6 +31,7 @@ export const PostManagementScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const posts = useSelector((state: RootState) => state.posts.posts);
+  const isFetchingPosts = useSelector((state: RootState) => state.posts.isFetching);
   const navigate = useNavigate();
   const isAdmin = useIsAdmin();
   const [searchParams] = useSearchParams();
@@ -86,10 +87,10 @@ export const PostManagementScreen: React.FC = () => {
   }, [postId, posts, setValue]);
 
   useEffect(() => {
-    if (!posts || posts.length === 0) {
+    if (!isFetchingPosts) {
       dispatch(fetchPosts());
     }
-  }, [posts, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     onStart();

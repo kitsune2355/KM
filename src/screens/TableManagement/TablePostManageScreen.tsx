@@ -18,6 +18,7 @@ import {
   DeleteFilled,
   EditFilled,
   FileOutlined,
+  PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { AppDispatch, RootState } from "../../store";
@@ -364,10 +365,26 @@ export const TablePostManageScreen: React.FC = () => {
           orientationMargin="0"
           className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
         >
-          การจัดการบทความ
+          การจัดการองค์ความรู้องค์กร
         </Divider>
       </div>
       <Card>
+        <div className="tw-flex tw-flex-row tw-justify-end tw-mb-4 tw-space-x-2">
+          <Button
+            className="!tw-text-primary"
+            onClick={() => navigate("/category")}
+          >
+            สร้างหมวดหมู่
+          </Button>
+          <Button
+            type="primary"
+            className="!tw-bg-primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/new-post")}
+          >
+            ยื่นแบบฟอร์มบันทึกองค์ความรู้
+          </Button>
+        </div>
         <Table
           rowKey="id"
           columns={columns}

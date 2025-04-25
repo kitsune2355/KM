@@ -54,7 +54,7 @@ export const DashboardScreen: React.FC = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -115,7 +115,7 @@ export const DashboardScreen: React.FC = () => {
         </div>
       ) : (
         <div className="tw-w-full tw-h-[90vh] tw-flex tw-justify-center tw-items-center tw-text-gray-500">
-          ยังไม่มีบทความ
+          ยังไม่มีองค์ความรู้องค์กร
         </div>
       )}
     </>
