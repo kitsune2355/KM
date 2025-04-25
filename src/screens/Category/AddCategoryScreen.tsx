@@ -8,11 +8,11 @@ import { addCategory, deleteCategory } from "../../services/categoryService";
 import { v4 as uuidv4 } from "uuid";
 import { EditCategoryModal } from "./EditCategoryModal";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
 import {
   ADD_CATEGORY,
   CategoryTreeNode,
   DELETE_CATEGORY,
+  selectCategoryState,
   UPDATE_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
 import { useChildTreeNodeForm } from "../../forms/ChildTreeNodeForm";
@@ -21,9 +21,7 @@ const { confirm } = Modal;
 
 export const AddCategoryScreen: React.FC = () => {
   const dispatch = useDispatch();
-  const categories = useSelector(
-    (state: RootState) => state.categories.categories
-  );
+  const { categories } = useSelector(selectCategoryState);
 
   const {
     handleSubmit,
@@ -64,13 +62,13 @@ export const AddCategoryScreen: React.FC = () => {
       title: data.title,
       key: uuidv4(),
       children: [],
-      parent_id: selectedKey ? selectedKey : null,
+      parent_key: selectedKey ? selectedKey : null,
     };
     dispatch(ADD_CATEGORY(newCategory));
 
     const isSuccess = await addCategoryToTree(newCategory);
     if (isSuccess) {
-      message.success("Category added successfully!");
+      message.success("เพิ่มหมวดหมู่สำเร็จ");
     }
   };
 
@@ -99,7 +97,7 @@ export const AddCategoryScreen: React.FC = () => {
       title: data.title,
       key: uuidv4(),
       children: [],
-      parent_id: selectedKey,
+      parent_key: selectedKey,
     };
 
     const parentNode = findNodeByKey(categories, selectedKey);
@@ -115,7 +113,7 @@ export const AddCategoryScreen: React.FC = () => {
     const isSuccess = await addCategoryToTree(newChild);
     if (isSuccess) {
       dispatch(ADD_CATEGORY(newChild));
-      message.success("Child category added successfully!");
+      message.success("เพิ่มหมวดหมู่ย่อยสำเร็จ");
     }
   };
 

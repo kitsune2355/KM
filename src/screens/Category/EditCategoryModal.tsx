@@ -61,7 +61,7 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
         UPDATE_CATEGORY({
           key: editKey,
           title: data.title,
-          parent_id: findNodeByKey(categories, editKey)?.parent_id || null,
+          parent_key: findNodeByKey(categories, editKey)?.parent_key || null,
         })
       );
       onCancel();

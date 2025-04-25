@@ -6,26 +6,20 @@ import { AppDispatch, RootState } from "../../store";
 import {
   CategoryTreeNode,
   FETCH_CATEGORY,
+  selectCategoryState,
 } from "../../redux/reducer/categoryReducer";
 import { fetchCategories } from "../../services/categoryService";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { Post } from "../../services/postService";
 import { RightCircleOutlined } from "@ant-design/icons";
+import { selectPostState } from "../../redux/reducer/postReducer";
 
 export const CategoryScreen: React.FC = () => {
   const navigation = useNavigate();
   const params = useParams().id;
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, isFetchingCategory } = useSelector(
-    (state: RootState) => ({
-      categories: state.categories.categories,
-      isFetchingCategory: state.categories.isFetching,
-    })
-  );
-  const { posts, isFetchingPosts } = useSelector((state: RootState) => ({
-    posts: state.posts.posts,
-    isFetchingPosts: state.posts.isFetching,
-  }));
+  const { categories, isFetchingCategory } = useSelector(selectCategoryState);
+  const { posts, isFetchingPosts } = useSelector(selectPostState);
 
   const [treeData, setTreeData] = React.useState<CategoryTreeNode[]>([]);
   const [expandedKeys, setExpandedKeys] = React.useState<string[]>([]);
@@ -47,7 +41,7 @@ export const CategoryScreen: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!isFetchingCategory && !isFetchingPosts) {
+    if (!isFetchingCategory) {
       fetchData();
     }
     if (treeData.length > 0) {
@@ -76,7 +70,7 @@ export const CategoryScreen: React.FC = () => {
               title: post.post_title,
               key: post.id,
               isLeaf: true,
-              parent_id: node.key,
+              parent_key: node.key,
             } as CategoryTreeNode)
         );
 
@@ -93,12 +87,14 @@ export const CategoryScreen: React.FC = () => {
   };
 
   const onStart = useCallback(() => {
-    const tree = categories
-      .filter((c) => c.key === params)
-      .map((item) => item.children)[0];
+    const selectedCategory = categories.find((c) => c.key === params);
+    if (!selectedCategory || !selectedCategory.children) {
+      setTreeData([]);
+      return;
+    }
 
     const treeWithPosts = mergePostsIntoTreeData(
-      tree as CategoryTreeNode[],
+      selectedCategory.children,
       posts
     );
     setTreeData(treeWithPosts);
@@ -113,10 +109,8 @@ export const CategoryScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    if (categories && categories.length > 0) {
-      onStart();
-    }
-  }, [categories, onStart]);
+    onStart();
+  }, [onStart]);
 
   return (
     <>

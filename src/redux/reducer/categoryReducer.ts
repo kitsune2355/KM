@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction, configureStore } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, configureStore, createSelector } from "@reduxjs/toolkit";
 
 export interface CategoryTreeNode {
   id?: string;
   title: string;
   key: string;
   children?: CategoryTreeNode[];
-  parent_id: string | null;
+  parent_key: string | null;
 }
 
 interface CategoryState {
@@ -47,15 +47,15 @@ const categorySlice = createSlice({
   reducers: {
     ADD_CATEGORY: (state, action: PayloadAction<CategoryTreeNode>) => {
       const newCategory = action.payload;
-      if (newCategory.parent_id) {
-        // ถ้ามี parent_id ต้องหาที่ parent นั้น
+      if (newCategory.parent_key) {
+        // ถ้ามี parent_key ต้องหาที่ parent นั้น
         state.categories = addChildToTreeRecursive(
           state.categories,
-          newCategory.parent_id,
+          newCategory.parent_key,
           newCategory
         );
       } else {
-        // ถ้าไม่มี parent_id ให้เพิ่มเป็น root node
+        // ถ้าไม่มี parent_key ให้เพิ่มเป็น root node
         state.categories.push(newCategory);
       }
     },
@@ -88,7 +88,7 @@ const categorySlice = createSlice({
             return {
               ...node,
               title: updated.title,
-              parent_id: updated.parent_id,
+              parent_key: updated.parent_key,
             };
           } else if (node.children) {
             return {
@@ -126,6 +126,14 @@ export const store = configureStore({
     categories: categoryReducer,
   },
 });
+
+export const selectCategoryState = createSelector(
+  (state: RootState) => state.categories,
+  (posts) => ({
+    categories: posts.categories,
+    isFetchingCategory: posts.isFetching,
+  })
+);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

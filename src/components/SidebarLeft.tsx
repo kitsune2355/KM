@@ -7,6 +7,7 @@ import { RootState } from "../store";
 import {
   CategoryTreeNode,
   FETCH_CATEGORY,
+  selectCategoryState,
 } from "../redux/reducer/categoryReducer";
 import { FolderOpenOutlined } from "@ant-design/icons";
 
@@ -34,12 +35,8 @@ const transformCategoriesToMenuItems = (
 export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { categories, isFetchingCategory } = useSelector(
-    (state: RootState) => ({
-      categories: state.categories.categories,
-      isFetchingCategory: state.categories.isFetching,
-    })
-  );
+  const { categories, isFetchingCategory } = useSelector(selectCategoryState);
+
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const fetchData = useCallback(async () => {

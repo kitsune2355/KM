@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, configureStore } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, configureStore, createSelector } from "@reduxjs/toolkit";
 import { Post } from "../../services/postService";
 
 interface PostState {
@@ -46,6 +46,14 @@ export const store = configureStore({
     posts: postReducer,
   },
 });
+
+export const selectPostState = createSelector(
+  (state: RootState) => state.posts,
+  (posts) => ({
+    posts: posts.posts,
+    isFetchingPosts: posts.isFetching,
+  })
+);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

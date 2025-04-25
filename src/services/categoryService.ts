@@ -2,7 +2,7 @@ export interface Category {
   title: string;
   key: string;
   children?: Category[];
-  parent_id: string | null;
+  parent_key: string | null;
 }
 
 export interface CategoryResponse {
