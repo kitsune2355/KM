@@ -62,20 +62,26 @@ export const PostContentScreen: React.FC = () => {
                   <p className="tw-text-primary tw-font-bold">
                     {postData?.post_fname} {postData.post_lname}
                   </p>
-                  <p className="tw-text-xs">
-                    ตำแหน่ง{" "}
-                    <span className="tw-text-gray-500">
-                      {postData?.post_position}
-                    </span>{" "}
-                    แผนก{" "}
-                    <span className="tw-text-gray-500">
-                      {postData?.post_depm}
-                    </span>{" "}
-                    ฝ่าย{" "}
-                    <span className="tw-text-gray-500">
-                      {postData?.post_sub_depm}
-                    </span>
-                  </p>
+                  {postData.post_type === "1" ? (
+                    <p className="tw-text-xs">
+                      ตำแหน่ง{" "}
+                      <span className="tw-text-gray-500">
+                        {postData?.post_position}
+                      </span>{" "}
+                      แผนก{" "}
+                      <span className="tw-text-gray-500">
+                        {postData?.post_depm}
+                      </span>{" "}
+                      ฝ่าย{" "}
+                      <span className="tw-text-gray-500">
+                        {postData?.post_sub_depm}
+                      </span>
+                    </p>
+                  ) : (
+                    <p className="tw-text-primary tw-font-bold">
+                      องค์ความรู้องค์กร
+                    </p>
+                  )}
                   <p className="tw-text-gray-500 tw-text-xs">
                     บันทึกวันที่ {postData?.post_create_at}
                   </p>
@@ -130,7 +136,9 @@ export const PostContentScreen: React.FC = () => {
                   <p className="tw-text-primary tw-font-bold">
                     รายละเอียดขององค์ความรู้ :
                   </p>
-                  <p>{postData?.post_desc}</p>
+                  <p
+                    dangerouslySetInnerHTML={{ __html: postData?.post_desc }}
+                  />
                 </div>
               )}
               {postData.post_benefit && (
@@ -138,7 +146,9 @@ export const PostContentScreen: React.FC = () => {
                   <p className="tw-text-primary tw-font-bold">
                     ประโยชน์ขององค์ความรู้ :
                   </p>
-                  <p>{postData.post_benefit}</p>
+                  <p
+                    dangerouslySetInnerHTML={{ __html: postData?.post_benefit }}
+                  />
                 </div>
               )}
             </div>

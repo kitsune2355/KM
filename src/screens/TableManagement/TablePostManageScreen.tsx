@@ -272,9 +272,10 @@ export const TablePostManageScreen: React.FC = () => {
           key: "post_desc",
           width: 350,
           render: (_: any, record: any) => (
-            <p className="tw-text-ellipsis tw-line-clamp-2">
-              {record.post_desc}
-            </p>
+            <p
+              className="tw-text-ellipsis tw-line-clamp-2"
+              dangerouslySetInnerHTML={{ __html: record.post_desc }}
+            />
           ),
         },
         {
@@ -282,9 +283,10 @@ export const TablePostManageScreen: React.FC = () => {
           key: "post_benefit",
           width: 350,
           render: (_: any, record: any) => (
-            <p className="tw-text-ellipsis tw-line-clamp-2">
-              {record.post_benefit}
-            </p>
+            <p
+              className="tw-text-ellipsis tw-line-clamp-2"
+              dangerouslySetInnerHTML={{ __html: record.post_benefit }}
+            />
           ),
         },
         {

@@ -24,6 +24,7 @@ import { addPost } from "../../services/postService";
 import { fetchPosts } from "../../redux/actions/postActions";
 import useIsAdmin from "../../hook/useIsAdmin";
 import { typeKM, typeKnowledge } from "../../config/constant";
+import TextEditor from "../../components/TextEditor";
 
 export const PostManagementScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +32,9 @@ export const PostManagementScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const posts = useSelector((state: RootState) => state.posts.posts);
-  const isFetchingPosts = useSelector((state: RootState) => state.posts.isFetching);
+  const isFetchingPosts = useSelector(
+    (state: RootState) => state.posts.isFetching
+  );
   const navigate = useNavigate();
   const isAdmin = useIsAdmin();
   const [searchParams] = useSearchParams();
@@ -411,10 +414,10 @@ export const PostManagementScreen: React.FC = () => {
               name="description"
               control={control}
               render={({ field }) => (
-                <TextArea
-                  {...field}
-                  rows={4}
-                  placeholder="รายละเอียดขององค์ความรู้"
+                <TextEditor
+                  onChange={field.onChange}
+                  value={field.value || ""}
+                  ref={field.ref}
                 />
               )}
             />
@@ -426,10 +429,10 @@ export const PostManagementScreen: React.FC = () => {
               name="benefit"
               control={control}
               render={({ field }) => (
-                <TextArea
-                  {...field}
-                  rows={4}
-                  placeholder="ประโยชน์ขององค์ความรู้"
+                <TextEditor
+                  onChange={field.onChange}
+                  value={field.value || ""}
+                  ref={field.ref}
                 />
               )}
             />
