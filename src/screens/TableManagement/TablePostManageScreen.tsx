@@ -13,7 +13,7 @@ import {
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, deletePost, Post } from "../../services/postService";
-import { DELETE_POST } from "../../redux/reducer/postReducer";
+import { DELETE_POST, selectPostState } from "../../redux/reducer/postReducer";
 import {
   DeleteFilled,
   EditFilled,
@@ -21,7 +21,7 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { AppDispatch, RootState } from "../../store";
+import { AppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { ColumnsType } from "antd/es/table";
@@ -32,7 +32,7 @@ import Highlighter from "react-highlight-words";
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const posts = useSelector((state: RootState) => state.posts.posts);
+  const { posts } = useSelector(selectPostState);
   const searchInput = useRef<InputRef>(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -125,7 +125,6 @@ export const TablePostManageScreen: React.FC = () => {
       setSelectedKeys,
       selectedKeys,
       confirm,
-      clearFilters,
     }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
@@ -175,6 +174,7 @@ export const TablePostManageScreen: React.FC = () => {
           title: "ชื่อเรื่ององค์ความรู้",
           dataIndex: "post_title",
           key: "post_title",
+          width: 350,
           sorter: getSorter("post_title"),
           ...getColumnSearchProps("post_title"),
         },
@@ -182,11 +182,14 @@ export const TablePostManageScreen: React.FC = () => {
           title: "หมวดหมู่",
           dataIndex: "categories_title",
           key: "categories_title",
+          width: 300,
           sorter: getSorter("categories_title"),
+          ...getColumnSearchProps("categories_title"),
         },
         {
           title: "ประเภทขององค์ความรู้",
           key: "post_type",
+          width: 200,
           sorter: (a, b) => {
             const labelA =
               typeKnowledge.find((t) => t.value === a.post_type)?.label || "";
@@ -217,30 +220,35 @@ export const TablePostManageScreen: React.FC = () => {
               title: "ชื่อ",
               dataIndex: "post_fname",
               key: "post_fname",
+              width: 150,
               sorter: getSorter("post_fname"),
             },
             {
               title: "นามสกุล",
               dataIndex: "post_lname",
               key: "post_lname",
+              width: 150,
               sorter: getSorter("post_lname"),
             },
             {
               title: "ตำแหน่ง",
               dataIndex: "post_position",
               key: "post_position",
+              width: 150,
               sorter: getSorter("post_position"),
             },
             {
               title: "แผนก",
               dataIndex: "post_depm",
               key: "post_depm",
+              width: 150,
               sorter: getSorter("post_depm"),
             },
             {
               title: "ฝ่าย",
               dataIndex: "post_sub_depm",
               key: "post_sub_depm",
+              width: 150,
               sorter: getSorter("post_sub_depm"),
             },
           ],
@@ -292,6 +300,7 @@ export const TablePostManageScreen: React.FC = () => {
         {
           title: "เอกสาร/ไฟล์แนบ",
           key: "files",
+          width: 100,
           render: (_: any, record: any) => {
             return (
               <>
@@ -370,8 +379,8 @@ export const TablePostManageScreen: React.FC = () => {
           การจัดการองค์ความรู้องค์กร
         </Divider>
       </div>
-      <Card>
-        <div className="tw-flex tw-flex-row tw-justify-end tw-mb-4 tw-space-x-2">
+      <Card className="tw-min-h-[65vh]">
+        <div className="tw-flex tw-flex-row tw-justify-end tw-space-x-2">
           <Button
             className="!tw-text-primary"
             onClick={() => navigate("/category")}
@@ -392,8 +401,7 @@ export const TablePostManageScreen: React.FC = () => {
           columns={columns}
           dataSource={posts}
           bordered
-          scroll={{ x: "max-content" }}
-          pagination={{ current: 1, pageSize: 10, position: ["bottomRight"] }}
+          scroll={{ x: "max-content", y: 500 }}
         />
       </Card>
     </>

@@ -1,4 +1,9 @@
-import { createSlice, PayloadAction, configureStore, createSelector } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  configureStore,
+  createSelector,
+} from "@reduxjs/toolkit";
 import { Post } from "../../services/postService";
 
 interface PostState {

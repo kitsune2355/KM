@@ -50,12 +50,14 @@ export const PostContentScreen: React.FC = () => {
     }
   }, [fetchData]);
 
+  console.log('categories', categories)
+
   return (
     <div className="tw-flex tw-flex-col tw-space-y-4">
       {postData ? (
         <>
           <Card>
-            <div className="tw-flex tw-flex-row tw-justify-between">
+            <div className="tw-flex tw-flex-col md:tw-flex-row  tw-justify-between">
               <div className="tw-flex tw-flex-row tw-items-center">
                 <Avatar size={48} icon={<UserOutlined />} />
                 <div className="tw-flex tw-flex-col tw-ml-4">
@@ -88,7 +90,7 @@ export const PostContentScreen: React.FC = () => {
                 </div>
               </div>
 
-              <div className="tw-text-gray-500 tw-text-xs">
+              <div className="tw-text-gray-500 tw-text-xs tw-text-end">
                 วันที่ทำเอกสาร {formatThaiDate(postData.post_date)}
               </div>
             </div>
@@ -146,7 +148,7 @@ export const PostContentScreen: React.FC = () => {
                   <p className="tw-text-primary tw-font-bold">
                     ประโยชน์ขององค์ความรู้ :
                   </p>
-                  <p
+                  <div
                     dangerouslySetInnerHTML={{ __html: postData?.post_benefit }}
                   />
                 </div>

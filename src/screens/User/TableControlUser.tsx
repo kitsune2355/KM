@@ -1,7 +1,196 @@
-import React from "react";
+import { Button, message, Popconfirm, Space, Table } from "antd";
+import { ColumnsType } from "antd/es/table";
+import React, { useEffect } from "react";
+import { AddUserFormProps } from "../../forms/AddUserForm";
+import { addUser, deleteUser, fetchAllUsers } from "../../services/userService";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import {
+  DELETE_USER,
+  FETCH_ALL_USERS_REQUEST,
+  FETCH_ALL_USERS_SUCCESS,
+  UPDATE_USER,
+  User,
+} from "../../redux/reducer/userReducer";
+import { DeleteFilled, EditFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
-const TableControlUser: React.FC = () => {
-  return <div className="tw-min-h-[65vh]">ControlUser</div>;
+interface TableControlUserProps {
+  setActiveTab: (key: string) => void;
+  activeTab: string;
+}
+
+const TableControlUser: React.FC<TableControlUserProps> = ({
+  setActiveTab,
+  activeTab,
+}) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const allUsers = useSelector((state: RootState) => state.users.allUsers);
+  const isFetchingUsers = useSelector((state: RootState) => state.users.isFetchingUsers);
+
+  const fetchData = async () => {
+    dispatch(FETCH_ALL_USERS_REQUEST());
+    const res = await fetchAllUsers();
+    dispatch(FETCH_ALL_USERS_SUCCESS(res));
+    return res;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "1") {
+      navigate("/user-management", { replace: true });
+    }
+  }, [activeTab, navigate]);
+
+  const handleDelete = async (record: User) => {
+    try {
+      await deleteUser(record.employeeID);
+      dispatch(DELETE_USER(record.employeeID));
+      fetchData();
+      message.success("ลบข้อมูลสำเร็จ");
+    } catch (error) {
+      console.error(error);
+      message.error("มีข้อผิดพลาดในการลบข้อมูล");
+    }
+  };
+
+  const handleEdit = async (record: User) => {
+    setActiveTab("2");
+    navigate(`/user-management?id=${record.employeeID}`);
+  };
+
+  const handleStatus = async (record: User) => {
+    const updatedStatus = {
+      ...record,
+      status: record.status === "0" ? "1" : "0",
+    };
+    try {
+      await addUser(updatedStatus);
+      dispatch(UPDATE_USER(updatedStatus));
+      fetchData();
+      message.success(
+        updatedStatus.status === "1"
+          ? " เปิดการใช้งานแล้ว"
+          : "ยกเลิกการใช้งานแล้ว"
+      );
+    } catch (error) {
+      console.error(error);
+      message.error("ไม่สามารถอัปเดตสถานะการเผยแพร่ได้");
+    }
+  };
+
+  const columns: ColumnsType<AddUserFormProps> = [
+    {
+      title: "รหัสพนักงาน",
+      dataIndex: "employeeID",
+      key: "employeeID",
+      width: 150,
+    },
+    {
+      title: "ชื่อ",
+      dataIndex: "firstName",
+      key: "firstName",
+      width: 150,
+    },
+    {
+      title: "นามสกุล",
+      dataIndex: "lastName",
+      key: "lastName",
+      width: 150,
+    },
+    {
+      title: "ตำแหน่ง",
+      dataIndex: "position",
+      key: "position",
+      width: 150,
+    },
+    {
+      title: "แผนก",
+      dataIndex: "department",
+      key: "department",
+      width: 150,
+    },
+    {
+      title: "ฝ่าย",
+      dataIndex: "sub_department",
+      key: "sub_department",
+      width: 150,
+    },
+    {
+      title: "บริษัท",
+      dataIndex: "company",
+      key: "company",
+      width: 150,
+    },
+    {
+      title: "สิทธิ์การใช้งาน",
+      dataIndex: "role",
+      key: "role",
+      width: 150,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      fixed: "right",
+      render: (_: any, record: any) => (
+        <Space>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            icon={<EditFilled />}
+            shape="circle"
+            onClick={() => handleEdit(record)}
+          />
+          <Popconfirm
+            title="คุณต้องการลบข้อมูลนี้ใช่หรือไม่?"
+            onConfirm={() => handleDelete(record)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              size="small"
+              danger
+              icon={<DeleteFilled />}
+              shape="circle"
+            />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+    {
+      title: "สถานะ",
+      key: "status",
+      fixed: "right",
+      render: (_: any, record: any) => (
+        <Button
+          size="small"
+          variant="filled"
+          color={record.status === "0" ? "default" : "cyan"}
+          onClick={() => handleStatus(record)}
+        >
+          {record.post_publish === "0" ? "ปิดการใช้งาน" : "เปิดการใช้งาน"}
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+    <div className="tw-min-h-[65vh]">
+      <Table
+        rowKey="id"
+        columns={columns}
+        dataSource={allUsers}
+        bordered
+        scroll={{ x: "max-content", y: 500 }}
+        loading={isFetchingUsers}
+      />
+    </div>
+  );
 };
 
 export default TableControlUser;

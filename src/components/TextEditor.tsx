@@ -38,11 +38,9 @@ const TextEditor = React.forwardRef<HTMLDivElement, TextEditorProps>(
                   "hiliteColor",
                   "align",
                   "horizontalRule",
-                  "list",
-                  "table",
                 ],
                 ["outdent", "indent"],
-                ["image", "link", "video"],
+                // ["image", "link", "video"],
                 ["preview", "print", "fullScreen"],
               ],
             }}

@@ -10,7 +10,6 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
 import useIsAdmin from "../hook/useIsAdmin";
-import { fetchUser, User } from "../services/userService";
 import { useDispatch, useSelector } from "react-redux";
 import {
   SET_POST_TYPE_FILTER,
@@ -21,6 +20,8 @@ import { FETCH_CATEGORY } from "../redux/reducer/categoryReducer";
 import { AppDispatch, RootState } from "../store";
 import { fetchPosts } from "../redux/actions/postActions";
 import { typeKnowledge } from "../config/constant";
+import { fetchUser } from "../services/userService";
+import { User } from "../redux/reducer/userReducer";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -112,7 +113,9 @@ export const Navbar: React.FC = () => {
       },
       {
         key: "management",
-        label: <>{isAdmin && <Link to="/management">ระบบจัดการองค์ความรู้</Link>}</>,
+        label: (
+          <>{isAdmin && <Link to="/management">ระบบจัดการองค์ความรู้</Link>}</>
+        ),
       },
       {
         key: "user",
@@ -223,7 +226,7 @@ export const Navbar: React.FC = () => {
           {!isAdmin && (
             <div className="tw-flex tw-flex-col tw-justify-center tw-items-end">
               <p className="tw-text-primary tw-font-bold">
-                {user?.username} {user?.fname}
+                {user?.firstName} {user?.lastName}
               </p>
               <p className="tw-text-white tw-text-xs">{user?.position}</p>
             </div>

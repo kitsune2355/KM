@@ -1,23 +1,25 @@
 import { Card, Divider, Tabs, TabsProps } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import AddUser from "./AddUser";
 import TableControlUser from "./TableControlUser";
 
 export const UserManagementScreen: React.FC = () => {
+  const [activeKey, setActiveKey] = useState("1");
+
   const onChange = (key: string) => {
-    console.log(key);
+    setActiveKey(key);
   };
 
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "เพิ่มผู้ใช้",
-      children: <AddUser />,
+      label: "ข้อมูลผู้ใช้",
+      children: <TableControlUser setActiveTab={setActiveKey} activeTab={activeKey} />,
     },
     {
       key: "2",
-      label: "กำหนดสิทธิ์การใช้งาน",
-      children: <TableControlUser />,
+      label: "เพิ่มผู้ใช้",
+      children: <AddUser />,
     },
   ];
 
@@ -35,9 +37,10 @@ export const UserManagementScreen: React.FC = () => {
       <Card>
         <Tabs
           className="tw-tabs"
-          defaultActiveKey="1"
+          activeKey={activeKey}
           items={items}
           onChange={onChange}
+          destroyInactiveTabPane
         />
       </Card>
     </>
