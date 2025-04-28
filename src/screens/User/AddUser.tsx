@@ -5,10 +5,10 @@ import { useAddUserForm } from "../../forms/AddUserForm";
 import { addUser } from "../../services/userService";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { selectUserState } from "../../redux/reducer/userReducer";
+import { RootState } from "../../store";
 
 const AddUser: React.FC = () => {
-  const { allUsers } = useSelector(selectUserState);
+  const allUsers = useSelector((state: RootState) => state.users.allUsers);
   const {
     control,
     formState: { errors },
