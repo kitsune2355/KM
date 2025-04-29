@@ -97,7 +97,7 @@ export const DashboardScreen: React.FC = () => {
               const tag = findCategory(categories, item.post_ctg_id);
               return (
                 <div
-                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-3"
+                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-4"
                   key={key}
                 >
                   <KnowledgeCard
