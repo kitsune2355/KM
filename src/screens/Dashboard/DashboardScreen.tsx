@@ -44,6 +44,7 @@ export const DashboardScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const query = useSelector((state: RootState) => state.search.query);
+  const selectedTags = useSelector((state: RootState) => state.search.selectedTags);
   const postTypeFilter = useSelector(
     (state: RootState) => state.search.postTypeFilter
   );
@@ -67,12 +68,13 @@ export const DashboardScreen: React.FC = () => {
       post.post_create_by.toLowerCase().includes(query.toLowerCase()) ||
       post.post_fname.toLowerCase().includes(query.toLowerCase()) ||
       post.post_lname.toLowerCase().includes(query.toLowerCase());
-
-    const matchesPostType = postTypeFilter
-      ? post.post_type === postTypeFilter
-      : true;
-
-    return post.post_publish === "1" && matchesQuery && matchesPostType;
+  
+    const matchesSelectedTags =
+      selectedTags.length === 0 ||
+      selectedTags.includes(post.post_type) ||
+      selectedTags.includes(post.post_ctg_id);
+  
+    return post.post_publish === "1" && matchesQuery && matchesSelectedTags;
   });
 
   return (

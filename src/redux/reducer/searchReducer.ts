@@ -4,12 +4,14 @@ interface SearchState {
   query: string;
   results: any[];
   postTypeFilter: string | null;
+  selectedTags: string[];
 }
 
 const initialState: SearchState = {
-  query: '',
+  query: "",
   results: [],
   postTypeFilter: null,
+  selectedTags: [],
 };
 
 const searchSlice = createSlice({
@@ -26,18 +28,17 @@ const searchSlice = createSlice({
       state.postTypeFilter = action.payload;
     },
     CLEAR_SEARCH: (state) => {
-      state.query = '';
+      state.query = "";
       state.results = [];
       state.postTypeFilter = null;
+    },
+    SET_SELECTED_TAGS: (state, action: PayloadAction<string[]>) => {
+      state.selectedTags = action.payload;
     },
   },
 });
 
-export const {
-  SET_QUERY,
-  SET_RESULTS,
-  SET_POST_TYPE_FILTER,
-  CLEAR_SEARCH,
-} = searchSlice.actions;
+export const { SET_QUERY, SET_RESULTS, SET_POST_TYPE_FILTER, CLEAR_SEARCH, SET_SELECTED_TAGS } =
+  searchSlice.actions;
 
 export const searchReducer = searchSlice.reducer;

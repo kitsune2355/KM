@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Avatar, Button, Drawer, Dropdown, Input, Tag } from "antd";
+import { Avatar, Button, Drawer, Dropdown,Tag, TreeSelect } from "antd";
 import {
   UserOutlined,
   MenuOutlined,
   SearchOutlined,
   LogoutOutlined,
-  FilterFilled,
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { SidebarLeft } from "./SidebarLeft";
@@ -14,10 +13,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   SET_POST_TYPE_FILTER,
   SET_QUERY,
+  SET_SELECTED_TAGS,
 } from "../redux/reducer/searchReducer";
 import { fetchCategories } from "../services/categoryService";
-import { FETCH_CATEGORY } from "../redux/reducer/categoryReducer";
-import { AppDispatch, RootState } from "../store";
+import {
+  FETCH_CATEGORY,
+  selectCategoryState,
+} from "../redux/reducer/categoryReducer";
+import { AppDispatch } from "../store";
 import { fetchPosts } from "../redux/actions/postActions";
 import { typeKnowledge } from "../config/constant";
 import { fetchUser } from "../services/userService";
@@ -27,15 +30,12 @@ export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<string>("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const isAdmin = useIsAdmin();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const isFetchingCategory = useSelector(
-    (state: RootState) => state.categories.isFetching
-  );
+  const { categories, isFetchingCategory } = useSelector(selectCategoryState);
 
   const fetchData = useCallback(async () => {
     const res = await fetchCategories();
@@ -75,9 +75,8 @@ export const Navbar: React.FC = () => {
     setDrawerVisible(false);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    dispatch(SET_QUERY(query));
+  const handleSearchChange = (value: string) => {
+    dispatch(SET_QUERY(value));
     navigate("/");
   };
 
@@ -85,10 +84,15 @@ export const Navbar: React.FC = () => {
     navigate("/user-management");
   };
 
-  const handleFilterSelect = (type: string) => {
-    setSelectedFilter(type);
-    dispatch(SET_POST_TYPE_FILTER(type));
-    setIsFilterDropdownOpen(false);
+  const handleTagChange = (values: string[]) => {
+    setSelectedTags(values);
+
+    const selectedType = values.find((v) =>
+      typeKnowledge.some((tk) => tk.value === v)
+    );
+
+    dispatch(SET_POST_TYPE_FILTER(selectedType || ""));
+    dispatch(SET_SELECTED_TAGS(values));
     navigate("/");
   };
 
@@ -148,60 +152,85 @@ export const Navbar: React.FC = () => {
     ],
   };
 
+  const buildTreeData = (categories: any[]): any[] => {
+    return categories.map((category) => {
+      // สร้าง object สำหรับหมวดหมู่
+      const categoryData: any = {
+        title: category.title,
+        value: category.key,
+        children:
+          category.children && category.children.length > 0
+            ? buildTreeData(category.children)
+            : [], // ถ้ามี children ก็ทำการเรียก buildTreeData ซ้ำ
+      };
+      return categoryData;
+    });
+  };
+
+  const combinedTreeData = [
+    {
+      title: "ประเภทความรู้",
+      value: "type",
+      selectable: false,
+      children: typeKnowledge.map((item) => ({
+        title: item.label,
+        value: item.value,
+      })),
+    },
+    {
+      title: "หมวดหมู่",
+      value: "category",
+      selectable: false,
+      children: buildTreeData(categories),
+    },
+  ];
+
+  const tagRender = (props: any) => {
+    const { label, value, closable, onClose } = props;
+    let color;
+    if (
+      typeKnowledge.find((item) => item.value.includes(value))?.value === "1"
+    ) {
+      color = "pink";
+    } else if (
+      typeKnowledge.find((item) => item.value.includes(value))?.value === "2"
+    ) {
+      color = "purple";
+    } else {
+      color = "blue";
+    }
+
+    return (
+      <Tag
+        color={color}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3 }}
+      >
+        {label}
+      </Tag>
+    );
+  };
+
   const renderSearch = () => {
     return (
-      <div className="tw-relative tw-w-full">
-        <Input
-          placeholder="ค้นหาองค์ความรู้"
-          prefix={
-            <>
-              <SearchOutlined className="tw-text-gray-400" />
-              {selectedFilter && (
-                <Tag
-                  closable
-                  onClose={(e) => {
-                    e.preventDefault();
-                    handleFilterSelect("");
-                  }}
-                  color={
-                    typeKnowledge.find((item) => item.value === selectedFilter)
-                      ?.value === "1"
-                      ? "pink"
-                      : "purple"
-                  }
-                  style={{ marginRight: 8 }}
-                >
-                  {
-                    typeKnowledge.find((item) => item.value === selectedFilter)
-                      ?.label
-                  }
-                </Tag>
-              )}
-            </>
-          }
-          suffix={
-            <FilterFilled
-              className="tw-text-gray-400 tw-cursor-pointer"
-              onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-            />
-          }
-          onChange={handleSearchChange}
-        />
-
-        {isFilterDropdownOpen && (
-          <div className="tw-absolute tw-z-50 tw-w-full tw-bg-white tw-shadow-lg tw-rounded-md tw-mt-1 tw-border tw-border-gray-200">
-            {typeKnowledge.map((type, key) => (
-              <div
-                key={key}
-                className="tw-py-2 tw-px-4 tw-text-sm tw-cursor-pointer hover:tw-bg-gray-100"
-                onClick={() => handleFilterSelect(type.value)}
-              >
-                {type.label}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <TreeSelect
+        showSearch
+        treeData={combinedTreeData}
+        value={selectedTags}
+        onChange={handleTagChange}
+        onSearch={handleSearchChange}
+        treeCheckable
+        showCheckedStrategy={TreeSelect.SHOW_CHILD}
+        filterTreeNode={(input, node) =>
+          (node.title as string).toLowerCase().includes(input.toLowerCase())
+        }
+        placeholder="ค้นหาองค์ความรู้"
+        className="tw-w-full"
+        dropdownStyle={{ maxHeight: 300, overflow: "auto" }}
+        tagRender={tagRender}
+        suffixIcon={<SearchOutlined />}
+      />
     );
   };
 
