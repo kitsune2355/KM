@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Avatar, Button, Drawer, Dropdown,Tag, TreeSelect } from "antd";
+import { Avatar, Button, Drawer, Dropdown, Tag, TreeSelect } from "antd";
 import {
   UserOutlined,
   MenuOutlined,
@@ -230,6 +230,7 @@ export const Navbar: React.FC = () => {
         dropdownStyle={{ maxHeight: 300, overflow: "auto" }}
         tagRender={tagRender}
         suffixIcon={<SearchOutlined />}
+        allowClear
       />
     );
   };
