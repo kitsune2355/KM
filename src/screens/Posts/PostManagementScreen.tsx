@@ -128,8 +128,6 @@ export const PostManagementScreen: React.FC = () => {
       files: data.files,
     };
 
-    console.log('post', post)
-
     try {
       const response = await addPost(post);
       if (postId) {
@@ -196,6 +194,17 @@ export const PostManagementScreen: React.FC = () => {
             <p>แบบฟอร์มบันทึกองค์ความรู้องค์กร</p>
             <p>(Organization Knowledge Recording Form)</p>
           </div>
+
+          {postId && (
+            <div className="tw-col-span-12">
+              <div className="tw-flex tw-flex-row tw-justify-end tw-space-x-2">
+                <p>เลขที่เอกสาร</p>
+                <span className="tw-text-gray-500">
+                  {posts.find((item) => item.id === postId)?.post_format}
+                </span>
+              </div>
+            </div>
+          )}
 
           <div className="tw-col-span-12">
             <p className="tw-font-bold tw-pb-4">ส่วนที่ 1 : ข้อมูลทั่วไป</p>

@@ -32,7 +32,7 @@ import Highlighter from "react-highlight-words";
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { posts } = useSelector(selectPostState);
+  const { posts, isFetchingPosts } = useSelector(selectPostState);
   const searchInput = useRef<InputRef>(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -40,7 +40,7 @@ export const TablePostManageScreen: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      dispatch(fetchPosts());
+      await dispatch(fetchPosts());
     } catch (error) {
       console.error(error);
     }
@@ -172,7 +172,7 @@ export const TablePostManageScreen: React.FC = () => {
       title: "ข้อมูลทั่วไป",
       children: [
         {
-          title: "รหัสองค์ความรู้",
+          title: "เลขที่องค์ความรู้",
           dataIndex: "post_format",
           key: "post_format",
           width: 200,
@@ -277,6 +277,7 @@ export const TablePostManageScreen: React.FC = () => {
         {
           title: "ประเภทขององค์ความรู้",
           key: "post_contents",
+          width: 350,
           render: (_: any, record: any) => (
             <div className="">
               {typeKM
@@ -348,6 +349,7 @@ export const TablePostManageScreen: React.FC = () => {
       title: "Actions",
       key: "actions",
       fixed: "right",
+      width: 100,
       render: (_: any, record: any) => (
         <Space>
           <Button
@@ -378,6 +380,7 @@ export const TablePostManageScreen: React.FC = () => {
       title: "สถานะ",
       key: "post_publish",
       fixed: "right",
+      width: 100,
       render: (_: any, record: any) => (
         <Button
           size="small"
@@ -431,6 +434,7 @@ export const TablePostManageScreen: React.FC = () => {
             console.log("count", count);
             setCount(count);
           }}
+          loading={isFetchingPosts}
         />
         <p>แสดงทั้งหมด {count} รายการ</p>
       </Card>

@@ -20,8 +20,11 @@ const postSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    FETCH_POSTS: (state, action: PayloadAction<Post[]>) => {
+    FETCH_POSTS_REQUEST: (state) => {
       state.isFetching = true;
+    },
+    FETCH_POSTS_SUCCESS: (state, action: PayloadAction<Post[]>) => {
+      state.isFetching = false;
       state.posts = action.payload;
     },
     ADD_POST: (state, action: PayloadAction<Post>) => {
@@ -41,8 +44,13 @@ const postSlice = createSlice({
   },
 });
 
-export const { ADD_POST, DELETE_POST, UPDATE_POST, FETCH_POSTS } =
-  postSlice.actions;
+export const {
+  ADD_POST,
+  DELETE_POST,
+  UPDATE_POST,
+  FETCH_POSTS_REQUEST,
+  FETCH_POSTS_SUCCESS,
+} = postSlice.actions;
 
 export const postReducer = postSlice.reducer;
 
