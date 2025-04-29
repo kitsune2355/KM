@@ -23,8 +23,9 @@ import { AppDispatch, RootState } from "../../store";
 import { addPost } from "../../services/postService";
 import { fetchPosts } from "../../redux/actions/postActions";
 import useIsAdmin from "../../hook/useIsAdmin";
-import { typeKM, typeKnowledge } from "../../config/constant";
+import { typeKM } from "../../config/constant";
 import TextEditor from "../../components/TextEditor";
+import { CategoryTreeNode } from "../../redux/reducer/categoryReducer";
 
 export const PostManagementScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -106,6 +107,7 @@ export const PostManagementScreen: React.FC = () => {
 
     const post = {
       id: postId,
+      post_format: postById ? postById.post_format : "",
       post_title: data.title,
       post_ctg_id: data.category,
       post_date: data.date,
@@ -125,6 +127,8 @@ export const PostManagementScreen: React.FC = () => {
       post_create_by: user[0].id,
       files: data.files,
     };
+
+    console.log('post', post)
 
     try {
       const response = await addPost(post);
@@ -152,6 +156,27 @@ export const PostManagementScreen: React.FC = () => {
     } else {
       navigate("/");
     }
+  };
+
+  const findLabelByKey = (
+    nodes: CategoryTreeNode[],
+    key: string,
+    path: string[] = []
+  ): string | null => {
+    for (const node of nodes) {
+      const newPath = [...path, node.title];
+
+      if (node.key === key) {
+        return newPath.join("/");
+      }
+
+      if (node.children && node.children.length > 0) {
+        const result = findLabelByKey(node.children, key, newPath);
+        if (result) return result;
+      }
+    }
+
+    return null;
   };
 
   return (
@@ -202,6 +227,7 @@ export const PostManagementScreen: React.FC = () => {
                 )}
               </div>
               <div className="tw-col-span-12">
+                หมวดหมู่
                 <Controller
                   name="category"
                   control={control}
@@ -214,6 +240,18 @@ export const PostManagementScreen: React.FC = () => {
                         label: "title",
                         value: "key",
                         children: "children",
+                      }}
+                      labelInValue
+                      value={
+                        field.value
+                          ? {
+                              label: findLabelByKey(categories, field.value),
+                              value: field.value,
+                            }
+                          : undefined
+                      }
+                      onChange={(val) => {
+                        field.onChange(val?.value);
                       }}
                       placeholder="เลือกหมวดหมู่"
                       allowClear
@@ -244,7 +282,18 @@ export const PostManagementScreen: React.FC = () => {
                     <Radio.Group
                       {...field}
                       className="tw-flex tw-flex-col"
-                      options={typeKnowledge}
+                      options={[
+                        {
+                          label:
+                            "ความรู้จากการปฏิบัติงาน (ระบุบข้อมูลในข้อที่ 3 และส่วนที่ 2 ทุกข้อ)",
+                          value: "1",
+                        },
+                        {
+                          label:
+                            "ความรู้จากการเข้าอบรม  (ระบุบข้อมูลในส่วนที่ 2 ทุกข้อ)",
+                          value: "2",
+                        },
+                      ]}
                     />
                   )}
                 />

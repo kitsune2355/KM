@@ -36,6 +36,7 @@ export const TablePostManageScreen: React.FC = () => {
   const searchInput = useRef<InputRef>(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [count, setCount] = useState<number>(posts.length);
 
   const fetchData = useCallback(async () => {
     try {
@@ -48,6 +49,10 @@ export const TablePostManageScreen: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    setCount(posts.length);
+  }, [posts]);
 
   const handleEdit = (record: any) => {
     navigate(`/new-post?id=${record.id}`);
@@ -121,15 +126,11 @@ export const TablePostManageScreen: React.FC = () => {
   };
 
   const getColumnSearchProps = (dataIndex: keyof Post): ColumnType<Post> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-    }) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`ค้นหา`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -171,6 +172,14 @@ export const TablePostManageScreen: React.FC = () => {
       title: "ข้อมูลทั่วไป",
       children: [
         {
+          title: "รหัสองค์ความรู้",
+          dataIndex: "post_format",
+          key: "post_format",
+          width: 200,
+          sorter: getSorter("post_format"),
+          ...getColumnSearchProps("post_format"),
+        },
+        {
           title: "ชื่อเรื่ององค์ความรู้",
           dataIndex: "post_title",
           key: "post_title",
@@ -196,6 +205,13 @@ export const TablePostManageScreen: React.FC = () => {
             const labelB =
               typeKnowledge.find((t) => t.value === b.post_type)?.label || "";
             return labelA.localeCompare(labelB);
+          },
+          filters: typeKnowledge.map((type) => ({
+            text: type.label,
+            value: type.value,
+          })),
+          onFilter: (value, record) => {
+            return record.post_type === value;
           },
           render: (_, record) => (
             <div>
@@ -322,6 +338,13 @@ export const TablePostManageScreen: React.FC = () => {
       ],
     },
     {
+      title: "วันที่สร้าง",
+      dataIndex: "post_create_at",
+      key: "post_create_at",
+      width: 150,
+      sorter: getSorter("post_create_at"),
+    },
+    {
       title: "Actions",
       key: "actions",
       fixed: "right",
@@ -380,7 +403,7 @@ export const TablePostManageScreen: React.FC = () => {
         </Divider>
       </div>
       <Card className="tw-min-h-[65vh]">
-        <div className="tw-flex tw-flex-row tw-justify-end tw-space-x-2">
+        <div className="tw-flex tw-flex-col md:tw-flex-row tw-justify-end tw-gap-1 tw-mb-2">
           <Button
             className="!tw-text-primary"
             onClick={() => navigate("/category")}
@@ -402,7 +425,14 @@ export const TablePostManageScreen: React.FC = () => {
           dataSource={posts}
           bordered
           scroll={{ x: "max-content", y: 500 }}
+          tableLayout="fixed"
+          onChange={(pagination, filters, sorter, extra) => {
+            const count = extra.currentDataSource.length;
+            console.log("count", count);
+            setCount(count);
+          }}
         />
+        <p>แสดงทั้งหมด {count} รายการ</p>
       </Card>
     </>
   );

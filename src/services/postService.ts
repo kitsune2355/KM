@@ -1,5 +1,6 @@
 export interface Post {
   id: string | null;
+  post_format?: string;
   post_title: string;
   post_ctg_id: string;
   post_date: string;
@@ -39,6 +40,7 @@ export async function addPost(payload: Post): Promise<PostResponse> {
 
   const dataPayload = {
     id: payload.id,
+    post_format: payload.post_format,
     post_title: payload.post_title,
     post_ctg_id: payload.post_ctg_id,
     post_date: payload.post_date,

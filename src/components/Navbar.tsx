@@ -89,6 +89,7 @@ export const Navbar: React.FC = () => {
     setSelectedFilter(type);
     dispatch(SET_POST_TYPE_FILTER(type));
     setIsFilterDropdownOpen(false);
+    navigate("/");
   };
 
   useEffect(() => {
