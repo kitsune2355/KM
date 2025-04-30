@@ -8,11 +8,11 @@ import {
   FETCH_CATEGORY,
   selectCategoryState,
 } from "../../redux/reducer/categoryReducer";
-import { fetchCategories } from "../../services/categoryService";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { Post } from "../../services/postService";
 import { RightCircleOutlined } from "@ant-design/icons";
 import { selectPostState } from "../../redux/reducer/postReducer";
+import { fetchCategory } from "../../redux/actions/categoryAction";
 
 export const CategoryScreen: React.FC = () => {
   const navigation = useNavigate();
@@ -35,8 +35,7 @@ export const CategoryScreen: React.FC = () => {
   };
 
   const fetchData = useCallback(async () => {
-    const res = await fetchCategories();
-    dispatch(FETCH_CATEGORY(res));
+    dispatch(fetchCategory());
     dispatch(fetchPosts());
   }, [dispatch]);
 

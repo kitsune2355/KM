@@ -19,7 +19,7 @@ export const UserManagementScreen: React.FC = () => {
     {
       key: "2",
       label: "เพิ่มผู้ใช้",
-      children: <AddUser />,
+      children: <AddUser setActiveTab={setActiveKey} activeTab={activeKey} />,
     },
   ];
 

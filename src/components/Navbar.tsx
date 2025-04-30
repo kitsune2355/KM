@@ -15,16 +15,13 @@ import {
   SET_QUERY,
   SET_SELECTED_TAGS,
 } from "../redux/reducer/searchReducer";
-import { fetchCategories } from "../services/categoryService";
-import {
-  FETCH_CATEGORY,
-  selectCategoryState,
-} from "../redux/reducer/categoryReducer";
+import { selectCategoryState } from "../redux/reducer/categoryReducer";
 import { AppDispatch } from "../store";
 import { fetchPosts } from "../redux/actions/postActions";
 import { typeKnowledge } from "../config/constant";
 import { fetchUser } from "../services/userService";
 import { User } from "../redux/reducer/userReducer";
+import { fetchCategory } from "../redux/actions/categoryAction";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -38,8 +35,7 @@ export const Navbar: React.FC = () => {
   const { categories, isFetchingCategory } = useSelector(selectCategoryState);
 
   const fetchData = useCallback(async () => {
-    const res = await fetchCategories();
-    dispatch(FETCH_CATEGORY(res));
+    dispatch(fetchCategory());
     dispatch(fetchPosts());
   }, [dispatch]);
 

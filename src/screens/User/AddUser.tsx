@@ -1,4 +1,4 @@
-import { Button, Input, message, Select } from "antd";
+import { Button, Input, message, Select, Tree } from "antd";
 import React, { useEffect, useMemo } from "react";
 import { Controller } from "react-hook-form";
 import { useAddUserForm } from "../../forms/AddUserForm";
@@ -6,22 +6,48 @@ import { addUser } from "../../services/userService";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { RootState } from "../../store";
+import { selectCategoryState } from "../../redux/reducer/categoryReducer";
 
-const AddUser: React.FC = () => {
+interface AddUserProps {
+  setActiveTab: (key: string) => void;
+  activeTab: string;
+}
+
+export const getAllKeys = (data: any[]) => {
+  let keys: string[] = [];
+  const traverse = (nodes: any[]) => {
+    nodes.forEach((node) => {
+      keys.push(node.path);
+      if (node.children) {
+        traverse(node.children);
+      }
+    });
+  };
+  traverse(data);
+  return keys;
+};
+
+const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
   const allUsers = useSelector((state: RootState) => state.users.allUsers);
+  const { categories } = useSelector(selectCategoryState);
   const {
     control,
     formState: { errors },
     setValue,
     handleSubmit,
     reset,
-  } = useAddUserForm();
+  } = useAddUserForm({
+    defaultValues: {
+      permission: getAllKeys(categories),
+    },
+  });
   const [searchParams] = useSearchParams();
   const userId = useMemo(() => searchParams.get("id"), [searchParams]);
 
   const onStart = () => {
     if (userId) {
       const user = allUsers.find((user) => user.employeeID === userId);
+      console.log("user", user);
       if (user) {
         setValue("employeeID", user.employeeID);
         setValue("firstName", user.firstName);
@@ -32,6 +58,7 @@ const AddUser: React.FC = () => {
         setValue("company", user.company);
         setValue("role", user.role);
         setValue("status", user.status);
+        setValue("permission", user.permission);
       }
     }
   };
@@ -47,12 +74,18 @@ const AddUser: React.FC = () => {
       company: data.company,
       role: data.role,
       status: data.status,
+      permission: data.permission,
     };
 
     try {
-      await addUser(user);
-      message.success("เพิ่มผู้ใช้สำเร็จ");
-      reset();
+      const res = await addUser(user);
+      if (res.status === "success") {
+        message.success("เพิ่มผู้ใช้สำเร็จ");
+        reset();
+        setActiveTab("1");
+      } else {
+        message.error("เกิดข้อผิดพลาดในการเพิ่มผู้ใช้");
+      }
     } catch (error) {
       message.error("เกิดข้อผิดพลาดในการเพิ่มผู้ใช้");
     }
@@ -207,6 +240,35 @@ const AddUser: React.FC = () => {
             {errors.status && (
               <div className="tw-text-red-500">{errors.status.message}</div>
             )}
+          </div>
+
+          <div className="tw-col-span-12">
+            <p>สิทธิ์การเข้าถึงเอกสาร</p>
+            <Controller
+              name="permission"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <div className="tw-flex tw-flex-col">
+                  <Tree
+                    checkable
+                    defaultExpandAll
+                    checkStrictly={true}
+                    treeData={categories}
+                    fieldNames={{
+                      title: "title",
+                      key: "path",
+                    }}
+                    checkedKeys={value}
+                    onCheck={(checkedKeys) => {
+                      const checkedArray = Array.isArray(checkedKeys)
+                        ? checkedKeys
+                        : checkedKeys.checked;
+                      onChange(checkedArray);
+                    }}
+                  />
+                </div>
+              )}
+            />
           </div>
         </div>
 

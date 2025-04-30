@@ -6,6 +6,7 @@ export interface CategoryTreeNode {
   key: string;
   children?: CategoryTreeNode[];
   parent_key: string | null;
+  path?: string;
 }
 
 interface CategoryState {
@@ -45,6 +46,20 @@ const categorySlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
+    FETCH_CATEGORIES_REQUEST: (state) => {
+      state.isFetching = true;
+    },
+    FETCH_CATEGORIES_SUCCESS: (state, action: PayloadAction<CategoryTreeNode[]>) => {
+      state.categories = action.payload;
+      state.isFetching = false;
+    },
+    FETCH_CATEGORIES_FAILURE: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.isFetching = false;
+      console.error(action.payload);
+    },
     ADD_CATEGORY: (state, action: PayloadAction<CategoryTreeNode>) => {
       const newCategory = action.payload;
       if (newCategory.parent_key) {
@@ -113,6 +128,9 @@ const categorySlice = createSlice({
 });
 
 export const {
+  FETCH_CATEGORIES_REQUEST,
+  FETCH_CATEGORIES_SUCCESS,
+  FETCH_CATEGORIES_FAILURE,
   ADD_CATEGORY,
   DELETE_CATEGORY,
   UPDATE_CATEGORY,

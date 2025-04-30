@@ -29,9 +29,15 @@ export async function addCategory(
   return await response.json();
 }
 
-export async function fetchCategories(): Promise<Category[]> {
+export async function fetchCategories(user_id: string): Promise<Category[]> {
   try {
-    const response = await fetch("/API/show_category.php");
+    const response = await fetch("/API/show_category.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ user_id }),
+    });
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -77,7 +83,9 @@ export const updateCategory = async (
   }
 };
 
-export const deleteCategory = async (key: string): Promise<CategoryResponse> => {
+export const deleteCategory = async (
+  key: string
+): Promise<CategoryResponse> => {
   try {
     const response = await fetch("/API/delete_category.php", {
       method: "POST",

@@ -127,7 +127,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
       width: 150,
     },
     {
-      title: "สิทธิ์การใช้งาน",
+      title: "ระดับการใช้งาน",
       dataIndex: "role",
       key: "role",
       width: 150,

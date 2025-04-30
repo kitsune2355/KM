@@ -75,8 +75,14 @@ export async function addPost(payload: Post): Promise<PostResponse> {
   return await response.json();
 }
 
-export async function getPosts(): Promise<Post[]> {
-  const response = await fetch("/API/show_post.php");
+export async function getPosts(user_id: string): Promise<Post[]> {
+  const response = await fetch("/API/show_post.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user_id }),
+  });
   const res = await response.json();
   return res;
 }

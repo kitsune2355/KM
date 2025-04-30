@@ -12,6 +12,7 @@ export interface AddUserFormProps {
   company: string;
   role: string;
   status: string;
+  permission?: string[];
 }
 
 const schema: yup.ObjectSchema<AddUserFormProps> = yup.object().shape({
@@ -24,11 +25,12 @@ const schema: yup.ObjectSchema<AddUserFormProps> = yup.object().shape({
   company: yup.string().required("จำเป็นต้องกรอกบริษัท").default(""),
   role: yup.string().required("จำเป็นต้องกรอกสิทธิ์"),
   status: yup.string().required("จำเป็นต้องกรอกสถานะ"),
+  permission: yup.array().required('โปรดเลือกสิทธิ์การใช้งาน').default([]),
 });
 
-export const useAddUserForm = () => {
+export const useAddUserForm = (props?: { defaultValues?: Partial<AddUserFormProps> }) => {
   return useForm<AddUserFormProps>({
-    defaultValues: schema.getDefault(),
+    defaultValues: props?.defaultValues,
     resolver: yupResolver(schema),
     mode: "onSubmit",
   });

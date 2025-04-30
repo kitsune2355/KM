@@ -1,15 +1,14 @@
 import { Menu, MenuProps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, matchPath } from "react-router-dom";
-import { fetchCategories } from "../services/categoryService";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
 import {
+  AppDispatch,
   CategoryTreeNode,
-  FETCH_CATEGORY,
   selectCategoryState,
 } from "../redux/reducer/categoryReducer";
 import { FolderOpenOutlined } from "@ant-design/icons";
+import { fetchCategory } from "../redux/actions/categoryAction";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -33,22 +32,21 @@ const transformCategoriesToMenuItems = (
 };
 
 export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
   const { categories, isFetchingCategory } = useSelector(selectCategoryState);
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const fetchData = useCallback(async () => {
-    const res = await fetchCategories();
-    dispatch(FETCH_CATEGORY(res));
+    dispatch(fetchCategory());
   }, [dispatch]);
 
   useEffect(() => {
     if (!isFetchingCategory) {
       fetchData();
     }
-  }, [categories, fetchData]);
+  }, [fetchData]);
 
   useEffect(() => {
     if (categories && categories.length > 0) {

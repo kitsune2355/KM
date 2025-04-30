@@ -15,6 +15,7 @@ export interface User {
   company: string;
   role: string;
   status: string;
+  permission?: string[];
 }
 
 interface UserState {
