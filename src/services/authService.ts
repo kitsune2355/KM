@@ -1,17 +1,10 @@
+import { User } from "../redux/reducer/userReducer";
+
 export interface LoginPayload {
   username: string;
 }
 
-export interface LoginResponse {
-  id: string;
-  username: string;
-  fname: string;
-  position: string;
-  role: string;
-  status: string;
-}
-
-export const login = async (data: LoginPayload): Promise<LoginResponse[]> => {
+export const login = async (data: LoginPayload): Promise<User[]> => {
   const res = await fetch(`/API/login.php`, {
     method: "POST",
     headers: {
@@ -24,6 +17,6 @@ export const login = async (data: LoginPayload): Promise<LoginResponse[]> => {
     throw new Error("Login failed");
   }
 
-  const result: LoginResponse[] = await res.json();
+  const result: User[] = await res.json();
   return result;
 };

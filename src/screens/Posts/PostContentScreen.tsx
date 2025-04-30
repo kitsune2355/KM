@@ -50,7 +50,7 @@ export const PostContentScreen: React.FC = () => {
     }
   }, [fetchData]);
 
-  console.log('categories', categories)
+  console.log("categories", categories);
 
   return (
     <div className="tw-flex tw-flex-col tw-space-y-4">
@@ -101,7 +101,7 @@ export const PostContentScreen: React.FC = () => {
                   .filter((type) => type.value === postData.post_type)
                   .map((item, key) => (
                     <Tag
-                      color={item.value === "1" ? "pink" : "purple"}
+                      color={item.value === "1" ? "green" : "cyan"}
                       key={key}
                       className="tw-truncate"
                     >

@@ -38,7 +38,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
             .filter((type) => type.value === postType)
             .map((item, key) => (
               <Tag
-                color={item.value === "1" ? "pink" : "purple"}
+                color={item.value === "1" ? "green" : "cyan"}
                 key={key}
                 className="tw-truncate"
               >
@@ -64,7 +64,10 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           >
             <p dangerouslySetInnerHTML={{ __html: createdAt }} />
           </Divider>
-          <Button className="tw-w-full !tw-text-primary hover:!tw-bg-primary hover:!tw-text-white" onClick={handleClick}>
+          <Button
+            className="tw-w-full !tw-text-primary hover:!tw-bg-primary hover:!tw-text-white"
+            onClick={handleClick}
+          >
             อ่านเพิ่มเติม
           </Button>
         </div>

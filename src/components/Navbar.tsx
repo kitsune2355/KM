@@ -99,20 +99,6 @@ export const Navbar: React.FC = () => {
   const AdminMenu = {
     items: [
       {
-        key: "formKM",
-        label: (
-          <>
-            {isAdmin && (
-              <Link to="/new-post">ยื่นแบบฟอร์มบันทึกองค์ความรู้</Link>
-            )}
-          </>
-        ),
-      },
-      {
-        key: "category",
-        label: <>{isAdmin && <Link to="/category">สร้างหมวดหมู่</Link>}</>,
-      },
-      {
         key: "management",
         label: (
           <>{isAdmin && <Link to="/management">ระบบจัดการองค์ความรู้</Link>}</>
@@ -150,14 +136,13 @@ export const Navbar: React.FC = () => {
 
   const buildTreeData = (categories: any[]): any[] => {
     return categories.map((category) => {
-      // สร้าง object สำหรับหมวดหมู่
       const categoryData: any = {
         title: category.title,
         value: category.key,
         children:
           category.children && category.children.length > 0
             ? buildTreeData(category.children)
-            : [], // ถ้ามี children ก็ทำการเรียก buildTreeData ซ้ำ
+            : [],
       };
       return categoryData;
     });
@@ -187,11 +172,11 @@ export const Navbar: React.FC = () => {
     if (
       typeKnowledge.find((item) => item.value.includes(value))?.value === "1"
     ) {
-      color = "pink";
+      color = "green";
     } else if (
       typeKnowledge.find((item) => item.value.includes(value))?.value === "2"
     ) {
-      color = "purple";
+      color = "cyan";
     } else {
       color = "blue";
     }
@@ -250,13 +235,15 @@ export const Navbar: React.FC = () => {
         <div className="tw-w-2/5 tw-hidden md:tw-flex">{renderSearch()}</div>
 
         <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
-          {!isAdmin && (
+          {!isAdmin ? (
             <div className="tw-flex tw-flex-col tw-justify-center tw-items-end">
-              <p className="tw-text-primary tw-font-bold">
+              <p className="tw-text-white tw-font-bold">
                 {user?.firstName} {user?.lastName}
               </p>
               <p className="tw-text-white tw-text-xs">{user?.position}</p>
             </div>
+          ) : (
+            <p className="tw-text-white tw-font-bold">Admin</p>
           )}
           <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
             <Avatar
