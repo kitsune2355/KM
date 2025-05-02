@@ -176,7 +176,7 @@ export const Navbar: React.FC = () => {
     } else if (
       typeKnowledge.find((item) => item.value.includes(value))?.value === "2"
     ) {
-      color = "cyan";
+      color = "orange";
     } else {
       color = "blue";
     }

@@ -101,7 +101,7 @@ export const PostContentScreen: React.FC = () => {
                   .filter((type) => type.value === postData.post_type)
                   .map((item, key) => (
                     <Tag
-                      color={item.value === "1" ? "green" : "cyan"}
+                      color={item.value === "1" ? "green" : "orange"}
                       key={key}
                       className="tw-truncate"
                     >

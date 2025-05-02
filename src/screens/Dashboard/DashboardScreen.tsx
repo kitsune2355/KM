@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { KnowledgeCard } from "../../components/KnowledgeCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
@@ -44,9 +44,8 @@ export const DashboardScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const query = useSelector((state: RootState) => state.search.query);
-  const selectedTags = useSelector((state: RootState) => state.search.selectedTags);
-  const postTypeFilter = useSelector(
-    (state: RootState) => state.search.postTypeFilter
+  const selectedTags = useSelector(
+    (state: RootState) => state.search.selectedTags
   );
 
   const fetchData = useCallback(async () => {
@@ -68,18 +67,18 @@ export const DashboardScreen: React.FC = () => {
       post.post_create_by.toLowerCase().includes(query.toLowerCase()) ||
       post.post_fname.toLowerCase().includes(query.toLowerCase()) ||
       post.post_lname.toLowerCase().includes(query.toLowerCase());
-  
+
     const matchesSelectedTags =
       selectedTags.length === 0 ||
       selectedTags.includes(post.post_type) ||
       selectedTags.includes(post.post_ctg_id);
-  
+
     return post.post_publish === "1" && matchesQuery && matchesSelectedTags;
   });
 
   return (
     <>
-    <div className="tw-mb-4">
+      <div className="tw-mb-4">
         <Divider
           orientation="left"
           orientationMargin="0"
@@ -88,17 +87,17 @@ export const DashboardScreen: React.FC = () => {
           องค์ความรู้องค์กร
         </Divider>
       </div>
-      
+
       {filteredPosts.filter((post) => post.post_publish === "1").length > 0 ? (
         <div className="tw-grid tw-grid-cols-12 tw-gap-4">
           {filteredPosts
             .filter((post) => post.post_publish === "1")
-            .map((item, key) => {
+            .map((item, index) => {
               const tag = findCategory(categories, item.post_ctg_id);
               return (
                 <div
-                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-4"
-                  key={key}
+                  key={index}
+                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-4 tw-transition-transform tw-duration-300 tw-transform hover:tw-scale-105 tw-cursor-pointer"
                 >
                   <KnowledgeCard
                     postId={item.id}

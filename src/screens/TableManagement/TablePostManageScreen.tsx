@@ -219,7 +219,7 @@ export const TablePostManageScreen: React.FC = () => {
                 .filter((type) => type.value === record.post_type)
                 .map((item, key) => (
                   <Tag
-                    color={item.value === "1" ? "green" : "cyan"}
+                    color={item.value === "1" ? "green" : "orange"}
                     key={key}
                     className="tw-truncate"
                   >

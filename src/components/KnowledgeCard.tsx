@@ -27,10 +27,10 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   };
 
   return (
-    <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full">
+    <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full hover:tw-shadow-tertiary tw-border-primary tw-border-[1px] tw-p-4">
       <div className="tw-p-4 tw-flex tw-flex-col tw-space-y-4 tw-w-full tw-h-full">
         <p
-          className="tw-text-lg tw-font-bold"
+          className="tw-text-md tw-font-semibold tw-truncate"
           dangerouslySetInnerHTML={{ __html: title }}
         />
         <div>
@@ -38,7 +38,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
             .filter((type) => type.value === postType)
             .map((item, key) => (
               <Tag
-                color={item.value === "1" ? "green" : "cyan"}
+                color={item.value === "1" ? "green" : "orange"}
                 key={key}
                 className="tw-truncate"
               >
@@ -65,7 +65,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
             <p dangerouslySetInnerHTML={{ __html: createdAt }} />
           </Divider>
           <Button
-            className="tw-w-full !tw-text-primary hover:!tw-bg-primary hover:!tw-text-white"
+            className="!tw-text-primary hover:!tw-bg-primary hover:!tw-text-white"
             onClick={handleClick}
           >
             อ่านเพิ่มเติม
