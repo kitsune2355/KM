@@ -234,7 +234,7 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* desktop */}
-        <div className="tw-hidden md:tw-flex">
+        <div className="tw-hidden lg:tw-flex">
           <Link to="/" className="tw-font-bold tw-text-xl tw-text-white">
             KM
           </Link>

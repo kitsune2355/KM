@@ -37,4 +37,26 @@
   .tw-tabs .ant-tabs-ink-bar {
     @apply !tw-bg-primary;
   }
+
+  /* Menu - Fix for knowledge management colors */
+  .tw-menu .ant-menu-sub.ant-menu-inline {
+    @apply !tw-bg-gray-50;
+  }
+
+  .tw-menu .ant-menu-item:hover {
+    @apply !tw-bg-tertiary !tw-text-secondary;
+  }
+
+  .tw-menu .ant-menu-item.ant-menu-item-selected {
+    @apply !tw-bg-primary !tw-text-white;
+  }
+
+  /* For submenu items */
+  .tw-menu .ant-menu-sub.ant-menu-inline .ant-menu-item:hover {
+    @apply !tw-bg-tertiary !tw-text-secondary;
+  }
+
+  .tw-menu .ant-menu-sub.ant-menu-inline .ant-menu-item.ant-menu-item-selected {
+    @apply !tw-bg-primary !tw-text-white;
+  }
 }

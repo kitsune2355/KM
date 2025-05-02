@@ -66,10 +66,15 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
           to="/"
           className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl"
         >
-          <img src={images.logoHL} alt="logo" className="tw-w-full tw-h-7 tw-flex tw-items-center" />
+          <img
+            src={images.logoHL}
+            alt="logo"
+            className="tw-w-full tw-h-7 tw-flex tw-items-center"
+          />
         </Link>
       </div>
       <Menu
+        className="tw-menu"
         style={{ width: "100%" }}
         mode="inline"
         items={menuItems}
