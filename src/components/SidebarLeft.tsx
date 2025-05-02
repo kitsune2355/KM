@@ -9,6 +9,7 @@ import {
 } from "../redux/reducer/categoryReducer";
 import { FolderOpenOutlined } from "@ant-design/icons";
 import { fetchCategory } from "../redux/actions/categoryAction";
+import { images } from "../utils/imageUtils";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -60,12 +61,12 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
 
   return (
     <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
-      <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-2">
+      <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-p-3">
         <Link
           to="/"
           className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl"
         >
-          KM
+          <img src={images.logoHL} alt="logo" className="tw-w-full tw-h-7 tw-flex tw-items-center" />
         </Link>
       </div>
       <Menu

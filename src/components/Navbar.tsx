@@ -219,7 +219,8 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <div className="tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-3 tw-bg-gradient-linear tw-border-spacing-1 tw-border-b-2 tw-border-background">
-        <div className="tw-flex tw-items-center tw-gap-2 tw-text-black tw-font-bold tw-text-xl">
+        {/* ipad */}
+        <div className="sm:tw-flex lg:tw-hidden tw-items-center tw-gap-2 tw-text-black tw-font-bold tw-text-xl">
           <Button
             size="large"
             shape="circle"
@@ -228,6 +229,13 @@ export const Navbar: React.FC = () => {
             icon={<MenuOutlined />}
           />
           <Link to="/" className="sm:tw-flex lg:tw-hidden tw-text-white">
+            KM
+          </Link>
+        </div>
+
+        {/* desktop */}
+        <div className="tw-hidden md:tw-flex">
+          <Link to="/" className="tw-font-bold tw-text-xl tw-text-white">
             KM
           </Link>
         </div>
@@ -255,6 +263,7 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
+      {/* mobile */}
       <Drawer
         title="KM"
         placement="left"
