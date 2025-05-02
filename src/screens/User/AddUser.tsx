@@ -244,31 +244,32 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
 
           <div className="tw-col-span-12">
             <p>สิทธิ์การเข้าถึงเอกสาร</p>
-            <Controller
-              name="permission"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <div className="tw-flex tw-flex-col">
-                  <Tree
-                    checkable
-                    defaultExpandAll
-                    checkStrictly={true}
-                    treeData={categories}
-                    fieldNames={{
-                      title: "title",
-                      key: "path",
-                    }}
-                    checkedKeys={value}
-                    onCheck={(checkedKeys) => {
-                      const checkedArray = Array.isArray(checkedKeys)
-                        ? checkedKeys
-                        : checkedKeys.checked;
-                      onChange(checkedArray);
-                    }}
-                  />
-                </div>
-              )}
-            />
+            <div className="tw-p-4 tw-rounded-md tw-border tw-border-tertiary">
+              <Controller
+                name="permission"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <div className="tw-flex tw-flex-col">
+                    <Tree
+                      checkable
+                      checkStrictly={true}
+                      treeData={categories}
+                      fieldNames={{
+                        title: "title",
+                        key: "path",
+                      }}
+                      checkedKeys={value}
+                      onCheck={(checkedKeys) => {
+                        const checkedArray = Array.isArray(checkedKeys)
+                          ? checkedKeys
+                          : checkedKeys.checked;
+                        onChange(checkedArray);
+                      }}
+                    />
+                  </div>
+                )}
+              />
+            </div>
           </div>
         </div>
 

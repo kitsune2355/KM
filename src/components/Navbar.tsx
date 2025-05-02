@@ -115,7 +115,7 @@ export const Navbar: React.FC = () => {
             ออกจากระบบ
           </div>
         ),
-        icon: <LogoutOutlined />,
+        icon: <LogoutOutlined className="tw-text-red-500" />,
       },
     ],
   };
@@ -129,7 +129,7 @@ export const Navbar: React.FC = () => {
             ออกจากระบบ
           </div>
         ),
-        icon: <LogoutOutlined />,
+        icon: <LogoutOutlined className="tw-text-red-500" />,
       },
     ],
   };
@@ -253,7 +253,10 @@ export const Navbar: React.FC = () => {
           ) : (
             <p className="tw-text-white tw-font-bold">Admin</p>
           )}
-          <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
+          <Dropdown
+            menu={isAdmin ? AdminMenu : items}
+            trigger={["click"]}
+          >
             <Avatar
               className="tw-cursor-pointer"
               icon={<UserOutlined />}
