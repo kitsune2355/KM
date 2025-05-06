@@ -212,6 +212,7 @@ export const Navbar: React.FC = () => {
         tagRender={tagRender}
         suffixIcon={<SearchOutlined />}
         allowClear
+        maxTagCount={2}
       />
     );
   };
@@ -253,10 +254,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <p className="tw-text-white tw-font-bold">Admin</p>
           )}
-          <Dropdown
-            menu={isAdmin ? AdminMenu : items}
-            trigger={["click"]}
-          >
+          <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
             <Avatar
               className="tw-cursor-pointer"
               icon={<UserOutlined />}
