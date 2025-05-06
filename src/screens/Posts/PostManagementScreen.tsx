@@ -144,10 +144,6 @@ export const PostManagementScreen: React.FC = () => {
     }
   };
 
-  const onError = (errors: any) => {
-    console.log("Form Errors", errors);
-  };
-
   const handleBack = () => {
     if (isAdmin) {
       navigate("/management");
@@ -552,7 +548,7 @@ export const PostManagementScreen: React.FC = () => {
         <div className="tw-w-full tw-flex tw-justify-end tw-mt-4 tw-space-x-2">
           <Button
             type="primary"
-            onClick={handleSubmit(onSubmit, onError)}
+            onClick={handleSubmit(onSubmit)}
             className="tw-w-24 tw-bg-primary"
           >
             บันทึก

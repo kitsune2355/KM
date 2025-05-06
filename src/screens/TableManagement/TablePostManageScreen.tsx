@@ -431,7 +431,6 @@ export const TablePostManageScreen: React.FC = () => {
           tableLayout="fixed"
           onChange={(pagination, filters, sorter, extra) => {
             const count = extra.currentDataSource.length;
-            console.log("count", count);
             setCount(count);
           }}
           loading={isFetchingPosts}

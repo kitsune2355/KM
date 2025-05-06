@@ -50,8 +50,6 @@ export const PostContentScreen: React.FC = () => {
     }
   }, [fetchData]);
 
-  console.log("categories", categories);
-
   return (
     <div className="tw-flex tw-flex-col tw-space-y-4">
       {postData ? (

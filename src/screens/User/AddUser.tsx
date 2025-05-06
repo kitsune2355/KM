@@ -47,7 +47,6 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
   const onStart = () => {
     if (userId) {
       const user = allUsers.find((user) => user.employeeID === userId);
-      console.log("user", user);
       if (user) {
         setValue("employeeID", user.employeeID);
         setValue("firstName", user.firstName);
