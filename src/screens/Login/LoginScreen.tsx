@@ -31,7 +31,7 @@ export const LoginScreen: React.FC = () => {
     <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear tw-p-8">
       <div className="tw-bg-white tw-p-4 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
         <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">KM</h2>
-        <form className="tw-space-y-4">
+        <form className="tw-space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="tw-mb-4">
             <label className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
               รหัสพนักงาน
@@ -56,7 +56,7 @@ export const LoginScreen: React.FC = () => {
 
           <Button
             type="primary"
-            onClick={handleSubmit(onSubmit)}
+            htmlType="submit"
             className="tw-w-full tw-py-2 !tw-bg-primary"
           >
             เข้าสู่ระบบ
