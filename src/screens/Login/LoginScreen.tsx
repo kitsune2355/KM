@@ -28,9 +28,11 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <div className="tw-flex tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear tw-p-8">
+    <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear tw-p-8 tw-space-y-4">
       <div className="tw-bg-white tw-p-4 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
-        <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">KM</h2>
+        <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">
+          Knowledge Management
+        </h2>
         <form className="tw-space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="tw-mb-4">
             <label className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
@@ -62,6 +64,21 @@ export const LoginScreen: React.FC = () => {
             เข้าสู่ระบบ
           </Button>
         </form>
+      </div>
+      <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-white tw-text-sm">
+        <a
+          target="_blank"
+          href="http://happylandgroup.net/ViewerJS/New_An.php?BS=บริษัท แฮปปี้แลนด์ กรุ๊ป จำกัด&amp;folder_0=HL&amp;folder_1=043-2568&amp;name=043-&amp;page=1"
+        >
+          ประกาศที่ 043-2568 - นโยบายการบันทึกความรู้องค์ความรู้ภายในองค์กร Ver
+          23-04-68
+        </a>
+        <a
+          target="_blank"
+          href="https://www.happylandgroup.net/ViewerJS/An/HL/042-2568/HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร Ver.00 23-4-68.pdf"
+        >
+          แบบฟอร์ม HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร Ver.00 23-04-68
+        </a>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import { Button, Input, message, Select, Tree } from "antd";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import { useAddUserForm } from "../../forms/AddUserForm";
-import { addUser } from "../../services/userService";
+import { addUser, fetchCompany, usrCompany } from "../../services/userService";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { RootState } from "../../store";
@@ -43,6 +43,7 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
   });
   const [searchParams] = useSearchParams();
   const userId = useMemo(() => searchParams.get("id"), [searchParams]);
+  const [company, setCompany] = useState<usrCompany[]>([]);
 
   const onStart = () => {
     if (userId) {
@@ -89,6 +90,15 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
       message.error("เกิดข้อผิดพลาดในการเพิ่มผู้ใช้");
     }
   };
+
+  const getCompany = async () => {
+    const res = await fetchCompany();
+    setCompany(res);
+  };
+
+  useEffect(()=>{
+    getCompany()
+  },[])
 
   useEffect(() => {
     onStart();
@@ -188,7 +198,18 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
             <Controller
               control={control}
               name="company"
-              render={({ field }) => <Input {...field} placeholder="บริษัท" />}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  className="tw-w-full"
+                  placeholder="บริษัท"
+                  options={company.map((item) => ({
+                    value: item.com_name,
+                    label: item.com_name,
+                  }))}
+                  onChange={(value) => field.onChange(value)}
+                />
+              )}
             />
             {errors.company && (
               <div className="tw-text-red-500">{errors.company.message}</div>
@@ -251,8 +272,11 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
                   <div className="tw-flex tw-flex-col">
                     <Tree
                       checkable
-                      checkStrictly={true}
-                      treeData={categories}
+                      // checkStrictly={true}
+                      treeData={categories.map(({ children, ...rest }) => ({
+                        ...rest,
+                        children: [],
+                      }))}
                       fieldNames={{
                         title: "title",
                         key: "path",

@@ -1,4 +1,9 @@
-import { createSlice, PayloadAction, configureStore, createSelector } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  configureStore,
+  createSelector,
+} from "@reduxjs/toolkit";
 
 export interface CategoryTreeNode {
   id?: string;
@@ -6,6 +11,7 @@ export interface CategoryTreeNode {
   key: string;
   children?: CategoryTreeNode[];
   parent_key: string | null;
+  parentId?: string | null;
   path?: string;
 }
 
@@ -49,14 +55,14 @@ const categorySlice = createSlice({
     FETCH_CATEGORIES_REQUEST: (state) => {
       state.isFetching = true;
     },
-    FETCH_CATEGORIES_SUCCESS: (state, action: PayloadAction<CategoryTreeNode[]>) => {
+    FETCH_CATEGORIES_SUCCESS: (
+      state,
+      action: PayloadAction<CategoryTreeNode[]>
+    ) => {
       state.categories = action.payload;
       state.isFetching = false;
     },
-    FETCH_CATEGORIES_FAILURE: (
-      state,
-      action: PayloadAction<string>
-    ) => {
+    FETCH_CATEGORIES_FAILURE: (state, action: PayloadAction<string>) => {
       state.isFetching = false;
       console.error(action.payload);
     },

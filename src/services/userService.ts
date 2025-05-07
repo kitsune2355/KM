@@ -1,5 +1,24 @@
 import { User } from "../redux/reducer/userReducer";
 
+export interface usrCompany{
+  com_id: string;
+  com_name: string;
+}
+
+export const fetchCompany = async (): Promise<usrCompany[]> => {
+  const res = await fetch(`/API/get_company.php`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch company");
+  }
+  const result = await res.json();
+  return result;
+}
+
 export const fetchUser = async (): Promise<User> => {
   const user = localStorage.getItem("user");
   const data = JSON.parse(user || "{}");
