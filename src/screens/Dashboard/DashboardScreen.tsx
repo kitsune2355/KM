@@ -86,6 +86,10 @@ export const DashboardScreen: React.FC = () => {
         >
           องค์ความรู้องค์กร
         </Divider>
+
+        <div className="tw-w-full tw-flex tw-justify-end tw-text-xs tw-text-gray-400">
+          จำนวนองค์ความรู้ : {filteredPosts.length} ฉบับ
+        </div>
       </div>
 
       {filteredPosts.filter((post) => post.post_publish === "1").length > 0 ? (
@@ -97,13 +101,16 @@ export const DashboardScreen: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-4 tw-transition-transform tw-duration-300 tw-transform hover:tw-scale-105 tw-cursor-pointer"
+                  className="tw-col-span-12 sm:tw-col-span-6 lg:tw-col-span-4 xl:tw-col-span-4 tw-transition-transform tw-duration-300 tw-transform hover:tw-scale-105 tw-cursor-pointer hover:tw-shadow-2xl"
                 >
                   <KnowledgeCard
                     postId={item.id}
                     title={highlightText(item.post_title, query)}
                     description={highlightText(item.post_desc, query)}
                     tags={tag || ["ไม่มีหมวดหมู่"]}
+                    fName={highlightText(item.post_fname, query)}
+                    lName={highlightText(item.post_lname, query)}
+                    postFormat={item.post_format}
                     createdAt={highlightText(
                       item.post_create_at as string,
                       query

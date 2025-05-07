@@ -1,4 +1,4 @@
-import { Menu, MenuProps } from "antd";
+import { Divider, Menu, MenuProps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation, matchPath } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -61,26 +61,55 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
 
   return (
     <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
-      <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between tw-p-3">
-        <Link
-          to="/"
-          className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl"
-        >
-          <img
-            src={images.logoHL}
-            alt="logo"
-            className="tw-w-full tw-h-7 tw-flex tw-items-center"
+      <div className="tw-flex tw-flex-col tw-justify-between tw-h-full">
+        <div>
+          <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between">
+            {/* <Link
+              to="/"
+              className="tw-hidden lg:tw-flex tw-text-primary tw-font-bold tw-text-2xl"
+            >
+              <img
+                src={images.logoHL}
+                alt="logo"
+                className="tw-w-full tw-h-7 tw-flex tw-items-center"
+              />
+            </Link> */}
+            <Divider
+              orientation="center"
+              orientationMargin="0"
+              className="!tw-text-primary !tw-border-primary"
+            >
+              <div className="tw-flex tw-flex-row tw-justify-center tw-items-center tw-space-x-4 tw-px-4">
+                <img src={images.logoH} alt="" className="tw-w-8 tw-h-8" />
+                <div className="tw-flex tw-flex-col tw-justify-start">
+                  <p>องค์ความรู้องค์กร</p>
+                  <p>Knowledge Management</p>
+                </div>
+              </div>
+            </Divider>
+          </div>
+          <Menu
+            className="tw-menu"
+            style={{ width: "100%" }}
+            mode="inline"
+            items={menuItems}
+            selectedKeys={selectedKey ? [selectedKey] : []}
+            onClick={onClose}
           />
-        </Link>
+        </div>
+        <div>
+          <Divider />
+          <p className="tw-p-3 tw-text-md tw-text-primary">วัตถุประสงค์</p>
+          <div className="tw-p-3 tw-text-xs tw-text-primary">
+            เพื่อส่งเสริมการบริหารจัดการองค์ความรู้ให้เป็นระบบ
+            และสามารถนำไปใช้ในการพัฒนาศักยภาพบุคลากร ปรับปรุงขบวนการทำงาน
+            รวมถึงใช้เป็นกรณีศึกษาในสถานสถานการณ์ต่างๆ
+            กลุ่มบริษัทในเครือแฮปปี้แลนด์จึงกำหนด
+            นโยบายการบันทึกองค์ความรู้ภายในองค์กร
+          </div>
+          <img src={images.km01} alt="" className="tw-h-32 tw-w-full" />
+        </div>
       </div>
-      <Menu
-        className="tw-menu"
-        style={{ width: "100%" }}
-        mode="inline"
-        items={menuItems}
-        selectedKeys={selectedKey ? [selectedKey] : []}
-        onClick={onClose}
-      />
     </div>
   );
 };

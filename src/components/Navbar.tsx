@@ -22,6 +22,7 @@ import { typeKnowledge } from "../config/constant";
 import { fetchUser } from "../services/userService";
 import { User } from "../redux/reducer/userReducer";
 import { fetchCategory } from "../redux/actions/categoryAction";
+import { images } from "../utils/imageUtils";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -237,7 +238,10 @@ export const Navbar: React.FC = () => {
         {/* desktop */}
         <div className="tw-hidden lg:tw-flex">
           <Link to="/" className="tw-font-bold tw-text-xl tw-text-white">
-            KM
+            <div className="tw-flex tw-flex-row tw-items-center tw-gap-2">
+              <img src={images.km02} alt="" className="tw-w-8 tw-h-8" />
+              <p>KM</p>
+            </div>
           </Link>
         </div>
 

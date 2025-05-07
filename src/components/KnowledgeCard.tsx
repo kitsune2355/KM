@@ -10,6 +10,9 @@ interface KnowledgeCardProps {
   postId: string | null;
   createdAt: string;
   postType: string;
+  fName: string;
+  lName: string;
+  postFormat?: string;
 }
 
 export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
@@ -19,6 +22,9 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   postId,
   createdAt,
   postType,
+  fName,
+  lName,
+  postFormat,
 }) => {
   const navigate = useNavigate();
 
@@ -27,8 +33,11 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   };
 
   return (
-    <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full hover:tw-shadow-tertiary tw-border-primary tw-border-[1px] tw-p-4">
-      <div className="tw-p-4 tw-flex tw-flex-col tw-space-y-4 tw-w-full tw-h-full">
+    <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full hover:tw-shadow-tertiary tw-border-primary tw-border-[1px] hover:tw-bg-slide-gradient tw-bg-[length:200%_100%] tw-bg-left hover:tw-animate-slide-colors">
+      <div className="tw-p-4 tw-flex tw-flex-col tw-space-y-1 tw-w-full tw-h-full">
+        <p className="tw-text-end tw-text-xs tw-text-gray-400">
+          เลขที่ : {postFormat}
+        </p>
         <p
           className="tw-text-md tw-font-semibold tw-truncate"
           dangerouslySetInnerHTML={{ __html: title }}
@@ -57,6 +66,14 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
           dangerouslySetInnerHTML={{ __html: description }}
         />
         <div className="tw-flex tw-flex-col tw-justify-end tw-flex-1">
+          {fName && lName && (
+            <div className="tw-text-end tw-text-xs tw-text-primary">
+              ผู้นำเสนอ : {fName} {lName}
+            </div>
+          )}
+          <p className="tw-text-xs tw-text-primary tw-text-end">
+            จำนวนนครั้งที่เข้าชม : 0 ครั้ง
+          </p>
           <Divider
             orientation="left"
             orientationMargin="0"

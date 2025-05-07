@@ -38,7 +38,10 @@ export const LoginScreen: React.FC = () => {
             orientationMargin="0"
             className="!tw-text-primary !tw-border-primary"
           >
-            Knowledge Management
+            <div className="">
+              <p>องค์ความรู้องค์กร</p>
+              <p>Knowledge Management</p>
+            </div>
           </Divider>
         </div>
         <form className="tw-space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -85,7 +88,7 @@ export const LoginScreen: React.FC = () => {
           target="_blank"
           href="https://www.happylandgroup.net/ViewerJS/An/HL/042-2568/HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร Ver.00 23-4-68.pdf"
         >
-          HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร
+          แบบฟอร์มบันทึกองค์ความรู้องค์กร
         </a>
       </div>
     </div>
