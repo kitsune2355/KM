@@ -1,9 +1,10 @@
 import React from "react";
-import { Button, Input } from "antd";
+import { Button, Divider, Input } from "antd";
 import { LoginFormProps, useLoginForm } from "../../forms/LoginForm";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
+import { images } from "../../utils/imageUtils";
 
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -29,12 +30,19 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-screen tw-bg-gradient-linear tw-p-8 tw-space-y-4">
-      <div className="tw-bg-white tw-p-4 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full">
-        <h2 className="tw-text-2xl tw-font-bold tw-text-center tw-mb-6">
-          Knowledge Management
-        </h2>
+      <div className="tw-bg-white tw-px-6 tw-pb-6 tw-rounded-lg tw-shadow-lg tw-max-w-sm tw-w-full tw-space-y-6">
+        <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-space-y-1">
+          <img src={images.logo} alt="logo" className="tw-h-32" />
+          <Divider
+            orientation="center"
+            orientationMargin="0"
+            className="!tw-text-primary !tw-border-primary"
+          >
+            Knowledge Management
+          </Divider>
+        </div>
         <form className="tw-space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <div className="tw-mb-4">
+          <div className="">
             <label className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
               รหัสพนักงาน
             </label>
