@@ -73,19 +73,19 @@ export const LoginScreen: React.FC = () => {
           </Button>
         </form>
       </div>
-      <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-white tw-text-sm">
+      <div className="tw-flex tw-flex-row tw-items-center tw-justify-center tw-text-white tw-text-sm">
         <a
           target="_blank"
           href="http://happylandgroup.net/ViewerJS/New_An.php?BS=บริษัท แฮปปี้แลนด์ กรุ๊ป จำกัด&amp;folder_0=HL&amp;folder_1=043-2568&amp;name=043-&amp;page=1"
         >
-          ประกาศที่ 043-2568 - นโยบายการบันทึกความรู้องค์ความรู้ภายในองค์กร Ver
-          23-04-68
+          นโยบาย
         </a>
+        <Divider type="vertical" className="tw-mx-2 tw-bg-white" />
         <a
           target="_blank"
           href="https://www.happylandgroup.net/ViewerJS/An/HL/042-2568/HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร Ver.00 23-4-68.pdf"
         >
-          แบบฟอร์ม HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร Ver.00 23-04-68
+          HR-CENTER-62 แบบฟอร์มบันทึกองค์ความรู้องค์กร
         </a>
       </div>
     </div>

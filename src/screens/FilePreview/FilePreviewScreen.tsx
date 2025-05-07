@@ -52,10 +52,10 @@ export const FilePreviewScreen: React.FC = () => {
           </div>
           <div className="tw-space-y-2">
             {files?.map((file: any, key) => (
-              <Card key={key}>
+              <Card className="tw-cursor-pointer" key={key} onClick={() => handleDownload(file)}>
                 <div className="tw-flex tw-flex-row tw-justify-between tw-items-center tw-space-x-2">
                   <p className="tw-text-gray-500">{file.file_file_name}</p>
-                  <CloudDownloadOutlined onClick={() => handleDownload(file)} />
+                  <CloudDownloadOutlined />
                 </div>
               </Card>
             ))}
