@@ -187,6 +187,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
       title: "สถานะ",
       key: "status",
       fixed: "right",
+      sorter: getSorter("status"),
       render: (_: any, record: any) => (
         <Button
           size="small"

@@ -305,6 +305,7 @@ export const TablePostManageScreen: React.FC = () => {
       key: "post_publish",
       fixed: "right",
       width: 100,
+      sorter: getSorter("post_publish"),
       render: (_: any, record: any) => (
         <Button
           size="small"
