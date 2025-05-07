@@ -26,16 +26,12 @@ import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { ColumnsType } from "antd/es/table";
 import { typeKM, typeKnowledge } from "../../config/constant";
-import { ColumnType, FilterConfirmProps } from "antd/es/table/interface";
-import Highlighter from "react-highlight-words";
+import { ColumnSearch as getColumnSearchProps, getSorter } from "../../components/ColumnSearch";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { posts, isFetchingPosts } = useSelector(selectPostState);
-  const searchInput = useRef<InputRef>(null);
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
   const [count, setCount] = useState<number>(posts.length);
 
   const fetchData = useCallback(async () => {
@@ -94,78 +90,6 @@ export const TablePostManageScreen: React.FC = () => {
       message.error("ไม่สามารถอัปเดตสถานะการเผยแพร่ได้");
     }
   };
-
-  const getSorter = (
-    field: string,
-    type: "string" | "number" | "date" = "string"
-  ) => {
-    return (a: any, b: any) => {
-      const valA = a[field];
-      const valB = b[field];
-
-      if (type === "number") {
-        return (valA || 0) - (valB || 0);
-      }
-
-      if (type === "date") {
-        return new Date(valA).getTime() - new Date(valB).getTime();
-      }
-
-      return (valA || "").toString().localeCompare((valB || "").toString());
-    };
-  };
-
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: any
-  ) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-
-  const getColumnSearchProps = (dataIndex: keyof Post): ColumnType<Post> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`ค้นหา`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-        />
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "cyan" : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        ?.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()) ?? false,
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
 
   const columns: ColumnsType<Post> = [
     {

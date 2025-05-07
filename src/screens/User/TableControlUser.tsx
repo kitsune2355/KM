@@ -14,6 +14,10 @@ import {
 } from "../../redux/reducer/userReducer";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import {
+  ColumnSearch as getColumnSearchProps,
+  getSorter,
+} from "../../components/ColumnSearch";
 
 interface TableControlUserProps {
   setActiveTab: (key: string) => void;
@@ -27,7 +31,9 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const allUsers = useSelector((state: RootState) => state.users.allUsers);
-  const isFetchingUsers = useSelector((state: RootState) => state.users.isFetchingUsers);
+  const isFetchingUsers = useSelector(
+    (state: RootState) => state.users.isFetchingUsers
+  );
 
   const fetchData = async () => {
     dispatch(FETCH_ALL_USERS_REQUEST());
@@ -89,48 +95,63 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
       dataIndex: "employeeID",
       key: "employeeID",
       width: 150,
+      sorter: getSorter("employeeID"),
+      ...getColumnSearchProps("employeeID"),
     },
     {
       title: "ชื่อ",
       dataIndex: "firstName",
       key: "firstName",
       width: 150,
+      sorter: getSorter("firstName"),
+      ...getColumnSearchProps("firstName"),
     },
     {
       title: "นามสกุล",
       dataIndex: "lastName",
       key: "lastName",
       width: 150,
+      sorter: getSorter("lastName"),
+      ...getColumnSearchProps("lastName"),
     },
     {
       title: "ตำแหน่ง",
       dataIndex: "position",
       key: "position",
       width: 150,
+      sorter: getSorter("position"),
+      ...getColumnSearchProps("position"),
     },
     {
       title: "แผนก",
       dataIndex: "department",
       key: "department",
       width: 150,
+      sorter: getSorter("department"),
+      ...getColumnSearchProps("department"),
     },
     {
       title: "ฝ่าย",
       dataIndex: "sub_department",
       key: "sub_department",
       width: 150,
+      sorter: getSorter("sub_department"),
+      ...getColumnSearchProps("sub_department"),
     },
     {
       title: "บริษัท",
       dataIndex: "company",
       key: "company",
       width: 150,
+      sorter: getSorter("company"),
+      ...getColumnSearchProps("company"),
     },
     {
       title: "ระดับการใช้งาน",
       dataIndex: "role",
       key: "role",
       width: 150,
+      sorter: getSorter("role"),
     },
     {
       title: "Actions",
@@ -173,7 +194,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
           color={record.status === "0" ? "default" : "cyan"}
           onClick={() => handleStatus(record)}
         >
-          {record.post_publish === "0" ? "ปิดการใช้งาน" : "เปิดการใช้งาน"}
+          {record.status === "0" ? "ปิดการใช้งาน" : "เปิดการใช้งาน"}
         </Button>
       ),
     },

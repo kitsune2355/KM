@@ -244,16 +244,12 @@ export const Navbar: React.FC = () => {
         <div className="tw-w-2/5 tw-hidden md:tw-flex">{renderSearch()}</div>
 
         <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
-          {!isAdmin ? (
-            <div className="tw-flex tw-flex-col tw-justify-center tw-items-end">
-              <p className="tw-text-white tw-font-bold">
-                {user?.firstName} {user?.lastName}
-              </p>
-              <p className="tw-text-white tw-text-xs">{user?.position}</p>
-            </div>
-          ) : (
-            <p className="tw-text-white tw-font-bold">Admin</p>
-          )}
+          <div className="tw-flex tw-flex-col tw-justify-center tw-items-end">
+            <p className="tw-text-white tw-font-bold">
+              {user?.firstName} {user?.lastName}
+            </p>
+            <p className="tw-text-white tw-text-xs">{user?.position}</p>
+          </div>
           <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
             <Avatar
               className="tw-cursor-pointer"
