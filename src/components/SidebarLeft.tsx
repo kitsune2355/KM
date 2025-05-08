@@ -60,7 +60,7 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   const selectedKey = match ? match.params?.id : undefined;
 
   return (
-    <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen md:tw-h-auto md:tw-max-h-screen">
+    <div className="tw-sidebar tw-bg-foreground tw-w-full tw-h-screen lg:tw-h-auto lg:tw-max-h-screen">
       <div className="tw-flex tw-flex-col tw-justify-between tw-h-full">
         <div>
           <div className="tw-font-bold tw-text-xl tw-flex tw-items-center tw-justify-between">
@@ -117,8 +117,8 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
               กลุ่มบริษัทในเครือแฮปปี้แลนด์จึงกำหนด
               นโยบายการบันทึกองค์ความรู้ภายในองค์กร
             </div>
-            <img src={images.km01} alt="" className="tw-h-32 tw-w-full" />
           </div>
+          <img src={images.km01} alt="" className="tw-h-32 tw-w-full" />
         </div>
       </div>
     </div>
