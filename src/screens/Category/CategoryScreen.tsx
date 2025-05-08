@@ -9,7 +9,7 @@ import {
   selectCategoryState,
 } from "../../redux/reducer/categoryReducer";
 import { fetchPosts } from "../../redux/actions/postActions";
-import { Post } from "../../services/postService";
+import { Post, postView } from "../../services/postService";
 import { RightCircleOutlined } from "@ant-design/icons";
 import { selectPostState } from "../../redux/reducer/postReducer";
 import { fetchCategory } from "../../redux/actions/categoryAction";
@@ -100,10 +100,11 @@ export const CategoryScreen: React.FC = () => {
     dispatch(FETCH_CATEGORY(categories));
   }, [categories, params, posts, dispatch]);
 
-  const onOpenContent = (key: string) => {
+  const onOpenContent = async(key: string) => {
     const post = posts.find((c) => c.id === key);
     if (post) {
       navigation(`/content/${post.id}`);
+      await postView(post.id);
     }
   };
 
