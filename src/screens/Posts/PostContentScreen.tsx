@@ -1,4 +1,4 @@
-import { UserOutlined } from "@ant-design/icons";
+import { EyeOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Card, Tag } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -112,6 +112,11 @@ export const PostContentScreen: React.FC = () => {
                       {tag}
                     </Tag>
                   ))}
+
+                <div className=" tw-items-center tw-space-x-1">
+                  <EyeOutlined />
+                  <span className="tw-text-primary">{postData.post_count}</span>
+                </div>
               </div>
 
               <h1 className="tw-text-xl tw-text-black tw-font-bold">

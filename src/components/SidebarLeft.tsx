@@ -83,11 +83,13 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
                 to="/"
                 className="tw-flex tw-flex-col md:tw-flex-row tw-justify-center tw-items-center tw-space-x-0 md:tw-space-x-2 tw-px-4"
               >
-                <img src={images.logoH} alt="" className="tw-w-6 tw-h-6 md:tw-w-8 md:tw-h-8" />
+                <img
+                  src={images.logoH}
+                  alt=""
+                  className="tw-w-6 tw-h-6 md:tw-w-8 md:tw-h-8"
+                />
                 <div className="tw-text-primary tw-text-center">
-                  <p className="tw-text-xs md:tw-text-sm">
-                    องค์ความรู้องค์กร
-                  </p>
+                  <p className="tw-text-xs md:tw-text-sm">องค์ความรู้องค์กร</p>
                   <p className="tw-text-xs md:tw-text-sm">
                     Knowledge Management
                   </p>
@@ -105,16 +107,18 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
           />
         </div>
         <div>
-          <Divider />
-          <p className="tw-p-3 tw-text-md tw-text-primary">วัตถุประสงค์</p>
-          <div className="tw-p-3 tw-text-xs tw-text-primary">
-            เพื่อส่งเสริมการบริหารจัดการองค์ความรู้ให้เป็นระบบ
-            และสามารถนำไปใช้ในการพัฒนาศักยภาพบุคลากร ปรับปรุงขบวนการทำงาน
-            รวมถึงใช้เป็นกรณีศึกษาในสถานสถานการณ์ต่างๆ
-            กลุ่มบริษัทในเครือแฮปปี้แลนด์จึงกำหนด
-            นโยบายการบันทึกองค์ความรู้ภายในองค์กร
+          <Divider orientationMargin={"0"} />
+          <div className="tw-p-3 tw-space-y-4">
+            <p className=" tw-text-md tw-text-primary">วัตถุประสงค์</p>
+            <div className=" tw-text-xs tw-text-primary tw-text-wrap">
+              เพื่อส่งเสริมการบริหารจัดการองค์ความรู้ให้เป็นระบบ
+              และสามารถนำไปใช้ในการพัฒนาศักยภาพบุคลากร ปรับปรุงขบวนการทำงาน
+              รวมถึงใช้เป็นกรณีศึกษาในสถานสถานการณ์ต่างๆ
+              กลุ่มบริษัทในเครือแฮปปี้แลนด์จึงกำหนด
+              นโยบายการบันทึกองค์ความรู้ภายในองค์กร
+            </div>
+            <img src={images.km01} alt="" className="tw-h-32 tw-w-full" />
           </div>
-          <img src={images.km01} alt="" className="tw-h-32 tw-w-full" />
         </div>
       </div>
     </div>

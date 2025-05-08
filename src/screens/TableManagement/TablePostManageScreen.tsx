@@ -7,10 +7,8 @@ import {
   Divider,
   message,
   Tag,
-  InputRef,
-  Input,
 } from "antd";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost, deletePost, Post } from "../../services/postService";
 import { DELETE_POST, selectPostState } from "../../redux/reducer/postReducer";
@@ -19,7 +17,6 @@ import {
   EditFilled,
   FileOutlined,
   PlusOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
 import { AppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";

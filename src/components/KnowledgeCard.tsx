@@ -2,7 +2,7 @@ import { Button, Divider, Tag } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { typeKnowledge } from "../config/constant";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, UserOutlined } from "@ant-design/icons";
 import { postView } from "../services/postService";
 
 interface KnowledgeCardProps {
@@ -32,7 +32,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleClick = async() => {
+  const handleClick = async () => {
     navigate("/content/" + postId);
     await postView(postId);
   };
@@ -72,8 +72,10 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
         />
         <div className="tw-flex tw-flex-col tw-justify-end tw-flex-1">
           {fName && lName && (
-            <div className="tw-text-end tw-text-xs tw-text-primary">
-              ผู้นำเสนอ : {fName} {lName}
+            <div className="tw-text-end tw-text-xs tw-text-primary tw-space-x-1">
+              <UserOutlined />
+              <span dangerouslySetInnerHTML={{ __html: fName }} />
+              <span dangerouslySetInnerHTML={{ __html: lName }} />
             </div>
           )}
           <p className="tw-text-xs tw-text-primary tw-text-end">
