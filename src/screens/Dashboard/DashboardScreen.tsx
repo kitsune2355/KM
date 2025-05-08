@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { KnowledgeCard } from "../../components/KnowledgeCard";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { Divider, Pagination } from "antd";
+import { set } from "react-hook-form";
 
 export const findCategory = (
   categoryList: any[],
@@ -62,21 +63,24 @@ export const DashboardScreen: React.FC = () => {
     fetchData();
   }, [fetchData]);
 
-  const filteredPosts = posts.filter((post) => {
-    const matchesQuery =
-      post.post_title.toLowerCase().includes(query.toLowerCase()) ||
-      post.post_desc.toLowerCase().includes(query.toLowerCase()) ||
-      post.post_create_by.toLowerCase().includes(query.toLowerCase()) ||
-      post.post_fname.toLowerCase().includes(query.toLowerCase()) ||
-      post.post_lname.toLowerCase().includes(query.toLowerCase());
+  const filteredPosts = useMemo(() => {
+    setCurrentPage(1);
+    return posts.filter((post) => {
+      const matchesQuery =
+        post.post_title.toLowerCase().includes(query.toLowerCase()) ||
+        post.post_desc.toLowerCase().includes(query.toLowerCase()) ||
+        post.post_create_by.toLowerCase().includes(query.toLowerCase()) ||
+        post.post_fname.toLowerCase().includes(query.toLowerCase()) ||
+        post.post_lname.toLowerCase().includes(query.toLowerCase());
 
-    const matchesSelectedTags =
-      selectedTags.length === 0 ||
-      selectedTags.includes(post.post_type) ||
-      selectedTags.includes(post.post_ctg_id);
+      const matchesSelectedTags =
+        selectedTags.length === 0 ||
+        selectedTags.includes(post.post_type) ||
+        selectedTags.includes(post.post_ctg_id);
 
-    return post.post_publish === "1" && matchesQuery && matchesSelectedTags;
-  });
+      return post.post_publish === "1" && matchesQuery && matchesSelectedTags;
+    });
+  }, [posts, query, selectedTags]);
 
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedPosts = filteredPosts.slice(startIndex, startIndex + pageSize);
