@@ -21,12 +21,25 @@ export interface Post {
   post_create_by: string;
   files?: File[];
   categories_title?: string | null;
+  post_count?: number;
 }
 
 export interface PostResponse {
   status: "success" | "error";
   message: string;
   insert_id?: number;
+}
+
+export async function postView(id: Post['id']): Promise<Post[]> {
+  const response = await fetch("/API/count_post.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  });
+  const res = await response.json();
+  return res;
 }
 
 export async function addPost(payload: Post): Promise<PostResponse> {

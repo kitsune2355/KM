@@ -77,15 +77,22 @@ export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
             <Divider
               orientation="center"
               orientationMargin="0"
-              className="!tw-text-primary !tw-border-primary"
+              className="!tw-text-primary !tw-border-primary tw-flex tw-justify-center tw-items-center tw-w-full"
             >
-              <div className="tw-flex tw-flex-row tw-justify-center tw-items-center tw-space-x-4 tw-px-4">
-                <img src={images.logoH} alt="" className="tw-w-8 tw-h-8" />
-                <div className="tw-flex tw-flex-col tw-justify-start">
-                  <p>องค์ความรู้องค์กร</p>
-                  <p>Knowledge Management</p>
+              <Link
+                to="/"
+                className="tw-flex tw-flex-col md:tw-flex-row tw-justify-center tw-items-center tw-space-x-0 md:tw-space-x-2 tw-px-4"
+              >
+                <img src={images.logoH} alt="" className="tw-w-6 tw-h-6 md:tw-w-8 md:tw-h-8" />
+                <div className="tw-text-primary tw-text-center">
+                  <p className="tw-text-xs md:tw-text-sm">
+                    องค์ความรู้องค์กร
+                  </p>
+                  <p className="tw-text-xs md:tw-text-sm">
+                    Knowledge Management
+                  </p>
                 </div>
-              </div>
+              </Link>
             </Divider>
           </div>
           <Menu

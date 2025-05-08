@@ -107,6 +107,27 @@ export const CategoryScreen: React.FC = () => {
     }
   };
 
+  const countPostsInLeafNodes = (tree: CategoryTreeNode[], posts: Post[]): number => {
+    const leafKeys: string[] = [];
+  
+    const findLeafKeys = (nodes: CategoryTreeNode[]) => {
+      for (const node of nodes) {
+        if (!node.children || node.children.length === 0) {
+          leafKeys.push(node.key);
+        } else if (node.children) {
+          findLeafKeys(node.children);
+        }
+      }
+    };
+  
+    findLeafKeys(tree);
+  
+    return posts.filter(
+      (post) => leafKeys.includes(post.id!) && post.post_publish === "1"
+    ).length;
+  }
+  
+
   useEffect(() => {
     onStart();
   }, [onStart]);
@@ -125,6 +146,10 @@ export const CategoryScreen: React.FC = () => {
             </div>
           </Tooltip>
         </Divider>
+
+        <div className="tw-w-full tw-flex tw-justify-end tw-text-xs tw-text-gray-400 tw-pb-4">
+          จำนวนองค์ความรู้ : {countPostsInLeafNodes(treeData, posts)} ฉบับ
+        </div>
       </div>
       <Card>
         <Tree

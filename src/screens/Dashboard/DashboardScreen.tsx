@@ -116,6 +116,7 @@ export const DashboardScreen: React.FC = () => {
                       query
                     )}
                     postType={item.post_type}
+                    view={item.post_count}
                   />
                 </div>
               );

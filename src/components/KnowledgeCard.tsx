@@ -2,6 +2,8 @@ import { Button, Divider, Tag } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { typeKnowledge } from "../config/constant";
+import { EyeOutlined } from "@ant-design/icons";
+import { postView } from "../services/postService";
 
 interface KnowledgeCardProps {
   title: string;
@@ -13,6 +15,7 @@ interface KnowledgeCardProps {
   fName: string;
   lName: string;
   postFormat?: string;
+  view?: number;
 }
 
 export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
@@ -25,11 +28,13 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
   fName,
   lName,
   postFormat,
+  view,
 }) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = async() => {
     navigate("/content/" + postId);
+    await postView(postId);
   };
 
   return (
@@ -72,7 +77,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
             </div>
           )}
           <p className="tw-text-xs tw-text-primary tw-text-end">
-            จำนวนนครั้งที่เข้าชม : 0 ครั้ง
+            <EyeOutlined /> {view} ครั้ง
           </p>
           <Divider
             orientation="left"
