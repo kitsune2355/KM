@@ -1,6 +1,6 @@
 import { User } from "../redux/reducer/userReducer";
 
-export interface usrCompany{
+export interface usrCompany {
   com_id: string;
   com_name: string;
 }
@@ -17,26 +17,34 @@ export const fetchCompany = async (): Promise<usrCompany[]> => {
   }
   const result = await res.json();
   return result;
-}
+};
 
-export const fetchUser = async (): Promise<User> => {
+export const fetchUser = async (): Promise<User | null> => {
+  const accessToken = localStorage.getItem("token");
+  const token = accessToken ? JSON.parse(accessToken).token : null;
   const user = localStorage.getItem("user");
-  const data = JSON.parse(user || "{}");
-  const userID = data[0].id;
+  const id = user ? JSON.parse(user).employeeID : null;
 
-  const res = await fetch(`/API/get_user.php?id=${userID}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const res = await fetch(`/API/get_user.php`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, token }),
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch user");
+    if (!res.ok) {
+      const errorMessage = await res.text();
+      throw new Error(`Failed to fetch user: ${errorMessage}`);
+    }
+
+    const result = await res.json();
+    return result[0] || null;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
   }
-
-  const result = await res.json();
-  return result[0];
 };
 
 export const fetchAllUsers = async (): Promise<User[]> => {
@@ -79,10 +87,10 @@ export const deleteUser = async (employeeID: string): Promise<any> => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ employeeID }),
-  })
+  });
   if (!res.ok) {
     throw new Error("Failed to delete user");
   }
   const result = await res.json();
   return result;
-  };
+};

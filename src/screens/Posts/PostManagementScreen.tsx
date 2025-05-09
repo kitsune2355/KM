@@ -33,6 +33,7 @@ export const PostManagementScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const posts = useSelector((state: RootState) => state.posts.posts);
+  const { currentUser } = useSelector((state: RootState) => state.users);
   const isFetchingPosts = useSelector(
     (state: RootState) => state.posts.isFetching
   );
@@ -101,8 +102,6 @@ export const PostManagementScreen: React.FC = () => {
   }, [onStart]);
 
   const onSubmit = async (data: PostManagementFormProps) => {
-    const userData = localStorage.getItem("user");
-    const user = userData ? JSON.parse(userData) : null;
     const postById = posts.find((post: any) => post.id === postId);
 
     const post = {
@@ -124,7 +123,7 @@ export const PostManagementScreen: React.FC = () => {
       post_att_file: data.attachments,
       post_publish: postById ? postById.post_publish : "0",
       post_comment: data.comment,
-      post_create_by: user[0].id,
+      post_create_by: currentUser?.employeeID as string,
       files: data.files,
     };
 

@@ -153,9 +153,9 @@ export const store = configureStore({
 
 export const selectCategoryState = createSelector(
   (state: RootState) => state.categories,
-  (posts) => ({
-    categories: posts.categories,
-    isFetchingCategory: posts.isFetching,
+  (category) => ({
+    categories: category.categories,
+    isFetchingCategory: category.isFetching,
   })
 );
 

@@ -16,44 +16,52 @@ import {
   SET_SELECTED_TAGS,
 } from "../redux/reducer/searchReducer";
 import { selectCategoryState } from "../redux/reducer/categoryReducer";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 import { fetchPosts } from "../redux/actions/postActions";
 import { typeKnowledge } from "../config/constant";
-import { fetchUser } from "../services/userService";
-import { User } from "../redux/reducer/userReducer";
 import { fetchCategory } from "../redux/actions/categoryAction";
 import { images } from "../utils/imageUtils";
+import { fetchUser } from "../services/userService";
+import {
+  FETCH_USER_REQUEST,
+  FETCH_USER_SUCCESS,
+  User,
+} from "../redux/reducer/userReducer";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const isAdmin = useIsAdmin();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { categories, isFetchingCategory } = useSelector(selectCategoryState);
+  const currUser = useSelector((state: RootState) => state.users.currentUser);
 
   const fetchData = useCallback(async () => {
     dispatch(fetchCategory());
     dispatch(fetchPosts());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (!isFetchingCategory) {
-      fetchData();
-    }
-  }, [fetchData]);
-
   const loadUser = async () => {
     try {
-      const result = await fetchUser();
-      setUser(result);
+      dispatch(FETCH_USER_REQUEST());
+      const res = await fetchUser();
+      dispatch(FETCH_USER_SUCCESS(res as User));
+      return res;
     } catch (err) {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    if (!isFetchingCategory) {
+      fetchData();
+      loadUser();
+    }
+  }, [fetchData]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -61,6 +69,7 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
     window.location.reload();
   };
 
@@ -93,9 +102,6 @@ export const Navbar: React.FC = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    loadUser();
-  }, []);
 
   const AdminMenu = {
     items: [
@@ -250,9 +256,9 @@ export const Navbar: React.FC = () => {
         <div className="tw-flex tw-justify-center tw-items-center tw-gap-2">
           <div className="tw-flex tw-flex-col tw-justify-center tw-items-end">
             <p className="tw-text-white tw-font-bold">
-              {user?.firstName} {user?.lastName}
+              {currUser?.firstName} {currUser?.lastName}
             </p>
-            <p className="tw-text-white tw-text-xs">{user?.position}</p>
+            <p className="tw-text-white tw-text-xs">{currUser?.position}</p>
           </div>
           <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
             <Avatar

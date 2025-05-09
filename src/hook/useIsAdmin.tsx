@@ -1,28 +1,22 @@
-import { useEffect, useState } from 'react';
-
-type User = {
-  role?: string;
-  [key: string]: any;
-};
+import { useEffect, useState } from "react";
 
 const useIsAdmin = (): boolean => {
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    try {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        const user: User = JSON.parse(userData);
-        if (user[0].role === 'admin') {
-          setIsAdmin(true);
-          return;
-        }
-      }
-    } catch (error) {
-      console.error('Error parsing user from localStorage:', error);
-    }
+  const fetchData = async () => {
+    const user = localStorage.getItem("user");
+    const userData = user ? JSON.parse(user) : null;
+    const userRole = userData.role;
 
-    setIsAdmin(false);
+    if (userRole === "admin") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   return isAdmin;

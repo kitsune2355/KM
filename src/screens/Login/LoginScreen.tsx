@@ -5,8 +5,11 @@ import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
 import { images } from "../../utils/imageUtils";
+import { useDispatch } from "react-redux";
+import { LOGIN_SUCCESS } from "../../redux/reducer/userReducer";
 
 export const LoginScreen: React.FC = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
     control,
@@ -17,13 +20,29 @@ export const LoginScreen: React.FC = () => {
 
   const onSubmit = async (data: LoginFormProps) => {
     const res = await login(data);
+    dispatch(LOGIN_SUCCESS(res[0]));
     if (res[0].status === "success") {
-      localStorage.setItem("user", JSON.stringify(res));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          employeeID: res[0].employeeID,
+          firstName: res[0].firstName,
+          lastName: res[0].lastName,
+          position: res[0].position,
+          role: res[0].role,
+        })
+      );
+      localStorage.setItem(
+        "token",
+        JSON.stringify({
+          token: res[0].token,
+        })
+      );
       navigate("/");
     } else {
       setError("username", {
         type: "manual",
-        message: "Login failed. Please check your username.",
+        message: "รหัสพนักงานไม่ถูกต้อง",
       });
     }
   };

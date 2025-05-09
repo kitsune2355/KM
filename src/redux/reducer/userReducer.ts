@@ -16,6 +16,7 @@ export interface User {
   role: string;
   status: string;
   permission?: string[];
+  token?: string;
 }
 
 interface UserState {
@@ -140,7 +141,7 @@ export const store = configureStore({
 });
 
 export const selectUserState = createSelector(
-  (state: RootState) => state.user || initialState,
+  (state: RootState) => state.user,
   (user) => ({
     currentUser: user.currentUser,
     allUsers: user.allUsers,

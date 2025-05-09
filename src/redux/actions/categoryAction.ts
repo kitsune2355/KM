@@ -7,7 +7,8 @@ import {
 
 export const fetchCategory = () => async (dispatch: AppDispatch) => {
   const user = localStorage.getItem("user");
-  const userID = JSON.parse(user || "{}")[0].id;
+  const userData = user ? JSON.parse(user) : null;
+  const userID = userData.employeeID;
   try {
     dispatch(FETCH_CATEGORIES_REQUEST());
     const categories = await fetchCategories(userID);
