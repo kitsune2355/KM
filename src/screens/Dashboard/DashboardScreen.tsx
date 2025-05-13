@@ -19,16 +19,22 @@ export const findCategory = (list: any[], id: string): string[] | null => {
 };
 
 export const highlightText = (text: string, query: string) =>
-  !query ? text : text.replace(new RegExp(`(${query})`, "gi"), '<mark>$1</mark>');
+  !query
+    ? text
+    : text.replace(new RegExp(`(${query})`, "gi"), "<mark>$1</mark>");
 
 export const DashboardScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const { posts, isFetchingPosts } = useSelector(selectPostState);
-  const categories = useSelector((state: RootState) => state.categories.categories);
+  const categories = useSelector(
+    (state: RootState) => state.categories.categories
+  );
   const query = useSelector((state: RootState) => state.search.query);
-  const selectedTags = useSelector((state: RootState) => state.search.selectedTags);
+  const selectedTags = useSelector(
+    (state: RootState) => state.search.selectedTags
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 9;
@@ -67,7 +73,10 @@ export const DashboardScreen: React.FC = () => {
     <div className="tw-flex tw-flex-col tw-justify-between tw-min-h-screen tw-gap-4">
       <div>
         <div className="tw-mb-4">
-          <Divider orientation="left" className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary">
+          <Divider
+            orientation="left"
+            className="!tw-text-xl !tw-text-primary !tw-font-bold !tw-border-primary"
+          >
             องค์ความรู้องค์กร
           </Divider>
           <div className="tw-w-full tw-flex tw-justify-end tw-text-xs tw-text-gray-400">
@@ -100,7 +109,10 @@ export const DashboardScreen: React.FC = () => {
                     fName={highlightText(item.post_fname, query)}
                     lName={highlightText(item.post_lname, query)}
                     postFormat={item.post_format}
-                    createdAt={highlightText(item.post_create_at as string, query)}
+                    createdAt={highlightText(
+                      item.post_create_at as string,
+                      query
+                    )}
                     postType={item.post_type}
                     view={item.post_count}
                   />
@@ -119,6 +131,7 @@ export const DashboardScreen: React.FC = () => {
           onChange={(page) => setCurrentPage(page)}
           showSizeChanger={false}
           className="tw-mt-8 tw-mb-2"
+          align="center"
         />
       )}
     </div>
