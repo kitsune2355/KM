@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from "../../store";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { Divider, Pagination } from "antd";
 import { set } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export const findCategory = (
   categoryList: any[],
@@ -39,6 +40,7 @@ export const highlightText = (text: string, query: string) => {
 };
 
 export const DashboardScreen: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
   const categories = useSelector(
@@ -53,7 +55,7 @@ export const DashboardScreen: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      dispatch(fetchPosts());
+      dispatch(fetchPosts(navigate));
     } catch (error) {
       console.error(error);
     }

@@ -1,4 +1,7 @@
 import axios from "axios";
+import { callApi } from "./callApi";
+import { NavigateFunction } from "react-router-dom";
+import { getAuthInfo } from "./userService";
 
 export interface Post {
   id: string | null;
@@ -32,16 +35,20 @@ export interface PostResponse {
   insert_id?: number;
 }
 
-export async function postView(id: Post['id']): Promise<Post[]> {
+export async function postView(id: Post["id"]): Promise<Post[]> {
   const { data } = await axios.post<Post[]>("/API/count_post.php", { id });
   return data;
 }
 
-export async function addPost(payload: Post): Promise<PostResponse> {
+export async function addPost(
+  payload: Post,
+  navigate?: NavigateFunction
+): Promise<PostResponse> {
+  const { token } = getAuthInfo();
   const formData = new FormData();
 
   if (payload.files) {
-    payload.files.forEach(file => {
+    payload.files.forEach((file) => {
       formData.append("file[]", file);
     });
   }
@@ -71,36 +78,61 @@ export async function addPost(payload: Post): Promise<PostResponse> {
 
   formData.append("data", JSON.stringify(dataPayload));
 
-  const { data } = await axios.post<PostResponse>("/API/add_post.php", formData);
+  const data = await callApi<PostResponse>(
+    "/API/add_post.php",
+    { ...formData, token },
+    navigate
+  );
   return data;
 }
 
-export async function getPosts(user_id: string): Promise<Post[]> {
-  const { data } = await axios.post<Post[]>("/API/show_post.php", { user_id });
-  return data;
-}
-
-export async function deletePost(post_id: string): Promise<PostResponse> {
+export async function getPosts(navigate?: NavigateFunction): Promise<Post[]> {
+  const { userID, token } = getAuthInfo();
   try {
-    const { data } = await axios.post<PostResponse>("/API/delete_post.php", { post_id });
+    const data = await callApi<Post[]>(
+      "/API/show_post.php",
+      { user_id: userID, token },
+      navigate
+    );
+    return data;
+  } catch (error) {
+    // console.error("API Error:", error);
+    throw new Error("Error while fetching posts");
+  }
+}
 
-    if (data.status === "success") {
-      return data;
-    } else {
-      throw new Error(data.message);
-    }
+export async function deletePost(
+  post_id: string,
+  navigate?: NavigateFunction
+): Promise<PostResponse> {
+  const { token } = getAuthInfo();
+  try {
+    const data = await callApi<PostResponse>("/API/delete_post.php", {
+      post_id,
+      token,
+      navigate,
+    });
+    return data;
   } catch (error) {
     console.error("API Error:", error);
     throw new Error("Error while deleting post");
   }
 }
 
-export async function searchPost(query: string): Promise<Post[]> {
-  try {
-    const { data } = await axios.post<Post[]>("/API/search_post.php", { data: query });
-    return data;
-  } catch (error) {
-    console.error("API Error:", error);
-    throw new Error("Error while searching post");
-  }
-}
+// export async function searchPost(
+//   query: string,
+//   navigate?: NavigateFunction
+// ): Promise<Post[]> {
+//   const { token } = getAuthInfo();
+//   try {
+//     const data = await callApi<Post[]>("/API/search_post.php", {
+//       data: query,
+//       token,
+//       navigate,
+//     });
+//     return data;
+//   } catch (error) {
+//     console.error("API Error:", error);
+//     throw new Error("Error while searching post");
+//   }
+// }

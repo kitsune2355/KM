@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     dispatch(fetchCategory(navigate));
-    dispatch(fetchPosts());
+    dispatch(fetchPosts(navigate));
   }, [dispatch]);
 
   const loadUser = async () => {

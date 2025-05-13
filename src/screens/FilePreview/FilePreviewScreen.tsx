@@ -2,12 +2,13 @@ import { Card, Divider } from "antd";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CloudDownloadOutlined } from "@ant-design/icons";
 import { fetchPosts } from "../../redux/actions/postActions";
 
 export const FilePreviewScreen: React.FC = () => {
   const postId = useParams().id;
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const posts = useSelector((state: RootState) => state.posts.posts);
 
@@ -27,7 +28,7 @@ export const FilePreviewScreen: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      dispatch(fetchPosts());
+      dispatch(fetchPosts(navigate));
     } catch (error) {
       console.error(error);
     }

@@ -23,7 +23,10 @@ import { useNavigate } from "react-router-dom";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { ColumnsType } from "antd/es/table";
 import { typeKM, typeKnowledge } from "../../config/constant";
-import { ColumnSearch as getColumnSearchProps, getSorter } from "../../components/ColumnSearch";
+import {
+  ColumnSearch as getColumnSearchProps,
+  getSorter,
+} from "../../components/ColumnSearch";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -33,7 +36,7 @@ export const TablePostManageScreen: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      await dispatch(fetchPosts());
+      await dispatch(fetchPosts(navigate));
     } catch (error) {
       console.error(error);
     }
@@ -53,7 +56,7 @@ export const TablePostManageScreen: React.FC = () => {
 
   const handleDelete = async (record: any) => {
     try {
-      await deletePost(record.id);
+      await deletePost(record.id, navigate);
       dispatch(DELETE_POST(record.id));
       fetchData();
       message.success("ลบข้อมูลสำเร็จ");

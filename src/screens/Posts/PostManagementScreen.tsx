@@ -93,7 +93,7 @@ export const PostManagementScreen: React.FC = () => {
 
   useEffect(() => {
     if (!isFetchingPosts) {
-      dispatch(fetchPosts());
+      dispatch(fetchPosts(navigate));
     }
   }, [dispatch]);
 

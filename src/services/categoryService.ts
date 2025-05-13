@@ -1,4 +1,3 @@
-import axios from "axios";
 import { callApi } from "./callApi";
 import { NavigateFunction } from "react-router-dom";
 import { getAuthInfo } from "./userService";

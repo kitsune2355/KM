@@ -2,7 +2,7 @@ import { EyeOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Card, Tag } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store";
 import { fetchPosts } from "../../redux/actions/postActions";
 import { FilePreviewScreen } from "../FilePreview/FilePreviewScreen";
@@ -21,6 +21,7 @@ export const formatThaiDate = (dateString: string) => {
 };
 
 export const PostContentScreen: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const postId = useParams().id;
   const posts = useSelector((state: RootState) => state.posts.posts);
@@ -36,7 +37,7 @@ export const PostContentScreen: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      dispatch(fetchPosts());
+      dispatch(fetchPosts(navigate));
     } catch (error) {
       console.error(error);
     }
