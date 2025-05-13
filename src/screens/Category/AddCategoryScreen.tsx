@@ -16,10 +16,12 @@ import {
   UPDATE_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
 import { useChildTreeNodeForm } from "../../forms/ChildTreeNodeForm";
+import { useNavigate } from "react-router-dom";
 
 const { confirm } = Modal;
 
 export const AddCategoryScreen: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { categories } = useSelector(selectCategoryState);
 
@@ -43,7 +45,7 @@ export const AddCategoryScreen: React.FC = () => {
 
   const addCategoryToTree = async (newCategory: CategoryTreeNode) => {
     try {
-      const response = await addCategory(newCategory);
+      const response = await addCategory(newCategory, navigate);
       if (response.status === "success") {
         return true;
       } else {
@@ -133,7 +135,7 @@ export const AddCategoryScreen: React.FC = () => {
       okText: "ยืนยัน",
       cancelText: "ยกเลิก",
       onOk: async () => {
-        await deleteCategory(key);
+        await deleteCategory(key, navigate);
         dispatch(DELETE_CATEGORY(key));
         setSelectedKey(null);
       },

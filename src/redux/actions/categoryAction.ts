@@ -9,10 +9,9 @@ import {
 
 export const fetchCategory =
   (navigate?: NavigateFunction) => async (dispatch: AppDispatch) => {
-    const { userID, token } = getAuthInfo();
     try {
       dispatch(FETCH_CATEGORIES_REQUEST());
-      const categories = await fetchCategories(userID, token, navigate);
+      const categories = await fetchCategories(navigate);
       dispatch(FETCH_CATEGORIES_SUCCESS(categories));
     } catch (error) {
       console.error("error::", error);

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { callApi } from "./callApi";
 import { NavigateFunction } from "react-router-dom";
+import { getAuthInfo } from "./userService";
 
 export interface Category {
   title: string;
@@ -16,24 +17,31 @@ export interface CategoryResponse {
 }
 
 export async function addCategory(
-  payload: Category
+  payload: Category,
+  navigate?: NavigateFunction
 ): Promise<CategoryResponse> {
-  const { data } = await axios.post<CategoryResponse>(
-    "/API/add_category.php",
-    payload
-  );
-  return data;
+  const { token } = getAuthInfo();
+  try {
+    const data = await callApi<CategoryResponse>(
+      "/API/add_category.php",
+      { ...payload, token },
+      navigate
+    );
+    return data;
+  } catch (error) {
+    console.error("Error adding category:", error);
+    throw error;
+  }
 }
 
 export const fetchCategories = async (
-  user_id: string,
-  token: string,
   navigate?: NavigateFunction
 ): Promise<Category[]> => {
+  const { userID, token } = getAuthInfo();
   try {
     const data = await callApi<Category[]>(
       "/API/show_category.php",
-      { user_id, token },
+      { user_id: userID, token },
       navigate
     );
     return data;
@@ -48,10 +56,11 @@ export async function updateCategory(
   title: string,
   navigate?: NavigateFunction
 ): Promise<CategoryResponse> {
+  const { token } = getAuthInfo();
   try {
     const data = await callApi<CategoryResponse>(
       "/API/update_category.php",
-      { key, title },
+      { key, title, token },
       navigate
     );
     return data;
@@ -61,20 +70,20 @@ export async function updateCategory(
   }
 }
 
-export async function deleteCategory(key: string): Promise<CategoryResponse> {
+export async function deleteCategory(
+  key: string,
+  navigate?: NavigateFunction
+): Promise<CategoryResponse> {
+  const { token } = getAuthInfo();
   try {
-    const { data } = await axios.post<CategoryResponse>(
+    const data = await callApi<CategoryResponse>(
       "/API/delete_category.php",
-      { key }
+      { key, token },
+      navigate
     );
-
-    if (data.status === "success") {
-      return data;
-    } else {
-      throw new Error(data.message);
-    }
+    return data;
   } catch (error) {
     console.error("API Error:", error);
-    throw new Error("Error while deleting category");
+    return { status: "error", message: "Error deleting category" };
   }
 }

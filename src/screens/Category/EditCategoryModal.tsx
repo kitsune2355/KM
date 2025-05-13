@@ -10,6 +10,7 @@ import {
   UPDATE_CATEGORY,
 } from "../../redux/reducer/categoryReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface EditCategoryModalProps {
   editKey: string | null;
@@ -22,6 +23,7 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   open,
   onCancel,
 }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const categories = useSelector(
     (state: RootState) => state.categories.categories
@@ -56,7 +58,7 @@ export const EditCategoryModal: React.FC<EditCategoryModalProps> = ({
   const onSubmit = useCallback(
     async (data: { title: string }) => {
       if (!editKey) return;
-      await updateCategory(editKey, data.title);
+      await updateCategory(editKey, data.title, navigate);
       dispatch(
         UPDATE_CATEGORY({
           key: editKey,
