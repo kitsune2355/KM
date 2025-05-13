@@ -1,3 +1,4 @@
+import axios from "axios";
 import { User } from "../redux/reducer/userReducer";
 
 export interface usrCompany {
@@ -6,17 +7,12 @@ export interface usrCompany {
 }
 
 export const fetchCompany = async (): Promise<usrCompany[]> => {
-  const res = await fetch(`/API/get_company.php`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!res.ok) {
+  try {
+    const res = await axios.get<usrCompany[]>("/API/get_company.php");
+    return res.data;
+  } catch (error) {
     throw new Error("Failed to fetch company");
   }
-  const result = await res.json();
-  return result;
 };
 
 export const fetchUser = async (): Promise<User | null> => {
@@ -26,71 +22,37 @@ export const fetchUser = async (): Promise<User | null> => {
   const id = user ? JSON.parse(user).employeeID : null;
 
   try {
-    const res = await fetch(`/API/get_user.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id, token }),
-    });
-
-    if (!res.ok) {
-      const errorMessage = await res.text();
-      throw new Error(`Failed to fetch user: ${errorMessage}`);
-    }
-
-    const result = await res.json();
-    return result[0] || null;
-  } catch (error) {
+    const res = await axios.post<User[]>("/API/get_user.php", { id, token });
+    return res.data[0] || null;
+  } catch (error: any) {
     console.error("Error fetching user:", error);
-    throw error;
+    throw new Error(`Failed to fetch user: ${error.response?.data || error.message}`);
   }
 };
 
 export const fetchAllUsers = async (): Promise<User[]> => {
-  const res = await fetch(`/API/get_all_user.php`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!res.ok) {
+  try {
+    const res = await axios.get<User[]>("/API/get_all_user.php");
+    return res.data;
+  } catch (error) {
     throw new Error("Failed to fetch users");
   }
-
-  const result = await res.json();
-  return result;
 };
 
 export const addUser = async (user: User): Promise<any> => {
-  const res = await fetch("/API/add_user.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  });
-
-  if (!res.ok) {
+  try {
+    const res = await axios.post<any>("/API/add_user.php", user);
+    return res.data;
+  } catch (error) {
     throw new Error("Failed to add user");
   }
-
-  const result = await res.json();
-  return result;
 };
 
 export const deleteUser = async (employeeID: string): Promise<any> => {
-  const res = await fetch(`/API/delete_user.php`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ employeeID }),
-  });
-  if (!res.ok) {
+  try {
+    const res = await axios.post<any>("/API/delete_user.php", { employeeID });
+    return res.data;
+  } catch (error) {
     throw new Error("Failed to delete user");
   }
-  const result = await res.json();
-  return result;
 };

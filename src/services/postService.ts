@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export interface Post {
   id: string | null;
   post_format?: string;
@@ -31,23 +33,16 @@ export interface PostResponse {
 }
 
 export async function postView(id: Post['id']): Promise<Post[]> {
-  const response = await fetch("/API/count_post.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ id }),
-  });
-  const res = await response.json();
-  return res;
+  const { data } = await axios.post<Post[]>("/API/count_post.php", { id });
+  return data;
 }
 
 export async function addPost(payload: Post): Promise<PostResponse> {
   const formData = new FormData();
 
   if (payload.files) {
-    payload.files.forEach((f, _index) => {
-      formData.append("file[]", f);
+    payload.files.forEach(file => {
+      formData.append("file[]", file);
     });
   }
 
@@ -76,50 +71,23 @@ export async function addPost(payload: Post): Promise<PostResponse> {
 
   formData.append("data", JSON.stringify(dataPayload));
 
-  const response = await fetch("/API/add_post.php", {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  return await response.json();
+  const { data } = await axios.post<PostResponse>("/API/add_post.php", formData);
+  return data;
 }
 
 export async function getPosts(user_id: string): Promise<Post[]> {
-  const response = await fetch("/API/show_post.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ user_id }),
-  });
-  const res = await response.json();
-  return res;
+  const { data } = await axios.post<Post[]>("/API/show_post.php", { user_id });
+  return data;
 }
 
-export async function deletePost(post_id: string): Promise<Post[]> {
+export async function deletePost(post_id: string): Promise<PostResponse> {
   try {
-    const response = await fetch("/API/delete_post.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ post_id }),
-    });
+    const { data } = await axios.post<PostResponse>("/API/delete_post.php", { post_id });
 
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    if (result.status === "success") {
-      return result;
+    if (data.status === "success") {
+      return data;
     } else {
-      throw new Error(result.message);
+      throw new Error(data.message);
     }
   } catch (error) {
     console.error("API Error:", error);
@@ -127,29 +95,12 @@ export async function deletePost(post_id: string): Promise<Post[]> {
   }
 }
 
-export async function searchPost(query: string) {
+export async function searchPost(query: string): Promise<Post[]> {
   try {
-    const response = await fetch("/API/search_post.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ data: query }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    if (result.status === "success") {
-      return result;
-    } else {
-      throw new Error(result.message);
-    }
+    const { data } = await axios.post<Post[]>("/API/search_post.php", { data: query });
+    return data;
   } catch (error) {
     console.error("API Error:", error);
-    throw new Error("Error while deleting post");
+    throw new Error("Error while searching post");
   }
 }

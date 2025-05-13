@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export interface Category {
   title: string;
   key: string;
@@ -14,100 +16,60 @@ export interface CategoryResponse {
 export async function addCategory(
   payload: Category
 ): Promise<CategoryResponse> {
-  const response = await fetch("/API/add_category.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  return await response.json();
+  const { data } = await axios.post<CategoryResponse>(
+    "/API/add_category.php",
+    payload
+  );
+  return data;
 }
 
 export async function fetchCategories(user_id: string): Promise<Category[]> {
   try {
-    const response = await fetch("/API/show_category.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ user_id }),
+    const { data } = await axios.post<Category[]>("/API/show_category.php", {
+      user_id,
     });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
     throw error;
   }
 }
 
-export const updateCategory = async (
+export async function updateCategory(
   key: string,
   title: string
-): Promise<CategoryResponse> => {
+): Promise<CategoryResponse> {
   try {
-    const data = {
-      key: key,
-      title: title,
-    };
+    const { data } = await axios.post<CategoryResponse>(
+      "/API/update_category.php",
+      { key, title }
+    );
 
-    const response = await fetch(`/API/update_category.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    if (result.status === "success") {
-      return result; // ส่งผลลัพธ์สำเร็จ
+    if (data.status === "success") {
+      return data;
     } else {
-      throw new Error(result.message); // ถ้ามีข้อผิดพลาดใน API
+      throw new Error(data.message);
     }
   } catch (error) {
     console.error("API Error:", error);
     throw new Error("Error while updating category");
   }
-};
+}
 
-export const deleteCategory = async (
-  key: string
-): Promise<CategoryResponse> => {
+export async function deleteCategory(key: string): Promise<CategoryResponse> {
   try {
-    const response = await fetch("/API/delete_category.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ key }),
-    });
+    const { data } = await axios.post<CategoryResponse>(
+      "/API/delete_category.php",
+      { key }
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    if (result.status === "success") {
-      return result;
+    if (data.status === "success") {
+      return data;
     } else {
-      throw new Error(result.message);
+      throw new Error(data.message);
     }
   } catch (error) {
     console.error("API Error:", error);
     throw new Error("Error while deleting category");
   }
-};
+}
