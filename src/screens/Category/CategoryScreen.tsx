@@ -1,4 +1,4 @@
-import { Card, Divider, Tooltip, Tree } from "antd";
+import { Card, Divider, Spin, Tooltip, Tree } from "antd";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -100,7 +100,7 @@ export const CategoryScreen: React.FC = () => {
     dispatch(FETCH_CATEGORY(categories));
   }, [categories, params, posts, dispatch]);
 
-  const onOpenContent = async(key: string) => {
+  const onOpenContent = async (key: string) => {
     const post = posts.find((c) => c.id === key);
     if (post) {
       navigate(`/content/${post.id}`);
@@ -108,9 +108,12 @@ export const CategoryScreen: React.FC = () => {
     }
   };
 
-  const countPostsInLeafNodes = (tree: CategoryTreeNode[], posts: Post[]): number => {
+  const countPostsInLeafNodes = (
+    tree: CategoryTreeNode[],
+    posts: Post[]
+  ): number => {
     const leafKeys: string[] = [];
-  
+
     const findLeafKeys = (nodes: CategoryTreeNode[]) => {
       for (const node of nodes) {
         if (!node.children || node.children.length === 0) {
@@ -120,14 +123,13 @@ export const CategoryScreen: React.FC = () => {
         }
       }
     };
-  
+
     findLeafKeys(tree);
-  
+
     return posts.filter(
       (post) => leafKeys.includes(post.id!) && post.post_publish === "1"
     ).length;
-  }
-  
+  };
 
   useEffect(() => {
     onStart();
@@ -152,20 +154,25 @@ export const CategoryScreen: React.FC = () => {
           จำนวนองค์ความรู้ : {countPostsInLeafNodes(treeData, posts)} ฉบับ
         </div>
       </div>
-      <Card>
-        <Tree
-          showLine
-          treeData={treeData as CategoryTreeNode[]}
-          expandedKeys={expandedKeys}
-          onExpand={(keys) => setExpandedKeys(keys as string[])}
-          onSelect={(key) => onOpenContent(key[0] as string)}
-          titleRender={(nodeData: any) => {
-            if (nodeData.isLeaf) {
-              return (
-                <Card
-                  size="small"
-                  hoverable
-                  className="
+      {isFetchingPosts ? (
+        <div className="tw-h-[90vh] tw-flex tw-justify-center tw-items-center tw-text-gray-500">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Card>
+          <Tree
+            showLine
+            treeData={treeData as CategoryTreeNode[]}
+            expandedKeys={expandedKeys}
+            onExpand={(keys) => setExpandedKeys(keys as string[])}
+            onSelect={(key) => onOpenContent(key[0] as string)}
+            titleRender={(nodeData: any) => {
+              if (nodeData.isLeaf) {
+                return (
+                  <Card
+                    size="small"
+                    hoverable
+                    className="
     tw-w-full tw-rounded
     tw-border-l-4 tw-border-l-primary tw-bg-white
     hover:tw-border-l-secondary 
@@ -174,20 +181,21 @@ export const CategoryScreen: React.FC = () => {
     hover:tw-bg-slide-gradient tw-bg-[length:200%_100%] tw-bg-left
     hover:tw-animate-slide-colors
   "
-                >
-                  <div className="tw-flex tw-items-center tw-space-x-2">
-                    <span className="tw-font-medium">{nodeData.title}</span>
-                    <span className="tw-ml-auto">
-                      <RightCircleOutlined />
-                    </span>
-                  </div>
-                </Card>
-              );
-            }
-            return <div className="tw-cursor-none">{nodeData.title}</div>;
-          }}
-        />
-      </Card>
+                  >
+                    <div className="tw-flex tw-items-center tw-space-x-2">
+                      <span className="tw-font-medium">{nodeData.title}</span>
+                      <span className="tw-ml-auto">
+                        <RightCircleOutlined />
+                      </span>
+                    </div>
+                  </Card>
+                );
+              }
+              return <div className="tw-cursor-none">{nodeData.title}</div>;
+            }}
+          />
+        </Card>
+      )}
     </>
   );
 };
