@@ -4,7 +4,7 @@ import { Controller } from "react-hook-form";
 import { useAddUserForm } from "../../forms/AddUserForm";
 import { addUser, fetchCompany, usrCompany } from "../../services/userService";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { RootState } from "../../store";
 import { selectCategoryState } from "../../redux/reducer/categoryReducer";
 
@@ -28,6 +28,7 @@ export const getAllKeys = (data: any[]) => {
 };
 
 const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
+  const navigate = useNavigate();
   const allUsers = useSelector((state: RootState) => state.users.allUsers);
   const { categories } = useSelector(selectCategoryState);
   const {
@@ -78,7 +79,7 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
     };
 
     try {
-      const res = await addUser(user);
+      const res = await addUser(user, navigate);
       if (res.status === "success") {
         message.success("เพิ่มผู้ใช้สำเร็จ");
         reset();
@@ -96,9 +97,9 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
     setCompany(res);
   };
 
-  useEffect(()=>{
-    getCompany()
-  },[])
+  useEffect(() => {
+    getCompany();
+  }, []);
 
   useEffect(() => {
     onStart();

@@ -15,7 +15,7 @@ import { selectPostState } from "../../redux/reducer/postReducer";
 import { fetchCategory } from "../../redux/actions/categoryAction";
 
 export const CategoryScreen: React.FC = () => {
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const params = useParams().id;
   const dispatch = useDispatch<AppDispatch>();
   const { categories, isFetchingCategory } = useSelector(selectCategoryState);
@@ -35,7 +35,7 @@ export const CategoryScreen: React.FC = () => {
   };
 
   const fetchData = useCallback(async () => {
-    dispatch(fetchCategory());
+    dispatch(fetchCategory(navigate));
     dispatch(fetchPosts());
   }, [dispatch]);
 
@@ -103,7 +103,7 @@ export const CategoryScreen: React.FC = () => {
   const onOpenContent = async(key: string) => {
     const post = posts.find((c) => c.id === key);
     if (post) {
-      navigation(`/content/${post.id}`);
+      navigate(`/content/${post.id}`);
       await postView(post.id);
     }
   };

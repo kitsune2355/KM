@@ -1,6 +1,6 @@
 import { Divider, Menu, MenuProps } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useLocation, matchPath } from "react-router-dom";
+import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AppDispatch,
@@ -35,12 +35,13 @@ const transformCategoriesToMenuItems = (
 export const SidebarLeft: React.FC<SidebarLeftProps> = ({ onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+  const navigate = useNavigate();
   const { categories, isFetchingCategory } = useSelector(selectCategoryState);
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
   const fetchData = useCallback(async () => {
-    dispatch(fetchCategory());
+    dispatch(fetchCategory(navigate));
   }, [dispatch]);
 
   useEffect(() => {

@@ -1,19 +1,20 @@
+import { NavigateFunction } from "react-router-dom";
 import { fetchCategories } from "../../services/categoryService";
+import { getAuthInfo } from "../../services/userService";
 import {
   AppDispatch,
   FETCH_CATEGORIES_REQUEST,
   FETCH_CATEGORIES_SUCCESS,
 } from "../reducer/categoryReducer";
 
-export const fetchCategory = () => async (dispatch: AppDispatch) => {
-  const user = localStorage.getItem("user");
-  const userData = user ? JSON.parse(user) : null;
-  const userID = userData.employeeID;
-  try {
-    dispatch(FETCH_CATEGORIES_REQUEST());
-    const categories = await fetchCategories(userID);
-    dispatch(FETCH_CATEGORIES_SUCCESS(categories));
-  } catch (error) {
-    console.error("error::", error);
-  }
-};
+export const fetchCategory =
+  (navigate?: NavigateFunction) => async (dispatch: AppDispatch) => {
+    const { userID, token } = getAuthInfo();
+    try {
+      dispatch(FETCH_CATEGORIES_REQUEST());
+      const categories = await fetchCategories(userID, token, navigate);
+      dispatch(FETCH_CATEGORIES_SUCCESS(categories));
+    } catch (error) {
+      console.error("error::", error);
+    }
+  };

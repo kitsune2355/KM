@@ -31,7 +31,7 @@ import {
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const isAdmin = useIsAdmin();
@@ -41,14 +41,14 @@ export const Navbar: React.FC = () => {
   const currUser = useSelector((state: RootState) => state.users.currentUser);
 
   const fetchData = useCallback(async () => {
-    dispatch(fetchCategory());
+    dispatch(fetchCategory(navigate));
     dispatch(fetchPosts());
   }, [dispatch]);
 
   const loadUser = async () => {
     try {
       dispatch(FETCH_USER_REQUEST());
-      const res = await fetchUser();
+      const res = await fetchUser(navigate);
       dispatch(FETCH_USER_SUCCESS(res as User));
       return res;
     } catch (err) {
@@ -101,7 +101,6 @@ export const Navbar: React.FC = () => {
     dispatch(SET_SELECTED_TAGS(values));
     navigate("/");
   };
-
 
   const AdminMenu = {
     items: [

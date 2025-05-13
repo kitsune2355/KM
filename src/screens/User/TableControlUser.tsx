@@ -37,7 +37,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
 
   const fetchData = async () => {
     dispatch(FETCH_ALL_USERS_REQUEST());
-    const res = await fetchAllUsers();
+    const res = await fetchAllUsers(navigate);
     dispatch(FETCH_ALL_USERS_SUCCESS(res));
     return res;
   };
@@ -54,7 +54,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
 
   const handleDelete = async (record: User) => {
     try {
-      await deleteUser(record.employeeID);
+      await deleteUser(record.employeeID, navigate);
       dispatch(DELETE_USER(record.employeeID));
       fetchData();
       message.success("ลบข้อมูลสำเร็จ");
@@ -75,7 +75,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
       status: record.status === "0" ? "1" : "0",
     };
     try {
-      await addUser(updatedStatus);
+      await addUser(updatedStatus, navigate);
       dispatch(UPDATE_USER(updatedStatus));
       fetchData();
       message.success(

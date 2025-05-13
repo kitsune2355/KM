@@ -1,4 +1,6 @@
 import axios from "axios";
+import { callApi } from "./callApi";
+import { NavigateFunction } from "react-router-dom";
 
 export interface Category {
   title: string;
@@ -23,36 +25,39 @@ export async function addCategory(
   return data;
 }
 
-export async function fetchCategories(user_id: string): Promise<Category[]> {
+export const fetchCategories = async (
+  user_id: string,
+  token: string,
+  navigate?: NavigateFunction
+): Promise<Category[]> => {
   try {
-    const { data } = await axios.post<Category[]>("/API/show_category.php", {
-      user_id,
-    });
+    const data = await callApi<Category[]>(
+      "/API/show_category.php",
+      { user_id, token },
+      navigate
+    );
     return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
-    throw error;
+    return [];
   }
-}
+};
 
 export async function updateCategory(
   key: string,
-  title: string
+  title: string,
+  navigate?: NavigateFunction
 ): Promise<CategoryResponse> {
   try {
-    const { data } = await axios.post<CategoryResponse>(
+    const data = await callApi<CategoryResponse>(
       "/API/update_category.php",
-      { key, title }
+      { key, title },
+      navigate
     );
-
-    if (data.status === "success") {
-      return data;
-    } else {
-      throw new Error(data.message);
-    }
+    return data;
   } catch (error) {
-    console.error("API Error:", error);
-    throw new Error("Error while updating category");
+    console.error("Error updating category:", error);
+    return { status: "error", message: "Error updating category" };
   }
 }
 

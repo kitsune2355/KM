@@ -1,4 +1,5 @@
 import { getPosts } from "../../services/postService";
+import { getAuthInfo } from "../../services/userService";
 import {
   AppDispatch,
   FETCH_POSTS_REQUEST,
@@ -6,9 +7,7 @@ import {
 } from "../reducer/postReducer";
 
 export const fetchPosts = () => async (dispatch: AppDispatch) => {
-  const user = localStorage.getItem("user");
-  const userData = user ? JSON.parse(user) : null;
-  const userID = userData.employeeID;
+  const { userID } = getAuthInfo();
   try {
     dispatch(FETCH_POSTS_REQUEST());
     const posts = await getPosts(userID);
