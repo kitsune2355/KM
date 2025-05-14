@@ -105,6 +105,10 @@ export const Navbar: React.FC = () => {
   const AdminMenu = {
     items: [
       {
+        key: "category",
+        label: (<>{isAdmin && <Link to="/category">ระบบจัดการหมวดหมู่</Link>}</>)
+      },
+      {
         key: "management",
         label: (
           <>{isAdmin && <Link to="/management">ระบบจัดการองค์ความรู้</Link>}</>
