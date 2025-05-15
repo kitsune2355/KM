@@ -8,7 +8,18 @@ export async function callApi<T>(
   navigate?: NavigateFunction
 ): Promise<T> {
   try {
-    const response = await axios.post<T>(url, body);
+    const isFormData = body instanceof FormData;
+
+    const response = await axios.post<T>(url, body, {
+      headers: isFormData
+        ? {
+            // ไม่ต้องตั้ง 'Content-Type' เพราะ axios จะจัดการให้อัตโนมัติเมื่อส่ง FormData
+          }
+        : {
+            "Content-Type": "application/json",
+          },
+    });
+
     const data = response.data as any;
 
     if (data?.status === "error" && data?.message === "Token expired") {
@@ -21,6 +32,6 @@ export async function callApi<T>(
     return data;
   } catch (error: any) {
     console.error("API error:", error);
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 }

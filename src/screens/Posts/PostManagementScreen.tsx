@@ -125,20 +125,23 @@ export const PostManagementScreen: React.FC = () => {
       post_comment: data.comment,
       post_create_by: currentUser?.employeeID as string,
       files: data.files,
+      post_count: postById ? postById.post_count : 0,
     };
 
     try {
       const response = await addPost(post);
-      if (postId) {
-        message.success("แบบฟอร์มถูกแก้ไขเรียบร้อยแล้ว");
+      if (response.status != "error") {
+        postId
+          ? message.success("แบบฟอร์มถูกแก้ไขเรียบร้อยแล้ว")
+          : message.success("แบบฟอร์มถูกบันทึกเรียบร้อยแล้ว");
+        reset();
+        navigate("/management");
+        return response;
       } else {
-        message.success("แบบฟอร์มถูกบันทึกเรียบร้อยแล้ว");
+        message.error("เกิดข้อผิดพลาดในการยื่นแบบฟอร์ม");
       }
-      reset();
-      navigate("/management");
-      return response;
     } catch (error) {
-      message.error("เกิดข้อผิดพลาดในการยื่นแบบฟอร์ม");
+      message.error("เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล");
       console.error(error);
     }
   };

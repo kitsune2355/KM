@@ -47,44 +47,69 @@ export async function addPost(
   const { token } = getAuthInfo();
   const formData = new FormData();
 
-  if (payload.files) {
+  if (payload.files?.length) {
     payload.files.forEach((file) => {
-      formData.append("file[]", file);
+      formData.append("file[]", file); 
     });
   }
 
+  const {
+    id,
+    post_format,
+    post_title,
+    post_ctg_id,
+    post_date,
+    post_type,
+    post_prefix_name,
+    post_fname,
+    post_lname,
+    post_position,
+    post_depm,
+    post_sub_depm,
+    post_contents,
+    post_desc,
+    post_benefit,
+    post_att_file,
+    post_publish,
+    post_comment,
+    post_create_by,
+    post_count,
+  } = payload;
+
   const dataPayload = {
-    id: payload.id,
-    post_format: payload.post_format,
-    post_title: payload.post_title,
-    post_ctg_id: payload.post_ctg_id,
-    post_date: payload.post_date,
-    post_type: payload.post_type,
-    post_prefix_name: payload.post_prefix_name,
-    post_fname: payload.post_fname,
-    post_lname: payload.post_lname,
-    post_position: payload.post_position,
-    post_depm: payload.post_depm,
-    post_sub_depm: payload.post_sub_depm,
-    post_contents: payload.post_contents,
-    desc: payload.post_desc,
-    post_benefit: payload.post_benefit,
-    post_att_file: payload.post_att_file,
-    post_publish: payload.post_publish,
-    post_comment: payload.post_comment,
-    post_create_by: payload.post_create_by,
-    file: payload.files,
+    id,
+    post_format,
+    post_title,
+    post_ctg_id,
+    post_date,
+    post_type,
+    post_prefix_name,
+    post_fname,
+    post_lname,
+    post_position,
+    post_depm,
+    post_sub_depm,
+    post_contents,
+    desc: post_desc,
+    post_benefit,
+    post_att_file,
+    post_publish,
+    post_comment,
+    post_create_by,
+    post_count,
+    token: token,
   };
 
   formData.append("data", JSON.stringify(dataPayload));
 
   const data = await callApi<PostResponse>(
     "/API/add_post.php",
-    { ...formData, token },
+    formData,
     navigate
   );
   return data;
 }
+
 
 export async function getPosts(navigate?: NavigateFunction): Promise<Post[]> {
   const { userID, token } = getAuthInfo();
