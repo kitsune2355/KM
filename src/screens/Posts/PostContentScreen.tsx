@@ -138,7 +138,7 @@ export const PostContentScreen: React.FC = () => {
                   ))}
               </div>
               {postData?.post_desc && (
-                <div>
+                <div className="tw-break-words">
                   <p className="tw-text-primary tw-font-bold">
                     รายละเอียดขององค์ความรู้ :
                   </p>
@@ -148,7 +148,7 @@ export const PostContentScreen: React.FC = () => {
                 </div>
               )}
               {postData.post_benefit && (
-                <div>
+                <div className="tw-break-words">
                   <p className="tw-text-primary tw-font-bold">
                     ประโยชน์ขององค์ความรู้ :
                   </p>
