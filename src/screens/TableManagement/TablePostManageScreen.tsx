@@ -76,7 +76,7 @@ export const TablePostManageScreen: React.FC = () => {
       post_publish: record.post_publish === "0" ? "1" : "0",
     };
     try {
-      await addPost(updatedPost);
+      await addPost(updatedPost, navigate);
       dispatch({
         type: "UPDATE_POST",
         payload: updatedPost,

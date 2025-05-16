@@ -1,7 +1,7 @@
 import { Button, Input, message, Select, Tree } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
-import { useAddUserForm } from "../../forms/AddUserForm";
+import { AddUserFormProps, useAddUserForm } from "../../forms/AddUserForm";
 import { addUser, fetchCompany, usrCompany } from "../../services/userService";
 import { useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -64,7 +64,7 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
     }
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: AddUserFormProps) => {
     const user = {
       employeeID: data.employeeID,
       firstName: data.firstName,

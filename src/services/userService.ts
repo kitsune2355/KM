@@ -65,14 +65,15 @@ export const fetchAllUsers = async (
 };
 
 export const addUser = async (
-  user: User,
+  userData: User,
   navigate?: NavigateFunction
 ): Promise<any> => {
   const { token } = getAuthInfo();
+  const user = { ...userData, status: parseInt(userData.status) };
   try {
     const data = await callApi<any>(
       "/API/add_user.php",
-      { ...user, token },
+      { user, token },
       navigate
     );
     return data;
