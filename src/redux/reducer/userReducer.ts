@@ -17,6 +17,7 @@ export interface User {
   status: string;
   permission?: string[];
   token?: string;
+  message?:string
 }
 
 interface UserState {

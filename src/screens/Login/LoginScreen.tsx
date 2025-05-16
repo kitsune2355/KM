@@ -42,7 +42,7 @@ export const LoginScreen: React.FC = () => {
     } else {
       setError("username", {
         type: "manual",
-        message: "รหัสพนักงานไม่ถูกต้อง",
+        message: res[0].message,
       });
     }
   };
