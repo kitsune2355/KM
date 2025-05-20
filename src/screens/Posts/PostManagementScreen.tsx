@@ -26,6 +26,11 @@ import useIsAdmin from "../../hook/useIsAdmin";
 import { typeKM } from "../../config/constant";
 import TextEditor from "../../components/TextEditor";
 import { CategoryTreeNode } from "../../redux/reducer/categoryReducer";
+import {
+  FETCH_ALL_USERS_REQUEST,
+  FETCH_ALL_USERS_SUCCESS,
+} from "../../redux/reducer/userReducer";
+import { fetchAllUsers } from "../../services/userService";
 
 export const PostManagementScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,7 +38,9 @@ export const PostManagementScreen: React.FC = () => {
     (state: RootState) => state.categories.categories
   );
   const posts = useSelector((state: RootState) => state.posts.posts);
-  const { currentUser } = useSelector((state: RootState) => state.users);
+  const { currentUser, allUsers } = useSelector(
+    (state: RootState) => state.users
+  );
   const isFetchingPosts = useSelector(
     (state: RootState) => state.posts.isFetching
   );
@@ -91,8 +98,16 @@ export const PostManagementScreen: React.FC = () => {
     }
   }, [postId, posts, setValue]);
 
+  const fetchData = async () => {
+    dispatch(FETCH_ALL_USERS_REQUEST());
+    const res = await fetchAllUsers(navigate);
+    dispatch(FETCH_ALL_USERS_SUCCESS(res));
+    return res;
+  };
+
   useEffect(() => {
     if (!isFetchingPosts) {
+      fetchData();
       dispatch(fetchPosts(navigate));
     }
   }, [dispatch]);
@@ -566,6 +581,32 @@ export const PostManagementScreen: React.FC = () => {
           )}
         </div>
       </Card>
+
+      {postId && (
+        <div className="tw-flex tw-flex-col tw-mt-2 tw-space-y-1">
+          <div className="tw-flex tw-flex-row tw-space-x-1 tw-text-gray-500 tw-text-xs">
+            <p>เรียบเรียงโดย :</p>
+            <span>
+              {(() => {
+                const post = posts.find((p) => p.id === postId);
+                const authorID = post?.post_create_by;
+                const matchedUser = allUsers.find(
+                  (user) => user.employeeID === authorID
+                );
+                return matchedUser
+                  ? `${matchedUser.firstName} ${matchedUser.lastName}`
+                  : "ไม่พบข้อมูล";
+              })()}
+            </span>
+          </div>
+          <div className="tw-flex tw-flex-row tw-space-x-1 tw-text-gray-500 tw-text-xs">
+            <p>อัพเดทล่าสุดวันที่ :</p>
+            <span>
+              {posts.find((item) => item.id === postId)?.post_update_at}
+            </span>
+          </div>
+        </div>
+      )}
     </>
   );
 };

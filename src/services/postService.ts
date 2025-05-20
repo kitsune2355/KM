@@ -24,6 +24,8 @@ export interface Post {
   post_comment?: string;
   post_create_at?: string;
   post_create_by: string;
+  post_update_at?: string;
+  post_update_by?: string;
   files?: File[];
   categories_title?: string | null;
   post_count?: number;

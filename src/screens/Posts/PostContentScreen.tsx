@@ -1,5 +1,5 @@
-import { EyeOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Card, Tag } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
+import { Card, Tag } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,6 +11,7 @@ import buddhistEra from "dayjs/plugin/buddhistEra";
 import "dayjs/locale/th";
 import { findCategory } from "../Dashboard/DashboardScreen";
 import { typeKM, typeKnowledge } from "../../config/constant";
+import UserAvatar from "../../components/UserAvatar";
 
 dayjs.extend(buddhistEra);
 dayjs.locale("th");
@@ -58,7 +59,7 @@ export const PostContentScreen: React.FC = () => {
           <Card>
             <div className="tw-flex tw-flex-col md:tw-flex-row  tw-justify-between">
               <div className="tw-flex tw-flex-row tw-items-center">
-                <Avatar size={48} icon={<UserOutlined />} />
+                <UserAvatar name={postData.post_fname} size={40} opacity={0.7} />
                 <div className="tw-flex tw-flex-col tw-ml-4">
                   <p className="tw-text-primary tw-font-bold">
                     {postData?.post_fname} {postData.post_lname}
@@ -83,14 +84,14 @@ export const PostContentScreen: React.FC = () => {
                       องค์ความรู้องค์กร
                     </p>
                   )}
-                  <p className="tw-text-gray-500 tw-text-xs">
+                  {/* <p className="tw-text-gray-500 tw-text-xs">
                     บันทึกวันที่ {postData?.post_create_at}
-                  </p>
+                  </p> */}
                 </div>
               </div>
 
               <div className="tw-text-gray-500 tw-text-xs tw-text-end">
-                วันที่ทำเอกสาร {formatThaiDate(postData.post_date)}
+                วันที่ทำเอกสาร : {formatThaiDate(postData.post_date)}
               </div>
             </div>
 

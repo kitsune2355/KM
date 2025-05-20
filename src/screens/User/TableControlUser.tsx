@@ -208,7 +208,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
         columns={columns}
         dataSource={allUsers}
         bordered
-        scroll={{ x: "max-content", y: 500 }}
+        scroll={{ x: "max-content", y: 'max-content' }}
         loading={isFetchingUsers}
       />
     </div>

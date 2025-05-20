@@ -27,6 +27,7 @@ import {
   ColumnSearch as getColumnSearchProps,
   getSorter,
 } from "../../components/ColumnSearch";
+import { formatThaiDate } from "../Posts/PostContentScreen";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -263,6 +264,15 @@ export const TablePostManageScreen: React.FC = () => {
       ],
     },
     {
+      title: "วันที่ทำเอกสาร",
+      key: "post_date",
+      width: 150,
+      sorter: getSorter("post_date"),
+      render: (_: any, record: any) => (
+        <span>{formatThaiDate(record.post_date)}</span>
+      ),
+    },
+    {
       title: "วันที่สร้าง",
       dataIndex: "post_create_at",
       key: "post_create_at",
@@ -352,7 +362,7 @@ export const TablePostManageScreen: React.FC = () => {
           columns={columns}
           dataSource={posts}
           bordered
-          scroll={{ x: "max-content", y: 500 }}
+          scroll={{ x: "max-content", y: 'max-content' }}
           tableLayout="fixed"
           onChange={(pagination, filters, sorter, extra) => {
             const count = extra.currentDataSource.length;

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Avatar, Button, Drawer, Dropdown, Tag, TreeSelect } from "antd";
+import { Button, Drawer, Dropdown, Tag, TreeSelect } from "antd";
 import {
-  UserOutlined,
   MenuOutlined,
   SearchOutlined,
   LogoutOutlined,
@@ -27,6 +26,7 @@ import {
   FETCH_USER_SUCCESS,
   User,
 } from "../redux/reducer/userReducer";
+import UserAvatar from "./UserAvatar";
 
 export const Navbar: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -39,6 +39,7 @@ export const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const { categories, isFetchingCategory } = useSelector(selectCategoryState);
   const currUser = useSelector((state: RootState) => state.users.currentUser);
+  const { query } = useSelector((state: RootState) => state.search);
 
   const fetchData = useCallback(async () => {
     dispatch(fetchCategory(navigate));
@@ -218,7 +219,7 @@ export const Navbar: React.FC = () => {
         }
         placeholder="ค้นหาองค์ความรู้"
         className="tw-w-full"
-        dropdownStyle={{ maxHeight: 300, overflow: "auto" }}
+        dropdownStyle={{ maxHeight: 300, overflow: "auto", display: `${query}` && "none" }}
         tagRender={tagRender}
         suffixIcon={<SearchOutlined />}
         allowClear
@@ -264,11 +265,7 @@ export const Navbar: React.FC = () => {
             <p className="tw-text-white tw-text-xs">{currUser?.position}</p>
           </div>
           <Dropdown menu={isAdmin ? AdminMenu : items} trigger={["click"]}>
-            <Avatar
-              className="tw-cursor-pointer"
-              icon={<UserOutlined />}
-              onClick={toggleDropdown}
-            />
+            <UserAvatar name={currUser?.firstName} size={32} className="tw-cursor-pointer" onClick={toggleDropdown} />
           </Dropdown>
         </div>
       </div>

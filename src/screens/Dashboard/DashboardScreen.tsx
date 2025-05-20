@@ -18,11 +18,6 @@ export const findCategory = (list: any[], id: string): string[] | null => {
   return null;
 };
 
-export const highlightText = (text: string, query: string) =>
-  !query
-    ? text
-    : text.replace(new RegExp(`(${query})`, "gi"), "<mark>$1</mark>");
-
 export const DashboardScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -90,7 +85,7 @@ export const DashboardScreen: React.FC = () => {
           </div>
         ) : isEmpty ? (
           <div className="tw-h-[90vh] tw-flex tw-justify-center tw-items-center tw-text-gray-500">
-            ยังไม่มีองค์ความรู้องค์กร
+            ไม่พบองค์ความรู้องค์กร
           </div>
         ) : (
           <div className="tw-grid tw-grid-cols-12 tw-gap-4">
@@ -103,18 +98,9 @@ export const DashboardScreen: React.FC = () => {
                 >
                   <KnowledgeCard
                     postId={item.id}
-                    title={highlightText(item.post_title, query)}
-                    description={highlightText(item.post_desc, query)}
+                    postsData={item}
+                    query={query}
                     tags={tag || ["ไม่มีหมวดหมู่"]}
-                    fName={highlightText(item.post_fname, query)}
-                    lName={highlightText(item.post_lname, query)}
-                    postFormat={item.post_format}
-                    createdAt={highlightText(
-                      item.post_create_at as string,
-                      query
-                    )}
-                    postType={item.post_type}
-                    view={item.post_count}
                   />
                 </div>
               );
