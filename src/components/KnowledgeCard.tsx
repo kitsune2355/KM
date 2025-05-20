@@ -1,4 +1,4 @@
-import { Button, Divider, Tag } from "antd";
+import { Divider, Tag } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { typeKnowledge } from "../config/constant";
@@ -21,7 +21,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleClick = async () => {
+  const handleReadmore = async () => {
     navigate("/content/" + postId);
     await postView(postId);
   };
@@ -32,7 +32,7 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
       : text.replace(new RegExp(`(${query})`, "gi"), "<mark>$1</mark>");
 
   return (
-    <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full hover:tw-shadow-tertiary tw-border-primary tw-border-[1px] hover:tw-bg-slide-gradient tw-bg-[length:200%_100%] tw-bg-left hover:tw-animate-slide-colors">
+    <div className="tw-bg-white tw-rounded-lg tw-shadow-lg tw-flex tw-flex-col tw-gap-2 tw-w-full tw-h-full hover:tw-shadow-tertiary tw-border-primary tw-border-[1px] hover:tw-bg-slide-gradient tw-bg-[length:200%_100%] tw-bg-left hover:tw-animate-slide-colors" onClick={handleReadmore}>
       <div className="tw-p-4 tw-flex tw-flex-col tw-space-y-1 tw-w-full tw-h-full">
         <p className="tw-text-end tw-text-xs tw-text-gray-400">
           เลขที่ : {highlightText(postsData.post_format as string)}
@@ -96,12 +96,6 @@ export const KnowledgeCard: React.FC<KnowledgeCardProps> = ({
               }}
             />
           </Divider>
-          <Button
-            className="!tw-text-primary hover:!tw-bg-primary hover:!tw-text-white"
-            onClick={handleClick}
-          >
-            อ่านเพิ่มเติม
-          </Button>
         </div>
       </div>
     </div>
