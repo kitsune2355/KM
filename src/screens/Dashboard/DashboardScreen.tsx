@@ -46,7 +46,8 @@ export const DashboardScreen: React.FC = () => {
         post.post_desc.toLowerCase().includes(lowerQuery) ||
         post.post_create_by.toLowerCase().includes(lowerQuery) ||
         post.post_fname.toLowerCase().includes(lowerQuery) ||
-        post.post_lname.toLowerCase().includes(lowerQuery);
+        post.post_lname.toLowerCase().includes(lowerQuery) || 
+        (post.post_format as string).toLowerCase().includes(lowerQuery);
 
       const matchesTags =
         selectedTags.length === 0 ||
