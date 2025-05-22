@@ -74,6 +74,7 @@ export const LoginScreen: React.FC = () => {
               render={({ field }) => (
                 <Input
                   {...field}
+                  autoComplete="off"
                   placeholder="รหัสพนักงาน"
                   className="tw-mt-2 tw-p-2 tw-w-full tw-border tw-border-gray-300 tw-rounded-md"
                 />

@@ -160,19 +160,20 @@ export const CategoryScreen: React.FC = () => {
         </div>
       ) : (
         <Card>
-          <Tree
-            showLine
-            treeData={treeData as CategoryTreeNode[]}
-            expandedKeys={expandedKeys}
-            onExpand={(keys) => setExpandedKeys(keys as string[])}
-            onSelect={(key) => onOpenContent(key[0] as string)}
-            titleRender={(nodeData: any) => {
-              if (nodeData.isLeaf) {
-                return (
-                  <Card
-                    size="small"
-                    hoverable
-                    className="
+          {treeData.length > 0 ? (
+            <Tree
+              showLine
+              treeData={treeData as CategoryTreeNode[]}
+              expandedKeys={expandedKeys}
+              onExpand={(keys) => setExpandedKeys(keys as string[])}
+              onSelect={(key) => onOpenContent(key[0] as string)}
+              titleRender={(nodeData: any) => {
+                if (nodeData.isLeaf) {
+                  return (
+                    <Card
+                      size="small"
+                      hoverable
+                      className="
     tw-w-full tw-rounded
     tw-border-l-4 tw-border-l-primary tw-bg-white
     hover:tw-border-l-secondary 
@@ -181,19 +182,22 @@ export const CategoryScreen: React.FC = () => {
     hover:tw-bg-slide-gradient tw-bg-[length:200%_100%] tw-bg-left
     hover:tw-animate-slide-colors
   "
-                  >
-                    <div className="tw-flex tw-items-center tw-space-x-2">
-                      <span className="tw-font-medium">{nodeData.title}</span>
-                      <span className="tw-ml-auto">
-                        <RightCircleOutlined />
-                      </span>
-                    </div>
-                  </Card>
-                );
-              }
-              return <div className="tw-cursor-none">{nodeData.title}</div>;
-            }}
-          />
+                    >
+                      <div className="tw-flex tw-items-center tw-space-x-2">
+                        <span className="tw-font-medium">{nodeData.title}</span>
+                        <span className="tw-ml-auto">
+                          <RightCircleOutlined />
+                        </span>
+                      </div>
+                    </Card>
+                  );
+                }
+                return <div className="tw-cursor-none">{nodeData.title}</div>;
+              }}
+            />
+          ) : (
+            <div className="tw-min-h-[70vh] tw-text-gray-500 tw-flex tw-justify-center tw-items-center">ไม่มีความรู้เพิ่มเติม</div>
+          )}
         </Card>
       )}
     </>

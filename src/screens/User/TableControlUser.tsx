@@ -19,7 +19,7 @@ import {
   UPDATE_USER,
   User,
 } from "../../redux/reducer/userReducer";
-import { DeleteFilled, EditFilled } from "@ant-design/icons";
+import { DeleteFilled, EditFilled, FileExcelFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import {
   ColumnSearch as getColumnSearchProps,
@@ -38,7 +38,7 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { company ,allUsers, isFetchingUsers } = useSelector(
+  const { company, allUsers, isFetchingUsers } = useSelector(
     (state: RootState) => state.users
   );
 
@@ -179,11 +179,9 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
       sorter: getSorter("company"),
       ...getColumnSearchProps("company"),
       render: (_: any, record: any) => {
-        const comp = company.find(
-          (c: any) => c.com_code === record.company
-        );
+        const comp = company.find((c: any) => c.com_code === record.company);
         return comp ? comp.com_name : "";
-      }
+      },
     },
     {
       title: "ระดับการใช้งาน",
@@ -241,9 +239,16 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
   ];
 
   return (
-    <div className="tw-min-h-[65vh] tw-space-y-2">
-      <div className="tw-flex tw-justify-end">
+    <div className="tw-min-h-[65vh] tw-space-y-4">
+      <div className="tw-flex tw-flex-col tw-justify-center tw-items-end tw-space-y-2">
         <ExcelImportUserPreview onConfirm={handleConfirmImport} />
+        <a
+          href="https://km.happylandgroup.biz/API/file/ไฟล์ตั้งต้นข้อมูลนำเข้าโปรแกรมKM.xlsx"
+          download
+          className="tw-text-gray-400 hover:tw-text-info tw-cursor-pointer tw-text-xs"
+        >
+          ตัวอย่างไฟล์นำเข้า <FileExcelFilled />
+        </a>
       </div>
       <Table
         rowKey="id"

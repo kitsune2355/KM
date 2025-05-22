@@ -48,7 +48,6 @@ const ExcelImportPreview: React.FC<ExcelImportPreviewProps> = ({
 
         if (jsonData.length === 0) return;
 
-        const user = jsonData[0];
         const permissionMap: Record<string, string[]> = {
           HL: ["2"],
           CNS: ["2", "3"],
@@ -57,12 +56,11 @@ const ExcelImportPreview: React.FC<ExcelImportPreviewProps> = ({
           CIC: ["2", "37"],
         };
 
-        const permissions = permissionMap[user.company] || [];
         let userData = jsonData.map((user) => ({
           ...user,
-          role:'user',
+          role: "user",
           status: "0",
-          permission: permissions,
+          permission: permissionMap[user.company],
         }));
 
         setPreviewData(userData);
@@ -111,8 +109,8 @@ const ExcelImportPreview: React.FC<ExcelImportPreviewProps> = ({
   return (
     <>
       <Button
-        variant="filled"
-        color="cyan"
+        variant='outlined'
+        color="primary"
         onClick={() => document.getElementById("excelUploadInput")?.click()}
       >
         Import Excel
@@ -128,11 +126,12 @@ const ExcelImportPreview: React.FC<ExcelImportPreviewProps> = ({
       <Modal
         title="ตรวจสอบข้อมูลก่อนนำเข้า"
         open={isModalVisible}
+        okText="นำเข้า"
+        cancelText="ยกเลิก"
         onOk={handleConfirmImport}
         onCancel={() => setIsModalVisible(false)}
         confirmLoading={loading}
-        width={"90%"}
-        height={"80vh"}
+        width={"70%"}
       >
         <Table
           dataSource={previewData}
