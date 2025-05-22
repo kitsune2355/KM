@@ -59,7 +59,7 @@ const ExcelImportPreview: React.FC<ExcelImportPreviewProps> = ({
         let userData = jsonData.map((user) => ({
           ...user,
           role: "user",
-          status: "0",
+          status: "1",
           permission: permissionMap[user.company],
         }));
 
