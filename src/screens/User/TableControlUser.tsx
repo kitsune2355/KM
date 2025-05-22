@@ -1,14 +1,21 @@
-import { Button, message, Popconfirm, Space, Table } from "antd";
+import { Button, message, Modal, Popconfirm, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import React, { useEffect } from "react";
-import { AddUserFormProps } from "../../forms/AddUserForm";
-import { addUser, deleteUser, fetchAllUsers } from "../../services/userService";
+import { AddUserFormProps, useAddUserForm } from "../../forms/AddUserForm";
+import {
+  addUser,
+  deleteUser,
+  fetchAllUsers,
+  fetchCompany,
+} from "../../services/userService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import {
   DELETE_USER,
   FETCH_ALL_USERS_REQUEST,
   FETCH_ALL_USERS_SUCCESS,
+  FETCH_COMPANY_REQUEST,
+  FETCH_COMPANY_SUCCESS,
   UPDATE_USER,
   User,
 } from "../../redux/reducer/userReducer";
@@ -18,6 +25,7 @@ import {
   ColumnSearch as getColumnSearchProps,
   getSorter,
 } from "../../components/ColumnSearch";
+import ExcelImportUserPreview from "../../components/ExcelImportUserPreview";
 
 interface TableControlUserProps {
   setActiveTab: (key: string) => void;
@@ -30,15 +38,17 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const allUsers = useSelector((state: RootState) => state.users.allUsers);
-  const isFetchingUsers = useSelector(
-    (state: RootState) => state.users.isFetchingUsers
+  const { company ,allUsers, isFetchingUsers } = useSelector(
+    (state: RootState) => state.users
   );
 
   const fetchData = async () => {
     dispatch(FETCH_ALL_USERS_REQUEST());
+    dispatch(FETCH_COMPANY_REQUEST());
     const res = await fetchAllUsers(navigate);
+    const usrCompay = await await fetchCompany();
     dispatch(FETCH_ALL_USERS_SUCCESS(res));
+    dispatch(FETCH_COMPANY_SUCCESS(usrCompay));
     return res;
   };
 
@@ -86,6 +96,29 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
     } catch (error) {
       console.error(error);
       message.error("ไม่สามารถอัปเดตสถานะการเผยแพร่ได้");
+    }
+  };
+
+  const handleConfirmImport = async (data: any[]) => {
+    try {
+      for (const user of data) {
+        const response = await addUser(user);
+
+        if (response.status !== "success") {
+          message.error("นำเข้าข้อมูลไม่สำเร็จ");
+          console.error(response.message);
+          return;
+        }
+      }
+
+      message.success("นำเข้าข้อมูลสำเร็จทั้งหมด");
+
+      dispatch(FETCH_ALL_USERS_REQUEST());
+      const res = await fetchAllUsers();
+      dispatch(FETCH_ALL_USERS_SUCCESS(res));
+    } catch (error: any) {
+      console.error(error);
+      message.error(error?.message || "เกิดข้อผิดพลาดในการนำเข้าข้อมูล");
     }
   };
 
@@ -145,6 +178,12 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
       width: 150,
       sorter: getSorter("company"),
       ...getColumnSearchProps("company"),
+      render: (_: any, record: any) => {
+        const comp = company.find(
+          (c: any) => c.com_code === record.company
+        );
+        return comp ? comp.com_name : "";
+      }
     },
     {
       title: "ระดับการใช้งาน",
@@ -202,13 +241,16 @@ const TableControlUser: React.FC<TableControlUserProps> = ({
   ];
 
   return (
-    <div className="tw-min-h-[65vh]">
+    <div className="tw-min-h-[65vh] tw-space-y-2">
+      <div className="tw-flex tw-justify-end">
+        <ExcelImportUserPreview onConfirm={handleConfirmImport} />
+      </div>
       <Table
         rowKey="id"
         columns={columns}
         dataSource={allUsers}
         bordered
-        scroll={{ x: "max-content", y: 'max-content' }}
+        scroll={{ x: "max-content", y: "max-content" }}
         loading={isFetchingUsers}
       />
     </div>

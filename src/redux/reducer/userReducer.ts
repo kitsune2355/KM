@@ -4,6 +4,7 @@ import {
   configureStore,
   createSelector,
 } from "@reduxjs/toolkit";
+import { usrCompany } from "../../services/userService";
 
 export interface User {
   employeeID: string;
@@ -17,7 +18,7 @@ export interface User {
   status: string;
   permission?: string[];
   token?: string;
-  message?:string
+  message?: string;
 }
 
 interface UserState {
@@ -27,6 +28,7 @@ interface UserState {
   isLoading: boolean;
   isFetchingUsers: boolean;
   error: string | null;
+  company: usrCompany[];
 }
 
 const initialState: UserState = {
@@ -36,6 +38,7 @@ const initialState: UserState = {
   isLoading: false,
   isFetchingUsers: false,
   error: null,
+  company: [],
 };
 
 const userSlice = createSlice({
@@ -113,6 +116,19 @@ const userSlice = createSlice({
         (user) => user.employeeID !== action.payload
       );
     },
+    FETCH_COMPANY_REQUEST: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    FETCH_COMPANY_SUCCESS: (state, action: PayloadAction<usrCompany[]>) => {
+      state.isLoading = false;
+      state.company = action.payload;
+      state.error = null;
+    },
+    FETCH_COMPANY_FAILURE: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -131,6 +147,9 @@ export const {
   ADD_USER,
   UPDATE_USER,
   DELETE_USER,
+  FETCH_COMPANY_REQUEST,
+  FETCH_COMPANY_SUCCESS,
+  FETCH_COMPANY_FAILURE,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
@@ -150,6 +169,7 @@ export const selectUserState = createSelector(
     isLoading: user.isLoading,
     isFetchingUsers: user.isFetchingUsers,
     error: user.error,
+    company: user.company,
   })
 );
 

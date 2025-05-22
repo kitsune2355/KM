@@ -3,10 +3,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Controller } from "react-hook-form";
 import { AddUserFormProps, useAddUserForm } from "../../forms/AddUserForm";
 import { addUser, fetchCompany, usrCompany } from "../../services/userService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RootState } from "../../store";
 import { selectCategoryState } from "../../redux/reducer/categoryReducer";
+import {
+  FETCH_COMPANY_REQUEST,
+  FETCH_COMPANY_SUCCESS,
+} from "../../redux/reducer/userReducer";
 
 interface AddUserProps {
   setActiveTab: (key: string) => void;
@@ -29,7 +33,8 @@ export const getAllKeys = (data: any[]) => {
 
 const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
   const navigate = useNavigate();
-  const allUsers = useSelector((state: RootState) => state.users.allUsers);
+  const dispatch = useDispatch();
+  const { company, allUsers } = useSelector((state: RootState) => state.users);
   const { categories } = useSelector(selectCategoryState);
   const {
     control,
@@ -44,7 +49,6 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
   });
   const [searchParams] = useSearchParams();
   const userId = useMemo(() => searchParams.get("id"), [searchParams]);
-  const [company, setCompany] = useState<usrCompany[]>([]);
 
   const onStart = () => {
     if (userId) {
@@ -93,8 +97,9 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
   };
 
   const getCompany = async () => {
+    dispatch(FETCH_COMPANY_REQUEST());
     const res = await fetchCompany();
-    setCompany(res);
+    dispatch(FETCH_COMPANY_SUCCESS(res));
   };
 
   useEffect(() => {
@@ -205,7 +210,7 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
                   className="tw-w-full"
                   placeholder="บริษัท"
                   options={company.map((item) => ({
-                    value: item.com_name,
+                    value: item.com_code,
                     label: item.com_name,
                   }))}
                   onChange={(value) => field.onChange(value)}
@@ -297,7 +302,7 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
           </div>
         </div>
 
-        <div className="tw-flex tw-flex-row tw-justify-end tw-items-center">
+        <div className="tw-flex tw-flex-row tw-justify-end tw-items-center tw-space-x-2">
           <Button
             type="primary"
             htmlType="submit"
@@ -305,6 +310,17 @@ const AddUser: React.FC<AddUserProps> = ({ setActiveTab, activeTab }) => {
           >
             บันทึก
           </Button>
+          {userId && (
+            <Button
+              variant="outlined"
+              className="tw-w-24 tw-border-primary"
+              onClick={() => {
+                setActiveTab("1");
+              }}
+            >
+              ยกเลิก
+            </Button>
+          )}
         </div>
       </div>
     </form>

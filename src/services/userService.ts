@@ -6,6 +6,7 @@ import { NavigateFunction } from "react-router-dom";
 export interface usrCompany {
   com_id: string;
   com_name: string;
+  com_code: string;
 }
 
 export const getAuthInfo = () => {
