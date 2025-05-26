@@ -1,6 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
 import { getPosts } from "../../services/postService";
-import { getAuthInfo } from "../../services/userService";
 import {
   AppDispatch,
   FETCH_POSTS_REQUEST,

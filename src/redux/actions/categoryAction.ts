@@ -1,6 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
 import { fetchCategories } from "../../services/categoryService";
-import { getAuthInfo } from "../../services/userService";
 import {
   AppDispatch,
   FETCH_CATEGORIES_REQUEST,
