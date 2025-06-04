@@ -28,6 +28,8 @@ import {
   getSorter,
 } from "../../components/ColumnSearch";
 import { formatThaiDate } from "../Posts/PostContentScreen";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 export const TablePostManageScreen: React.FC = () => {
   const navigate = useNavigate();
@@ -90,6 +92,73 @@ export const TablePostManageScreen: React.FC = () => {
       console.error(error);
       message.error("ไม่สามารถอัปเดตสถานะการเผยแพร่ได้");
     }
+  };
+
+  const htmlToText = (html: string): string => {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+  };
+
+  const exportToExcel = () => {
+    if (!posts.length) {
+      message.warning("ไม่มีข้อมูลให้ส่งออก");
+      return;
+    }
+
+    const exportData = posts.map((post) => ({
+      เลขที่องค์ความรู้: post.post_format,
+      ชื่อเรื่ององค์ความรู้: post.post_title,
+      หมวดหมู่: post.categories_title,
+      ประเภทขององค์ความรู้:
+        typeKnowledge.find((t) => t.value === post.post_type)?.label || "",
+      ชื่อ: post.post_fname,
+      นามสกุล: post.post_lname,
+      ตำแหน่ง: post.post_position,
+      แผนก: post.post_depm,
+      ฝ่าย: post.post_sub_depm,
+      ประเภทเนื้อหา: typeKM
+        .filter((item) => JSON.parse(post.post_contents).includes(item.value))
+        .map((item) => item.label)
+        .join(", "),
+      รายละเอียด: htmlToText(post.post_desc),
+      ประโยชน์ขององค์ความรู้: htmlToText(post.post_benefit),
+      วันที่ทำเอกสาร: formatThaiDate(post.post_date),
+      วันที่สร้าง: post.post_create_at as string,
+      สถานะ: post.post_publish === "1" ? "เผยแพร่" : "ไม่เผยแพร่",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    // ✅ ปรับขนาดคอลัมน์อัตโนมัติตามเนื้อหา ยกเว้นคอลัมน์ "รายละเอียด" และ "ประโยชน์ขององค์ความรู้"
+    type ExportRow = (typeof exportData)[number];
+    const keys = Object.keys(exportData[0]) as (keyof ExportRow)[];
+
+    const colWidths = keys.map((key) => {
+      if (key === "รายละเอียด" || key === "ประโยชน์ขององค์ความรู้") {
+        return { wch: 30 };
+      }
+      const maxLength = Math.max(
+        key.length,
+        ...exportData.map((row) => row[key]?.toString().length ?? 0)
+      );
+      return { wch: maxLength + 2 };
+    });
+
+    worksheet["!cols"] = colWidths;
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Posts");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+
+    saveAs(blob, "รายงาน_องค์ความรู้.xlsx");
   };
 
   const columns: ColumnsType<Post> = [
@@ -362,7 +431,7 @@ export const TablePostManageScreen: React.FC = () => {
           columns={columns}
           dataSource={posts}
           bordered
-          scroll={{ x: "max-content", y: 'max-content' }}
+          scroll={{ x: "max-content", y: "max-content" }}
           tableLayout="fixed"
           onChange={(pagination, filters, sorter, extra) => {
             const count = extra.currentDataSource.length;
@@ -370,7 +439,12 @@ export const TablePostManageScreen: React.FC = () => {
           }}
           loading={isFetchingPosts}
         />
-        <p>แสดงทั้งหมด {count} รายการ</p>
+        <div className="tw-flex tw-justify-between tw-items-center">
+          <p>แสดงทั้งหมด {count} รายการ</p>
+          <Button variant="outlined" color="primary" onClick={exportToExcel}>
+            Export Excel
+          </Button>
+        </div>
       </Card>
     </>
   );
