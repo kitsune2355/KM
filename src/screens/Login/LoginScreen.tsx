@@ -53,7 +53,6 @@ export const LoginScreen: React.FC = () => {
       <a
         href="https://km.happylandgroup.biz/API/file/คู่มือการใช้งาน.pdf"
         target="_blank"
-        download
         className="tw-fixed tw-top-4 tw-right-4 tw-z-10 tw-text-sm tw-text-white tw-flex tw-items-center tw-space-x-1 tw-cursor-pointer hover:tw-text-gray-300"
       >
         <BookOutlined />
