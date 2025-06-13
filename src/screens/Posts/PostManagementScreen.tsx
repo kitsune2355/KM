@@ -110,7 +110,7 @@ export const PostManagementScreen: React.FC = () => {
       fetchData();
       dispatch(fetchPosts(navigate));
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     onStart();
